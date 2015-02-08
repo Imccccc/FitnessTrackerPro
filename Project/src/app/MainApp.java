@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 public class MainApp extends Application {
 
     private Stage primaryStage;
-    private BorderPane rootLayout;
+    private AnchorPane rootLayout;
 
     @Override
     public void start(Stage primaryStage) {
@@ -30,8 +30,8 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+            loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
+            rootLayout = (AnchorPane)loader.load();
 
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
