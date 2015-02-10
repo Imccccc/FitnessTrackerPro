@@ -41,7 +41,7 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
     }
-
+    
     /**
      * Returns the main stage.
      * @return
