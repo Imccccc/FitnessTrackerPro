@@ -2,7 +2,11 @@ package app;
 
 import java.io.IOException;
 
+import app.controller.HomeTabController;
+import app.model.Activity;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -13,7 +17,23 @@ public class MainApp extends Application {
 
     private Stage primaryStage;
     private AnchorPane rootLayout;
+     
+    /**
+     * The data as an observable list of Persons.
+     */
+    private ObservableList<Activity> activityData = FXCollections.observableArrayList();
 
+    /**
+     * Constructor
+     */
+    public MainApp(){
+    	
+    }
+    
+    public ObservableList<Activity> getActivityData() {
+        return activityData;
+    }
+    
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -49,7 +69,8 @@ public class MainApp extends Application {
     public Stage getPrimaryStage() {
         return primaryStage;
     }
-
+    
+    
     public static void main(String[] args) {
         launch(args);
     }

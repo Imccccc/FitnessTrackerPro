@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import java.util.*;
 
 /**
  * 
@@ -15,9 +16,9 @@ import javafx.beans.property.StringProperty;
 
 public class Activity {
     private final StringProperty activityName;
-    private final IntegerProperty planCount;
-    private final IntegerProperty userCount;
-    //private final IntegerProperty unitsecond;
+    private final StringProperty planCount; //Should saved in plan
+    private final StringProperty userCount; //Should saved in plan
+    private final SimpleStringProperty unitsecond;
 
     /**
      * Default constructor.
@@ -34,10 +35,11 @@ public class Activity {
      */
     public Activity(String name, int count) {
         this.activityName = new SimpleStringProperty(name);
-        this.planCount = new SimpleIntegerProperty(count);
+        this.planCount = new SimpleStringProperty(Integer.toString(count));
 
         // Some initial dummy data, just for convenient testing.
-        this.userCount = new SimpleIntegerProperty(0);
+        this.userCount = new SimpleStringProperty(Integer.toString(0));
+        this.unitsecond = new SimpleStringProperty(Integer.toString(0));
     }
     
     public String getActvityName() {
@@ -48,21 +50,33 @@ public class Activity {
         this.activityName.set(Name);
     }
  
-    public int getPlanCount() {
+	public StringProperty ActvityNameProperty() {
+		return activityName;
+	}
+    
+    public String getPlanCount() {
         return this.planCount.get();
     }
     
     public void setPlanCount(int count) {
-        this.planCount.set(count);
+        this.planCount.set(Integer.toString(count));
     }
     
-    public int getUserCount() {
+	public StringProperty planCountProperty() {
+		return planCount;
+	}
+    
+    public String getUserCount() {
         return this.userCount.get();
     }
     
     public void setUserCount(int count) {
-        this.userCount.set(count);
+        this.userCount.set(Integer.toString(count));
     }
+    	
+	public StringProperty userCountProperty() {
+		return userCount;
+	}    
 }
 
 
