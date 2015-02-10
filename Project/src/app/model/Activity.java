@@ -52,8 +52,16 @@ public class Activity {
         return this.planCount.get();
     }
     
+    public void setPlanCount(int count) {
+        this.planCount.set(count);
+    }
+    
     public int getUserCount() {
         return this.userCount.get();
+    }
+    
+    public void setUserCount(int count) {
+        this.userCount.set(count);
     }
 }
 
