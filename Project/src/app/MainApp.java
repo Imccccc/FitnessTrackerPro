@@ -1,7 +1,7 @@
 package app;
 
 import java.io.IOException;
-
+import app.controller.ActivityListController;
 import app.controller.HomeTabController;
 import app.model.Activity;
 import javafx.application.Application;
@@ -53,6 +53,10 @@ public class MainApp extends Application {
             loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
             rootLayout = (AnchorPane)loader.load();
 
+            // Give the controller access to the main app.
+            //ActivityListController controller = loader.getController();
+            //controller.setMainApp(this);
+            
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);

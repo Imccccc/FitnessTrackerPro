@@ -32,6 +32,7 @@ public class HomeTabController {
      * The constructor.
      * The constructor is called before the initialize() method.
      */
+    
     public HomeTabController() {
     	activityData.add(new Activity("c1", 1));
     	activityData.add(new Activity("c2", 2));
