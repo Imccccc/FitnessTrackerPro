@@ -23,7 +23,10 @@
                                  </HBox>
                	               <SplitPane dividerPositions="0.1428, 0.2856, 0.4284, 0.5714, 0.7142, 0.8571" layoutX="12.0" layoutY="42.0" prefHeight="276.0" prefWidth="490.0">
                                        <items>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="274.0" prefWidth="70.0" />
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="274.0" prefWidth="70.0">
+                                 <children>
+                                    <ListView fx:id="sundayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children></AnchorPane>
                                                 <AnchorPane prefHeight="200.0" prefWidth="70.0" />
                                                 <AnchorPane prefHeight="200.0" prefWidth="70.0" />
                                                 <AnchorPane prefHeight="200.0" prefWidth="70.0" />
