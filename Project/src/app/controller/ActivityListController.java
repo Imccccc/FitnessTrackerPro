@@ -22,6 +22,19 @@ public class ActivityListController {
 	private ListView<String> activityList;
 	@FXML
 	private ListView<String> sundayList;
+	@FXML
+	private ListView<String> mondayList;
+	@FXML
+	private ListView<String> tuesdayList;
+	@FXML
+	private ListView<String> wednesdayList;
+	@FXML
+	private ListView<String> thursdayList;
+	@FXML
+	private ListView<String> fridayList;
+	@FXML
+	private ListView<String> saturdayList;
+
 	
 	public static final ObservableList<String> activities = 
 	        FXCollections.observableArrayList();
@@ -150,6 +163,294 @@ public class ActivityListController {
     			String newActivity = dragEvent.getDragboard().getString();
     
     			sundayList.getItems().addAll(newActivity);
+    
+    			dragEvent.setDropCompleted(true);
+    		}
+    	});
+    	
+    	mondayList.setOnDragEntered(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragEntered");
+    
+    			mondayList.setBlendMode(BlendMode.DIFFERENCE);
+    		}
+    	});
+    
+    	mondayList.setOnDragExited(new EventHandler<DragEvent>()
+        {
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragExited");
+    
+    			mondayList.setBlendMode(null);
+    		}
+    	});
+    
+    	mondayList.setOnDragOver(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragOver");
+    
+    			dragEvent.acceptTransferModes(TransferMode.MOVE);
+    		}
+    	});
+    
+    	mondayList.setOnDragDropped(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragDropped");
+    
+    			String newActivity = dragEvent.getDragboard().getString();
+    
+    			mondayList.getItems().addAll(newActivity);
+    
+    			dragEvent.setDropCompleted(true);
+    		}
+    	});
+    	
+    	tuesdayList.setOnDragEntered(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragEntered");
+    
+    			tuesdayList.setBlendMode(BlendMode.DIFFERENCE);
+    		}
+    	});
+    
+    	tuesdayList.setOnDragExited(new EventHandler<DragEvent>()
+        {
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragExited");
+    
+    			tuesdayList.setBlendMode(null);
+    		}
+    	});
+    
+    	tuesdayList.setOnDragOver(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragOver");
+    
+    			dragEvent.acceptTransferModes(TransferMode.MOVE);
+    		}
+    	});
+    
+    	tuesdayList.setOnDragDropped(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragDropped");
+    
+    			String newActivity = dragEvent.getDragboard().getString();
+    
+    			tuesdayList.getItems().addAll(newActivity);
+    
+    			dragEvent.setDropCompleted(true);
+    		}
+    	});
+    	
+    	wednesdayList.setOnDragEntered(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragEntered");
+    
+    			wednesdayList.setBlendMode(BlendMode.DIFFERENCE);
+    		}
+    	});
+    
+    	wednesdayList.setOnDragExited(new EventHandler<DragEvent>()
+        {
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragExited");
+    
+    			wednesdayList.setBlendMode(null);
+    		}
+    	});
+    
+    	wednesdayList.setOnDragOver(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragOver");
+    
+    			dragEvent.acceptTransferModes(TransferMode.MOVE);
+    		}
+    	});
+    
+    	wednesdayList.setOnDragDropped(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragDropped");
+    
+    			String newActivity = dragEvent.getDragboard().getString();
+    
+    			wednesdayList.getItems().addAll(newActivity);
+    
+    			dragEvent.setDropCompleted(true);
+    		}
+    	});
+    	
+    	thursdayList.setOnDragEntered(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragEntered");
+    
+    			thursdayList.setBlendMode(BlendMode.DIFFERENCE);
+    		}
+    	});
+    
+    	thursdayList.setOnDragExited(new EventHandler<DragEvent>()
+        {
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragExited");
+    
+    			thursdayList.setBlendMode(null);
+    		}
+    	});
+    
+    	thursdayList.setOnDragOver(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragOver");
+    
+    			dragEvent.acceptTransferModes(TransferMode.MOVE);
+    		}
+    	});
+    
+    	thursdayList.setOnDragDropped(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragDropped");
+    
+    			String newActivity = dragEvent.getDragboard().getString();
+    
+    			thursdayList.getItems().addAll(newActivity);
+    
+    			dragEvent.setDropCompleted(true);
+    		}
+    	});
+    	
+    	fridayList.setOnDragEntered(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragEntered");
+    
+    			fridayList.setBlendMode(BlendMode.DIFFERENCE);
+    		}
+    	});
+    
+    	fridayList.setOnDragExited(new EventHandler<DragEvent>()
+        {
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragExited");
+    
+    			fridayList.setBlendMode(null);
+    		}
+    	});
+    
+    	fridayList.setOnDragOver(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragOver");
+    
+    			dragEvent.acceptTransferModes(TransferMode.MOVE);
+    		}
+    	});
+    
+    	fridayList.setOnDragDropped(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragDropped");
+    
+    			String newActivity = dragEvent.getDragboard().getString();
+    
+    			fridayList.getItems().addAll(newActivity);
+    
+    			dragEvent.setDropCompleted(true);
+    		}
+    	});
+    	
+    	saturdayList.setOnDragEntered(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragEntered");
+    
+    			saturdayList.setBlendMode(BlendMode.DIFFERENCE);
+    		}
+    	});
+    
+    	saturdayList.setOnDragExited(new EventHandler<DragEvent>()
+        {
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragExited");
+    
+    			saturdayList.setBlendMode(null);
+    		}
+    	});
+    
+    	saturdayList.setOnDragOver(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragOver");
+    
+    			dragEvent.acceptTransferModes(TransferMode.MOVE);
+    		}
+    	});
+    
+    	saturdayList.setOnDragDropped(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("setOnDragDropped");
+    
+    			String newActivity = dragEvent.getDragboard().getString();
+    
+    			saturdayList.getItems().addAll(newActivity);
     
     			dragEvent.setDropCompleted(true);
     		}
