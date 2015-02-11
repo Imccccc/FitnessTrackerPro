@@ -1,5 +1,6 @@
 package app.controller;
 
+import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,9 +17,9 @@ public class HomeTabController {
     @FXML
     private TableColumn<Activity, String> ActivityName;
     @FXML
-    private TableColumn<Activity, String> PlanCount;
+    private TableColumn<Activity, Number> PlanCount;
     @FXML
-    private TableColumn<Activity, String> UserCount;
+    private TableColumn<Activity, Number> UserCount;
     @FXML
     private Label HomepageLabel;
     

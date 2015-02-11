@@ -19,9 +19,8 @@ enum Unit {
 
 public class Activity {
     private final StringProperty activityName;
-    private final StringProperty planCount; //Should saved in plan
-    private final StringProperty userCount; //Should saved in plan
-    private final SimpleStringProperty unitsecond;
+    private final IntegerProperty planCount; //Should saved in plan
+    private final IntegerProperty userCount; //Should saved in plan
     private final ObjectProperty<Unit> unit;
 
     
@@ -33,23 +32,16 @@ public class Activity {
      */
     public Activity(String name, int count, Unit unit) {
         this.activityName = new SimpleStringProperty(name);
-        this.planCount = new SimpleStringProperty(Integer.toString(count));
-
-        // Some initial dummy data, just for convenient testing.
-        this.userCount = new SimpleStringProperty(Integer.toString(0));
-        this.unitsecond = new SimpleStringProperty(Integer.toString(0));
+        this.planCount = new SimpleIntegerProperty(count);
+        this.userCount = new SimpleIntegerProperty(0);
         this.unit = new SimpleObjectProperty<Unit>(unit);
     }
     
     public Activity(String name, int count) {
         this.activityName = new SimpleStringProperty(name);
-        this.planCount = new SimpleStringProperty(Integer.toString(count));
-
-        // Some initial dummy data, just for convenient testing.
-        this.userCount = new SimpleStringProperty(Integer.toString(0));
-        this.unitsecond = new SimpleStringProperty(Integer.toString(0));
-        Unit unit = null;
-        this.unit = new SimpleObjectProperty<Unit>(unit);
+        this.planCount = new SimpleIntegerProperty(count);
+        this.userCount = new SimpleIntegerProperty(0);
+        this.unit = null;
     }
     
     
@@ -66,27 +58,27 @@ public class Activity {
 		return activityName;
 	}
     
-    public String getPlanCount() {
+    public Integer getPlanCount() {
         return this.planCount.get();
     }
     
     public void setPlanCount(int count) {
-        this.planCount.set(Integer.toString(count));
+        this.planCount.set(count);
     }
     
-	public StringProperty planCountProperty() {
+	public IntegerProperty planCountProperty() {
 		return planCount;
 	}
     
-    public String getUserCount() {
+    public Integer getUserCount() {
         return this.userCount.get();
     }
     
     public void setUserCount(int count) {
-        this.userCount.set(Integer.toString(count));
+        this.userCount.set(count);
     }
     	
-	public StringProperty userCountProperty() {
+	public IntegerProperty userCountProperty() {
 		return userCount;
 	}    
     

@@ -1,61 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.ActivityListController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.ActivityListController">
    <children>
-		<AnchorPane prefHeight="400.0" prefWidth="600.0">
+		<AnchorPane prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
               	<SplitPane dividerPositions="0.14046822742474915" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <items>
                        <ListView fx:id="activityList" prefHeight="200.0" prefWidth="80.0" />
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                <children>
-                     			 <HBox layoutX="336.0" layoutY="325.0">
+                     			 <HBox layoutX="672.0" layoutY="558.0" AnchorPane.bottomAnchor="14.0">
       		                          <children>
         	                             <Button layoutX="192.0" layoutY="340.0" mnemonicParsing="false" text="New" />
             	                         <Button layoutX="247.0" layoutY="340.0" mnemonicParsing="false" text="Delete" />
                 	                     <Button layoutX="302.0" layoutY="340.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="53.0" text="Edit" />
                     		           </children>
                                  </HBox>
-               	               <SplitPane dividerPositions="0.1428, 0.2856, 0.4284, 0.5714, 0.7142, 0.8571" layoutX="12.0" layoutY="42.0" prefHeight="276.0" prefWidth="490.0">
+               	               <SplitPane dividerPositions="0.1428, 0.2856, 0.4284, 0.5714, 0.7142, 0.8571" layoutX="12.0" layoutY="42.0" prefHeight="276.0" prefWidth="490.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="62.0">
                                        <items>
                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="274.0" prefWidth="70.0">
                                  				<children>
-                                    				<ListView fx:id="sundayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    				<TableView fx:id="sundayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="sundayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="sundayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			 </AnchorPane>
-                                             <AnchorPane prefHeight="200.0" prefWidth="70.0" >
-                                                <children>
-                                    				<ListView fx:id="mondayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                             <AnchorPane prefHeight="200.0" prefWidth="70.0">                                                                                 				
+                                             	<children>
+                                    				<TableView fx:id="mondayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="mondayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="mondayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			</AnchorPane>
-                                            <AnchorPane prefHeight="200.0" prefWidth="70.0" >
+                                            <AnchorPane prefHeight="200.0" prefWidth="70.0">
                                                 <children>
-                                    				<ListView fx:id="tuesdayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+													<TableView fx:id="tuesdayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="tuesdayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="tuesdayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			</AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="70.0" >
+                                                <AnchorPane prefHeight="200.0" prefWidth="70.0">
                                                 <children>
-                                    				<ListView fx:id="wednesdayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    				<TableView fx:id="wednesdayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="wednesdayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="wednesdayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			</AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="70.0" >
+                                                <AnchorPane prefHeight="200.0" prefWidth="70.0">
                                                 <children>
-                                    				<ListView fx:id="thursdayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    				<TableView fx:id="thursdayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="thursdayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="thursdayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			</AnchorPane>
-                                                <AnchorPane prefHeight="200.0" prefWidth="70.0" >
+                                                <AnchorPane prefHeight="200.0" prefWidth="70.0">
                                                 <children>
-                                    				<ListView fx:id="fridayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    				<TableView fx:id="fridayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="fridayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="fridayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			</AnchorPane>
-                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="70.0" >
+                                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="70.0">
                                                 <children>
-                                    				<ListView fx:id="saturdayList" layoutX="-67.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    				<TableView fx:id="saturdayList" layoutX="-6.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      					<columns>
+                                        					<TableColumn fx:id="saturdayList_actCol" minWidth="-1.0" prefWidth="79.0" text="Activity" />
+                                        					<TableColumn fx:id="saturdayList_cntCol" minWidth="-1.0" prefWidth="30.0" text="Count" />
+                                      					</columns>
+                                    				</TableView>
                                  				</children>
                                  			</AnchorPane>
                                               
@@ -63,7 +99,17 @@
                                               
                                             </items>
                                           </SplitPane>
-                                          <Label layoutX="219.0" layoutY="14.0" text="Weekly Paln" />
+                                          <Label layoutX="347.0" layoutY="14.0" text="Weekly Plan" textAlignment="CENTER" AnchorPane.leftAnchor="370.0" AnchorPane.rightAnchor="370.0" AnchorPane.topAnchor="15.0">
+                           <font>
+                              <Font size="17.0" />
+                           </font></Label>
+                        <Label layoutX="62.0" layoutY="40.0" text="Sunday" AnchorPane.leftAnchor="62.0" AnchorPane.topAnchor="40.0" />
+                        <Label layoutX="180.0" layoutY="40.0" text="Monday" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="40.0" />
+                        <Label layoutX="285.0" layoutY="40.0" text="Tuesday" AnchorPane.leftAnchor="285.0" AnchorPane.topAnchor="40.0" />
+                        <Label layoutX="392.0" layoutY="40.0" text="Wednesday" AnchorPane.leftAnchor="392.0" AnchorPane.topAnchor="40.0" />
+                        <Label layoutX="514.0" layoutY="40.0" text="Thursday" AnchorPane.rightAnchor="285.0" AnchorPane.topAnchor="40.0" />
+                        <Label layoutX="635.0" layoutY="40.0" text="Friday" AnchorPane.rightAnchor="182.0" AnchorPane.topAnchor="40.0" />
+                        <Label layoutX="740.0" layoutY="40.0" text="Saturday" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="40.0" />
                                        </children>
                          </AnchorPane>
                      </items>

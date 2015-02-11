@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -27,9 +27,9 @@
                         <fx:include fx:id="StatTab" source="StatTabLayout.fxml" /> 
                      </content>
                   </Tab>
-                  <Tab text="Share" >
+                  <Tab text="Share">
                      <content>
-                        <fx:include fx:id="ShareTab"  source="ShareTabLayout.fxml" /> 
+                        <fx:include fx:id="ShareTab" source="ShareTabLayout.fxml" /> 
                      </content>
                   </Tab>
                </tabs>

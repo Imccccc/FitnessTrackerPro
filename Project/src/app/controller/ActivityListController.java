@@ -1,5 +1,8 @@
 package app.controller;
 
+import java.util.Optional;
+
+import org.controlsfx.dialog.Dialogs;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
 import javafx.collections.FXCollections;
@@ -7,6 +10,8 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -14,6 +19,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import app.MainApp;
+import app.model.Activity;
 
 
 public class ActivityListController {
@@ -21,24 +27,63 @@ public class ActivityListController {
 	@FXML
 	private ListView<String> activityList;
 	@FXML
-	private ListView<String> sundayList;
+	private TableView<Activity> sundayList;
 	@FXML
-	private ListView<String> mondayList;
+	private TableColumn<Activity, String> sundayList_actCol;
 	@FXML
-	private ListView<String> tuesdayList;
+	private TableColumn<Activity, Number> sundayList_cntCol;
 	@FXML
-	private ListView<String> wednesdayList;
+	private TableView<Activity> mondayList;
 	@FXML
-	private ListView<String> thursdayList;
+	private TableColumn<Activity, String> mondayList_actCol;
 	@FXML
-	private ListView<String> fridayList;
+	private TableColumn<Activity, Number> mondayList_cntCol;
 	@FXML
-	private ListView<String> saturdayList;
-
+	private TableView<Activity> tuesdayList;
+	@FXML
+	private TableColumn<Activity, String> tuesdayList_actCol;
+	@FXML
+	private TableColumn<Activity, Number> tuesdayList_cntCol;
+	@FXML
+	private TableView<Activity> wednesdayList;
+	@FXML
+	private TableColumn<Activity, String> wednesdayList_actCol;
+	@FXML
+	private TableColumn<Activity, Number> wednesdayList_cntCol;
+	@FXML
+	private TableView<Activity> thursdayList;
+	@FXML
+	private TableColumn<Activity, String> thursdayList_actCol;
+	@FXML
+	private TableColumn<Activity, Number> thursdayList_cntCol;
+	@FXML
+	private TableView<Activity> fridayList;
+	@FXML
+	private TableColumn<Activity, String> fridayList_actCol;
+	@FXML
+	private TableColumn<Activity, Number> fridayList_cntCol;
+	@FXML
+	private TableView<Activity> saturdayList;
+	@FXML
+	private TableColumn<Activity, String> saturdayList_actCol;
+	@FXML
+	private TableColumn<Activity, Number> saturdayList_cntCol;
 	
 	public static final ObservableList<String> activities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<String> sundayActivities = 
+	public static final ObservableList<Activity> sundayActivities = 
+	        FXCollections.observableArrayList();
+	public static final ObservableList<Activity> mondayActivities = 
+	        FXCollections.observableArrayList();
+	public static final ObservableList<Activity> tuesdayActivities = 
+	        FXCollections.observableArrayList();
+	public static final ObservableList<Activity> wednesdayActivities = 
+	        FXCollections.observableArrayList();
+	public static final ObservableList<Activity> thursdayActivities = 
+	        FXCollections.observableArrayList();
+	public static final ObservableList<Activity> fridayActivities = 
+	        FXCollections.observableArrayList();
+	public static final ObservableList<Activity> saturdayActivities = 
 	        FXCollections.observableArrayList();
 	
 	// Reference to the main application.
@@ -65,7 +110,29 @@ public class ActivityListController {
                 "Tony", "Trudy", "Williams", "Zach");
     	//sundayActivities.addAll("");
     	activityList.setItems(activities);
-    	//sundayList.setItems(sundayActivities);
+    	
+    	// Set all 7 days data binding
+    	sundayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	sundayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	sundayList.setItems(sundayActivities);
+    	mondayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	mondayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	mondayList.setItems(mondayActivities);
+    	tuesdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	tuesdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	tuesdayList.setItems(tuesdayActivities);
+    	wednesdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	wednesdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	wednesdayList.setItems(wednesdayActivities);
+    	thursdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	thursdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	thursdayList.setItems(thursdayActivities);
+    	fridayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	fridayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	fridayList.setItems(fridayActivities);
+    	saturdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
+    	saturdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	saturdayList.setItems(saturdayActivities);
     	
     	initializeListeners();
     }
@@ -82,14 +149,6 @@ public class ActivityListController {
         //personTable.setItems(mainApp.getPersonData());
     }
     
-//    /**
-//     * Called when the drag gesture detected in activity list
-//     */
-//    @FXML
-//    private void dragActivity() {
-//        int selectedIndex = activityList.
-//        personTable.getItems().remove(selectedIndex);
-//    }
     
     private void initializeListeners()
     {
@@ -98,7 +157,7 @@ public class ActivityListController {
     		@Override
     		public void handle(MouseEvent event)
     		{
-    			System.out.println("setOnDragDetected");
+    			//System.out.println("setOnDragDetected");
     			Dragboard dragBoard = activityList.startDragAndDrop(TransferMode.MOVE);
     			ClipboardContent content = new ClipboardContent();
     			content.putString(activityList.getSelectionModel().getSelectedItem());
@@ -112,8 +171,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDone");
-    
+    			System.out.println("setOnDragDone");    
     			// This is not the ideal place to remove the player because the drag might not have been exited on the target.
     			// String player = dragEvent.getDragboard().getString();
     			// playersList.remove(new Player(player));
@@ -125,8 +183,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			sundayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -136,8 +193,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			sundayList.setBlendMode(null);
     		}
     	});
@@ -147,8 +203,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -158,12 +213,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			sundayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> sundayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -173,8 +234,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			mondayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -184,8 +244,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			mondayList.setBlendMode(null);
     		}
     	});
@@ -195,8 +254,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -206,12 +264,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			mondayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> mondayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -221,8 +285,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			tuesdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -232,8 +295,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			tuesdayList.setBlendMode(null);
     		}
     	});
@@ -243,8 +305,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -254,12 +315,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			tuesdayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> tuesdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -269,8 +336,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			wednesdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -280,8 +346,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			wednesdayList.setBlendMode(null);
     		}
     	});
@@ -291,8 +356,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -302,12 +366,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			wednesdayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> wednesdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -317,8 +387,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			thursdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -328,8 +397,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			thursdayList.setBlendMode(null);
     		}
     	});
@@ -339,8 +407,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -350,12 +417,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			thursdayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> thursdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -365,8 +438,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			fridayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -376,8 +448,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			fridayList.setBlendMode(null);
     		}
     	});
@@ -387,8 +458,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -398,12 +468,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			fridayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> fridayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -413,8 +489,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragEntered");
-    
+    			//System.out.println("setOnDragEntered");    
     			saturdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -424,8 +499,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragExited");
-    
+    			//System.out.println("setOnDragExited");  
     			saturdayList.setBlendMode(null);
     		}
     	});
@@ -435,8 +509,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragOver");
-    
+    			//System.out.println("setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -446,12 +519,18 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDropped");
-    
+    			//System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
-    
-    			saturdayList.getItems().addAll(newActivity);
-    
+ 
+    			// Pop up a dialog to accept planed count
+    			Optional<String> response = Dialogs.create()
+    			        .title("Text Input Count")
+    			        .message("Please enter your planned count:")
+    			        .showTextInput("15");
+
+    			// Add activity to the correspond observableList
+    			response.ifPresent(count -> saturdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+   
     			dragEvent.setDropCompleted(true);
     		}
     	});
