@@ -30,11 +30,11 @@ public class RealActivityPlan {
 		this.realCount.set(count);
 	}
 	
-	public Integer getPlannedCount() {
+	public Integer getRealCount() {
         return this.realCount.get();
     }
 	
-	public IntegerProperty plannedCountProperty() {
+	public IntegerProperty realCountProperty() {
 		return realCount;
 	}
 }

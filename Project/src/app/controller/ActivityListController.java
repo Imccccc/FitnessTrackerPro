@@ -330,7 +330,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> mondayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> mondayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}
@@ -381,7 +381,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> tuesdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> tuesdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}
@@ -432,7 +432,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> wednesdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> wednesdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}
@@ -483,7 +483,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> thursdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> thursdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}
@@ -534,7 +534,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> fridayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> fridayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}
@@ -585,7 +585,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> saturdayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> saturdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}

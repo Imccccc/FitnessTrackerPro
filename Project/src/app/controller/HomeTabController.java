@@ -8,22 +8,25 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import app.model.Activity;
+import app.model.ActivityPlan;
+import app.model.RealActivityPlan;
+import app.model.Unit;
 import app.MainApp;
 
 
 public class HomeTabController {
 	@FXML
-	private TableView<Activity> HomePageTable;
+	private TableView<RealActivityPlan> HomePageTable;
     @FXML
-    private TableColumn<Activity, String> ActivityName;
+    private TableColumn<RealActivityPlan, String> ActivityName;
     @FXML
-    private TableColumn<Activity, Number> PlanCount;
+    private TableColumn<RealActivityPlan, Number> PlanCount;
     @FXML
-    private TableColumn<Activity, Number> UserCount;
+    private TableColumn<RealActivityPlan, Number> UserCount;
     @FXML
     private Label HomepageLabel;
     
-    private ObservableList<Activity> activityData = FXCollections.observableArrayList();
+    private ObservableList<RealActivityPlan> activityData = FXCollections.observableArrayList();
 
     
     // Reference to the main application.
@@ -35,13 +38,13 @@ public class HomeTabController {
      */
     
     public HomeTabController() {
-    	activityData.add(new Activity("c1", 1));
-    	activityData.add(new Activity("c2", 2));
-    	activityData.add(new Activity("c3", 3));
-    	activityData.add(new Activity("c4", 4));
-    	activityData.add(new Activity("c5", 5));
-    	activityData.add(new Activity("c6", 6));
-    	activityData.add(new Activity("c7", 7));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c1", Unit.TIMES,15), 0));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c2", Unit.TIMES,20), 0));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c3", Unit.TIMES,35), 0));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c4", Unit.TIMES,5), 0));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c5", Unit.TIMES,25), 0));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c6", Unit.TIMES,15), 0));
+    	activityData.add(new RealActivityPlan(new ActivityPlan("c7", Unit.TIMES,15), 0));
     }
     
     /**
@@ -51,9 +54,9 @@ public class HomeTabController {
     @FXML
     private void initialize() {
         // Initialize the person table with the two columns.
-    	ActivityName.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	PlanCount.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
-    	UserCount.setCellValueFactory(cellData -> cellData.getValue().userCountProperty());
+    	ActivityName.setCellValueFactory(cellData -> cellData.getValue().getActivityPlan().getActivity().ActvityNameProperty());
+    	PlanCount.setCellValueFactory(cellData -> cellData.getValue().getActivityPlan().plannedCountProperty());
+    	UserCount.setCellValueFactory(cellData -> cellData.getValue().realCountProperty());
     	
         HomePageTable.setItems(activityData);
     }
