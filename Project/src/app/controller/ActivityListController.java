@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.controlsfx.dialog.Dialogs;
 
+import com.apple.eawt.AppEvent.PrintFilesEvent;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,8 @@ import app.model.Unit;
 public class ActivityListController {
 	private boolean dragable =false;
 	private String dragFrom = "";
+	private boolean removeAct = false;
+	private int removeIndex = -1;
 	
 	@FXML
 	private Button editPlanButton;
@@ -182,6 +185,17 @@ public class ActivityListController {
     	dragable = !dragable;
     }
     
+    @FXML
+    public void clearPlanButtonClicked(){
+    	sundayActivities.clear();
+    	mondayActivities.clear();
+    	tuesdayActivities.clear();
+    	wednesdayActivities.clear();
+    	thursdayActivities.clear();
+    	fridayActivities.clear();
+    	saturdayActivities.clear();
+    }
+    
     private void initializeListeners()
     {
     	activityList.setOnDragDetected(new EventHandler<MouseEvent>()
@@ -196,65 +210,71 @@ public class ActivityListController {
     				ClipboardContent content = new ClipboardContent();
     				String copyString = activityList.getSelectionModel().getSelectedItem().getActvityName()
     						+"|"+activityList.getSelectionModel().getSelectedItem().getUnit().toString();
+    				//System.out.println(copyString);
     				content.putString(copyString);
     				dragBoard.setContent(content);
     			}
     		}
-    	});
-    
-    	
+    	});    
+  	
     	activityList.setOnDragDone(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("AsetOnDragDone");    
-    			// This is not the ideal place to remove the player because the drag might not have been exited on the target.
-    			// String player = dragEvent.getDragboard().getString();
-    			// playersList.remove(new Player(player));
+    			//System.out.println("activityList->setOnDragDone");    
+
     		}
     	});
-    
+
+    	
+    	
     	sundayList.setOnDragDetected(new EventHandler<MouseEvent>()
     	{
     		@Override
     		public void handle(MouseEvent event)
     		{
-    			if(dragable){
-    				System.out.println("SsetOnDragDetected");
-    				System.out.printf("%s %s\n", Unit.TIMES.toString(),Unit.MINUTE.toString());
+    			if(dragable && sundayActivities.size()>0){
+    				System.out.println("sunday->setOnDragDetected");
     				dragFrom = "sundayList";
     				Dragboard dragBoard = sundayList.startDragAndDrop(TransferMode.MOVE);
     				ClipboardContent content = new ClipboardContent();
-    				String copyString = sundayList.getSelectionModel().getSelectedItem().getActivity().getActvityName()+"|"+
-    						sundayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				// Format String as: Name|Unit|Count
+    				String copyString = sundayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + sundayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + sundayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
     				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = sundayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
     				dragBoard.setContent(content);
     			}
     		}
-    	});
-    
+    	});   
     	
     	sundayList.setOnDragDone(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			System.out.println("setOnDragDone");    
-    			// This is not the ideal place to remove the player because the drag might not have been exited on the target.
-    			// String player = dragEvent.getDragboard().getString();
-    			// playersList.remove(new Player(player));
+    			System.out.println("sunday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				sundayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(sundayActivities.size());
+    			}
+    			removeIndex = -1;
     		}
-    	});
-    	
-    	
+    	});   	
     	
     	sundayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("sunday->setOnDragEntered");    
     			sundayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -264,7 +284,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("sunday->setOnDragExited");  
     			sundayList.setBlendMode(null);
     		}
     	});
@@ -274,7 +294,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("sunday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -284,29 +304,84 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			if(dragFrom.equals("sundayList")) return;
-    			System.out.println("setOnDragDropped");
+    			System.out.println("sunday->setOnDragDropped");
+    			if(dragFrom.equals("sundayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> sundayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> sundayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				sundayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
+    	
+    	
+    	
+    	mondayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable && mondayActivities.size()>0){
+    				System.out.println("monday->setOnDragDetected");
+    				dragFrom = "mondayList";
+    				Dragboard dragBoard = mondayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				// Format String as: Name|Unit|Count
+    				String copyString = mondayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + mondayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + mondayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
+    				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = mondayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});   
+    	
+    	mondayList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("monday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				mondayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(mondayActivities.size());
+    			}
+    			removeIndex = -1;
+    		}
+    	});   	
     	
     	mondayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("monday->setOnDragEntered");    
     			mondayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -316,7 +391,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("monday->setOnDragExited");  
     			mondayList.setBlendMode(null);
     		}
     	});
@@ -326,7 +401,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("monday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -336,28 +411,85 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			System.out.println("monday->setOnDragDropped");
+    			if(dragFrom.equals("mondayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> mondayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> mondayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				mondayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
+    	
+    	
+    	
+
+    	tuesdayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable && tuesdayActivities.size()>0){
+    				System.out.println("tuesday->setOnDragDetected");
+    				dragFrom = "tuesdayList";
+    				Dragboard dragBoard = tuesdayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				// Format String as: Name|Unit|Count
+    				String copyString = tuesdayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + tuesdayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + tuesdayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
+    				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = tuesdayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});   
+    	
+    	tuesdayList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("tuesday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				tuesdayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(tuesdayActivities.size());
+    			}
+    			removeIndex = -1;
+    		}
+    	});   	
     	
     	tuesdayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("tuesday->setOnDragEntered");    
     			tuesdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -367,7 +499,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("tuesday->setOnDragExited");  
     			tuesdayList.setBlendMode(null);
     		}
     	});
@@ -377,7 +509,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("tuesday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -387,28 +519,84 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			System.out.println("tuesday->setOnDragDropped");
+    			if(dragFrom.equals("tuesdayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> tuesdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> tuesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				tuesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
+    	
+    	
+    	
+    	wednesdayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable && wednesdayActivities.size()>0){
+    				System.out.println("wednesday->setOnDragDetected");
+    				dragFrom = "wednesdayList";
+    				Dragboard dragBoard = wednesdayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				// Format String as: Name|Unit|Count
+    				String copyString = wednesdayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + wednesdayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + wednesdayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
+    				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = wednesdayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});   
+    	
+    	wednesdayList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("wednesday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				wednesdayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(wednesdayActivities.size());
+    			}
+    			removeIndex = -1;
+    		}
+    	});   	
     	
     	wednesdayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("wednesday->setOnDragEntered");    
     			wednesdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -418,7 +606,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("wednesday->setOnDragExited");  
     			wednesdayList.setBlendMode(null);
     		}
     	});
@@ -428,7 +616,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("wednesday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -438,28 +626,84 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			System.out.println("wednesday->setOnDragDropped");
+    			if(dragFrom.equals("wednesdayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> wednesdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> wednesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				wednesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
+    	
+    	
+    	
+    	thursdayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable && thursdayActivities.size()>0){
+    				System.out.println("thursday->setOnDragDetected");
+    				dragFrom = "thursdayList";
+    				Dragboard dragBoard = thursdayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				// Format String as: Name|Unit|Count
+    				String copyString = thursdayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + thursdayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + thursdayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
+    				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = thursdayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});   
+    	
+    	thursdayList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("thursday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				thursdayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(thursdayActivities.size());
+    			}
+    			removeIndex = -1;
+    		}
+    	});   	
     	
     	thursdayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("thursday->setOnDragEntered");    
     			thursdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -469,7 +713,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("thursday->setOnDragExited");  
     			thursdayList.setBlendMode(null);
     		}
     	});
@@ -479,7 +723,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("thursday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -489,28 +733,84 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			System.out.println("thursday->setOnDragDropped");
+    			if(dragFrom.equals("thursdayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> thursdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> thursdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				thursdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
+    	
+    	
+    	
+    	fridayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable && fridayActivities.size()>0){
+    				System.out.println("friday->setOnDragDetected");
+    				dragFrom = "fridayList";
+    				Dragboard dragBoard = fridayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				// Format String as: Name|Unit|Count
+    				String copyString = fridayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + fridayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + fridayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
+    				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = fridayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});   
+    	
+    	fridayList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("friday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				fridayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(fridayActivities.size());
+    			}
+    			removeIndex = -1;
+    		}
+    	});   	
     	
     	fridayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("friday->setOnDragEntered");    
     			fridayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -520,7 +820,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("friday->setOnDragExited");  
     			fridayList.setBlendMode(null);
     		}
     	});
@@ -530,7 +830,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("friday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -540,28 +840,84 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			System.out.println("friday->setOnDragDropped");
+    			if(dragFrom.equals("fridayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> fridayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> fridayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				fridayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
+    	
+    	
+    	
+    	saturdayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable && saturdayActivities.size()>0){
+    				System.out.println("saturday->setOnDragDetected");
+    				dragFrom = "saturdayList";
+    				Dragboard dragBoard = saturdayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				// Format String as: Name|Unit|Count
+    				String copyString = saturdayList.getSelectionModel().getSelectedItem().getActivity().getActvityName() +
+    						"|" + saturdayList.getSelectionModel().getSelectedItem().getActivity().getUnit().toString() +
+    						"|" + saturdayList.getSelectionModel().getSelectedItem().getPlannedCount();
+    				//System.out.println(copyString);
+    				content.putString(copyString);
+    				removeAct = true;
+    				removeIndex = saturdayList.getSelectionModel().getSelectedIndex();
+    				//System.out.println(removeIndex);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});   
+    	
+    	saturdayList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("saturday->setOnDragDone");    
+    			if(removeAct){
+    				//remove that selected activity
+    				saturdayActivities.remove(removeIndex);
+    				removeAct = false;
+    				//System.out.println(saturdayActivities.size());
+    			}
+    			removeIndex = -1;
+    		}
+    	});   	
     	
     	saturdayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragEntered");    
+    			//System.out.println("saturday->setOnDragEntered");    
     			saturdayList.setBlendMode(BlendMode.DIFFERENCE);
     		}
     	});
@@ -571,7 +927,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragExited");  
+    			//System.out.println("saturday->setOnDragExited");  
     			saturdayList.setBlendMode(null);
     		}
     	});
@@ -581,7 +937,7 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragOver");
+    			//System.out.println("saturday->setOnDragOver");
     			dragEvent.acceptTransferModes(TransferMode.MOVE);
     		}
     	});
@@ -591,18 +947,32 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			System.out.println("saturday->setOnDragDropped");
+    			if(dragFrom.equals("saturdayList")){ 
+    				removeAct = false;
+    				return;
+    			}
     			String newActivity = dragEvent.getDragboard().getString();
- 
-    			// Pop up a dialog to accept planed count
-    			Optional<String> response = Dialogs.create()
-    			        .title("Text Input Count")
-    			        .message("Please enter your planned count:")
-    			        .showTextInput("15");
-
-    			// Add activity to the correspond observableList
-    			response.ifPresent(count -> saturdayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
-   
+    			// Split the string by "|"
+    			System.out.println(newActivity);
+				String[] info = newActivity.split("\\|");
+				//for(String string : info){
+				//	System.out.println(string);
+				//}
+				
+    			if(dragFrom.equals("activityList")){     				
+    				// Pop up a dialog to accept planed count
+    				Optional<String> response = Dialogs.create()
+    						.title("Text Input Count")
+    						.message("Please enter your planned count:")
+    						.showTextInput("15");
+    			
+    				// Add activity to the correspond observableList
+    				response.ifPresent(count -> saturdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    			}
+    			else{// Comes from other dayList
+    				saturdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
+    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});

@@ -24,7 +24,7 @@
       		                          <children>
         	                             <Button fx:id="editPlanButton" layoutX="192.0" layoutY="340.0" mnemonicParsing="false" onAction="#editPlanButtonClicked" text="Edit" />
             	                         <Button layoutX="247.0" layoutY="340.0" mnemonicParsing="false" text="Share" />
-                	                     <Button layoutX="302.0" layoutY="340.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="53.0" text="Clear" />
+                	                     <Button fx:id="clearPlanButton" layoutX="302.0" layoutY="340.0" mnemonicParsing="false" onAction="#clearPlanButtonClicked" prefHeight="23.0" prefWidth="53.0" text="Clear" />
                     		           </children>
                                  </HBox>
                	               <SplitPane dividerPositions="0.1428, 0.2856, 0.4284, 0.5714, 0.7142, 0.8571" layoutX="12.0" layoutY="42.0" prefHeight="276.0" prefWidth="490.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="62.0">
