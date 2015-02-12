@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -23,7 +24,10 @@ import app.model.Activity;
 
 
 public class ActivityListController {
-
+	private boolean dragable =false;
+	private String dragFrom = "";
+	@FXML
+	private Button editPlanButton;
 	@FXML
 	private ListView<String> activityList;
 	@FXML
@@ -149,6 +153,16 @@ public class ActivityListController {
         //personTable.setItems(mainApp.getPersonData());
     }
     
+    @FXML
+    public void editPlanButtonClicked(){
+    	if(dragable){
+    		editPlanButton.setText("Edit");
+    	}
+    	else{
+    		editPlanButton.setText("Finish");
+    	}
+    	dragable = !dragable;
+    }
     
     private void initializeListeners()
     {
@@ -157,16 +171,50 @@ public class ActivityListController {
     		@Override
     		public void handle(MouseEvent event)
     		{
-    			//System.out.println("setOnDragDetected");
-    			Dragboard dragBoard = activityList.startDragAndDrop(TransferMode.MOVE);
-    			ClipboardContent content = new ClipboardContent();
-    			content.putString(activityList.getSelectionModel().getSelectedItem());
-    			dragBoard.setContent(content);
+    			if(dragable){
+    				//System.out.println("setOnDragDetected");
+    				dragFrom = "activityList";
+    				Dragboard dragBoard = activityList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				content.putString(activityList.getSelectionModel().getSelectedItem());
+    				dragBoard.setContent(content);
+    			}
     		}
     	});
     
     	
     	activityList.setOnDragDone(new EventHandler<DragEvent>()
+    	{
+    		@Override
+    		public void handle(DragEvent dragEvent)
+    		{
+    			System.out.println("AsetOnDragDone");    
+    			// This is not the ideal place to remove the player because the drag might not have been exited on the target.
+    			// String player = dragEvent.getDragboard().getString();
+    			// playersList.remove(new Player(player));
+    		}
+    	});
+    
+    	sundayList.setOnDragDetected(new EventHandler<MouseEvent>()
+    	{
+    		@Override
+    		public void handle(MouseEvent event)
+    		{
+    			if(dragable){
+    				System.out.println("SsetOnDragDetected");
+    				dragFrom = "sundayList";
+    				Dragboard dragBoard = sundayList.startDragAndDrop(TransferMode.MOVE);
+    				ClipboardContent content = new ClipboardContent();
+    				String copyString = sundayList.getSelectionModel().getSelectedItem().getActvityName()+"|"+
+    						sundayList.getSelectionModel().getSelectedItem().getPlanCount();
+    				content.putString(copyString);
+    				dragBoard.setContent(content);
+    			}
+    		}
+    	});
+    
+    	
+    	sundayList.setOnDragDone(new EventHandler<DragEvent>()
     	{
     		@Override
     		public void handle(DragEvent dragEvent)
@@ -177,7 +225,9 @@ public class ActivityListController {
     			// playersList.remove(new Player(player));
     		}
     	});
-    
+    	
+    	
+    	
     	sundayList.setOnDragEntered(new EventHandler<DragEvent>()
     	{
     		@Override
@@ -213,7 +263,8 @@ public class ActivityListController {
     		@Override
     		public void handle(DragEvent dragEvent)
     		{
-    			//System.out.println("setOnDragDropped");
+    			if(dragFrom.equals("sundayList")) return;
+    			System.out.println("setOnDragDropped");
     			String newActivity = dragEvent.getDragboard().getString();
  
     			// Pop up a dialog to accept planed count
