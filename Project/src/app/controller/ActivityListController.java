@@ -3,9 +3,7 @@ package app.controller;
 import java.util.Optional;
 
 import org.controlsfx.dialog.Dialogs;
-import org.omg.CORBA.PRIVATE_MEMBER;
 
-import com.sun.javafx.print.Units;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,7 +32,9 @@ public class ActivityListController {
 	@FXML
 	private Button editPlanButton;
 	@FXML
-	private ListView<String> activityList;
+	private TableView<Activity> activityList;
+	@FXML
+	private TableColumn<Activity, String> nameList;
 	@FXML
 	private TableView<ActivityPlan> sundayList;
 	@FXML
@@ -78,7 +78,7 @@ public class ActivityListController {
 	@FXML
 	private TableColumn<ActivityPlan, Number> saturdayList_cntCol;
 	
-	public static final ObservableList<String> activities = 
+	public static final ObservableList<Activity> activities = 
 	        FXCollections.observableArrayList();
 	public static final ObservableList<ActivityPlan> sundayActivities = 
 	        FXCollections.observableArrayList();
@@ -113,12 +113,25 @@ public class ActivityListController {
     private void initialize() {
     	
         // Initialize the list with the activities.
-    	activities.addAll("Adam", "Alex", "Alfred", "Albert",
-                "Brenda", "Connie", "Derek", "Donny", 
-                "Lynne", "Myrtle", "Rose", "Rudolph", 
-                "Tony", "Trudy", "Williams", "Zach");
+    	activities.addAll(new Activity("Adam", Unit.TIMES),
+    						new Activity("Alex", Unit.TIMES),
+    						new Activity("Alfred", Unit.TIMES),
+    						new Activity("Albert", Unit.TIMES),
+    						new Activity("Brenda", Unit.TIMES),
+    						new Activity("Connie", Unit.TIMES),
+    						new Activity("Derek", Unit.TIMES),
+    						new Activity("Donny", Unit.TIMES),
+    						new Activity("Lynne", Unit.TIMES),
+    						new Activity("Myrtle", Unit.TIMES),
+    						new Activity("Rose", Unit.TIMES),
+    						new Activity("Rudolph", Unit.TIMES),
+    						new Activity("Tony", Unit.TIMES),
+    						new Activity("Trudy", Unit.TIMES),
+    						new Activity("Williams", Unit.TIMES),
+    						new Activity("Zach", Unit.TIMES));
     	//sundayActivities.addAll("");
     	activityList.setItems(activities);
+    	nameList.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
     	
     	// Set all 7 days data binding
     	sundayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
@@ -181,7 +194,9 @@ public class ActivityListController {
     				dragFrom = "activityList";
     				Dragboard dragBoard = activityList.startDragAndDrop(TransferMode.MOVE);
     				ClipboardContent content = new ClipboardContent();
-    				content.putString(activityList.getSelectionModel().getSelectedItem());
+    				String copyString = activityList.getSelectionModel().getSelectedItem().getActvityName()
+    						+"|"+activityList.getSelectionModel().getSelectedItem().getUnit().toString();
+    				content.putString(copyString);
     				dragBoard.setContent(content);
     			}
     		}
@@ -207,6 +222,7 @@ public class ActivityListController {
     		{
     			if(dragable){
     				System.out.println("SsetOnDragDetected");
+    				System.out.printf("%s %s\n", Unit.TIMES.toString(),Unit.MINUTE.toString());
     				dragFrom = "sundayList";
     				Dragboard dragBoard = sundayList.startDragAndDrop(TransferMode.MOVE);
     				ClipboardContent content = new ClipboardContent();
