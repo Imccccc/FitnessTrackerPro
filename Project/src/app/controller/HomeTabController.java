@@ -1,5 +1,9 @@
 package app.controller;
 
+import java.util.Optional;
+
+import org.controlsfx.dialog.Dialogs;
+
 import javafx.beans.property.IntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -69,6 +73,19 @@ public class HomeTabController {
         this.mainApp = mainApp;
 
         // Add observable list data to the table
+    }
+    
+    public void clickHandler(){
+    	RealActivityPlan temp;
+    	temp = HomePageTable.getSelectionModel().getSelectedItem();
+    	if(temp != null){
+   			Optional<String> response = Dialogs.create()
+			        .title("Text Input Count")
+			        .message("Please enter your planned count:")
+			        .showTextInput("15");
+   			response.ifPresent(count -> temp.setRealCount(Integer.parseInt(count)));
+    	}
+    	
     }
     
     

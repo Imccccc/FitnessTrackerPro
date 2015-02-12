@@ -6,39 +6,31 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.HomeTabController">
+<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.HomeTabController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="10.0">
+      <LineChart fx:id="HomePageChart" prefHeight="413.0" prefWidth="616.0" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="345.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="84.0">
+         <xAxis>
+            <CategoryAxis side="BOTTOM" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis side="LEFT" />
+         </yAxis>
+      </LineChart>
+      <Label fx:id="HomepageLabel" layoutX="544.0" layoutY="34.0" prefHeight="39.0" prefWidth="170.0" text="Plan For today" />
+      <AnchorPane layoutX="26.0" layoutY="34.0" prefHeight="450.0" prefWidth="286.0">
          <children>
-            <AnchorPane fx:id="Hometab" layoutX="10.0" layoutY="10.0" prefHeight="362.0" prefWidth="600.0">
-               <children>
-                  <LineChart fx:id="HomePageChart" layoutX="256.0" layoutY="38.0" prefHeight="210.0" prefWidth="329.0" AnchorPane.bottomAnchor="119.0" AnchorPane.leftAnchor="256.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="38.0">
-                     <xAxis>
-                        <CategoryAxis side="BOTTOM" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis side="LEFT" />
-                     </yAxis>
-                  </LineChart>
-                  <Label fx:id="HomepageLabel" layoutX="70.0" layoutY="14.0" prefHeight="15.0" prefWidth="163.0" text="Plan For today" />
-                  <AnchorPane layoutX="26.0" layoutY="38.0" prefHeight="309.0" prefWidth="207.0">
-                     <children>
-                        <TableView fx:id="HomePageTable" prefHeight="338.0" prefWidth="407.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                           <columns>
-                              <TableColumn fx:id="ActivityName" prefWidth="60.0" text="Activity" />
-                              <TableColumn fx:id="PlanCount" prefWidth="146.0" text="Count1" />
-                              <TableColumn fx:id="UserCount" prefWidth="146.0" text="Count2" />
-                           </columns>
-                        </TableView>
-                     </children>
-                  </AnchorPane>
-                  <TextField layoutX="347.0" layoutY="280.0" prefHeight="10.0" prefWidth="44.0" />
-               </children>
-            </AnchorPane>
+            <TableView fx:id="HomePageTable" onMouseClicked="#clickHandler" prefHeight="490.0" prefWidth="286.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <columns>
+                  <TableColumn fx:id="ActivityName" prefWidth="60.0" text="Activity" />
+                  <TableColumn fx:id="PlanCount" prefWidth="146.0" text="Count1" />
+                  <TableColumn fx:id="UserCount" prefWidth="146.0" text="Count2" />
+               </columns>
+            </TableView>
          </children>
       </AnchorPane>
+      <Button layoutX="112.0" layoutY="523.0" mnemonicParsing="false" text="Record My Data" />
    </children>
 </AnchorPane>
