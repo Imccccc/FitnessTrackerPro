@@ -7,12 +7,9 @@ import javafx.beans.property.StringProperty;
 
 /**
  * 
- * Model class for a Person.
+ * Model class for a Activity.
  *
  */
-enum Unit {
-	TIMES, MINUTE
-	}
 
 public class Activity {
     private final StringProperty activityName;

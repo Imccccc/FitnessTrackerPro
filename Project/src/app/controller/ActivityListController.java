@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.controlsfx.dialog.Dialogs;
 import org.omg.CORBA.PRIVATE_MEMBER;
 
+import com.sun.javafx.print.Units;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -21,73 +23,76 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import app.MainApp;
 import app.model.Activity;
+import app.model.ActivityPlan;
+import app.model.Unit;
 
 
 public class ActivityListController {
 	private boolean dragable =false;
 	private String dragFrom = "";
+	
 	@FXML
 	private Button editPlanButton;
 	@FXML
 	private ListView<String> activityList;
 	@FXML
-	private TableView<Activity> sundayList;
+	private TableView<ActivityPlan> sundayList;
 	@FXML
-	private TableColumn<Activity, String> sundayList_actCol;
+	private TableColumn<ActivityPlan, String> sundayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> sundayList_cntCol;
+	private TableColumn<ActivityPlan, Number> sundayList_cntCol;
 	@FXML
-	private TableView<Activity> mondayList;
+	private TableView<ActivityPlan> mondayList;
 	@FXML
-	private TableColumn<Activity, String> mondayList_actCol;
+	private TableColumn<ActivityPlan, String> mondayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> mondayList_cntCol;
+	private TableColumn<ActivityPlan, Number> mondayList_cntCol;
 	@FXML
-	private TableView<Activity> tuesdayList;
+	private TableView<ActivityPlan> tuesdayList;
 	@FXML
-	private TableColumn<Activity, String> tuesdayList_actCol;
+	private TableColumn<ActivityPlan, String> tuesdayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> tuesdayList_cntCol;
+	private TableColumn<ActivityPlan, Number> tuesdayList_cntCol;
 	@FXML
-	private TableView<Activity> wednesdayList;
+	private TableView<ActivityPlan> wednesdayList;
 	@FXML
-	private TableColumn<Activity, String> wednesdayList_actCol;
+	private TableColumn<ActivityPlan, String> wednesdayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> wednesdayList_cntCol;
+	private TableColumn<ActivityPlan, Number> wednesdayList_cntCol;
 	@FXML
-	private TableView<Activity> thursdayList;
+	private TableView<ActivityPlan> thursdayList;
 	@FXML
-	private TableColumn<Activity, String> thursdayList_actCol;
+	private TableColumn<ActivityPlan, String> thursdayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> thursdayList_cntCol;
+	private TableColumn<ActivityPlan, Number> thursdayList_cntCol;
 	@FXML
-	private TableView<Activity> fridayList;
+	private TableView<ActivityPlan> fridayList;
 	@FXML
-	private TableColumn<Activity, String> fridayList_actCol;
+	private TableColumn<ActivityPlan, String> fridayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> fridayList_cntCol;
+	private TableColumn<ActivityPlan, Number> fridayList_cntCol;
 	@FXML
-	private TableView<Activity> saturdayList;
+	private TableView<ActivityPlan> saturdayList;
 	@FXML
-	private TableColumn<Activity, String> saturdayList_actCol;
+	private TableColumn<ActivityPlan, String> saturdayList_actCol;
 	@FXML
-	private TableColumn<Activity, Number> saturdayList_cntCol;
+	private TableColumn<ActivityPlan, Number> saturdayList_cntCol;
 	
 	public static final ObservableList<String> activities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> sundayActivities = 
+	public static final ObservableList<ActivityPlan> sundayActivities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> mondayActivities = 
+	public static final ObservableList<ActivityPlan> mondayActivities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> tuesdayActivities = 
+	public static final ObservableList<ActivityPlan> tuesdayActivities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> wednesdayActivities = 
+	public static final ObservableList<ActivityPlan> wednesdayActivities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> thursdayActivities = 
+	public static final ObservableList<ActivityPlan> thursdayActivities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> fridayActivities = 
+	public static final ObservableList<ActivityPlan> fridayActivities = 
 	        FXCollections.observableArrayList();
-	public static final ObservableList<Activity> saturdayActivities = 
+	public static final ObservableList<ActivityPlan> saturdayActivities = 
 	        FXCollections.observableArrayList();
 	
 	// Reference to the main application.
@@ -116,26 +121,26 @@ public class ActivityListController {
     	activityList.setItems(activities);
     	
     	// Set all 7 days data binding
-    	sundayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	sundayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	sundayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	sundayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	sundayList.setItems(sundayActivities);
-    	mondayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	mondayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	mondayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	mondayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	mondayList.setItems(mondayActivities);
-    	tuesdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	tuesdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	tuesdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	tuesdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	tuesdayList.setItems(tuesdayActivities);
-    	wednesdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	wednesdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	wednesdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	wednesdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	wednesdayList.setItems(wednesdayActivities);
-    	thursdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	thursdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	thursdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	thursdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	thursdayList.setItems(thursdayActivities);
-    	fridayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	fridayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	fridayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	fridayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	fridayList.setItems(fridayActivities);
-    	saturdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
-    	saturdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().planCountProperty());
+    	saturdayList_actCol.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
+    	saturdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
     	saturdayList.setItems(saturdayActivities);
     	
     	initializeListeners();
@@ -205,8 +210,8 @@ public class ActivityListController {
     				dragFrom = "sundayList";
     				Dragboard dragBoard = sundayList.startDragAndDrop(TransferMode.MOVE);
     				ClipboardContent content = new ClipboardContent();
-    				String copyString = sundayList.getSelectionModel().getSelectedItem().getActvityName()+"|"+
-    						sundayList.getSelectionModel().getSelectedItem().getPlanCount();
+    				String copyString = sundayList.getSelectionModel().getSelectedItem().getActivity().getActvityName()+"|"+
+    						sundayList.getSelectionModel().getSelectedItem().getPlannedCount();
     				content.putString(copyString);
     				dragBoard.setContent(content);
     			}
@@ -274,7 +279,7 @@ public class ActivityListController {
     			        .showTextInput("15");
 
     			// Add activity to the correspond observableList
-    			response.ifPresent(count -> sundayActivities.add(new Activity(newActivity, Integer.parseInt(count))));
+    			response.ifPresent(count -> sundayActivities.add(new ActivityPlan(newActivity, Unit.TIMES, Integer.parseInt(count))));
    
     			dragEvent.setDropCompleted(true);
     		}
