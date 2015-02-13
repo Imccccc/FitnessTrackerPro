@@ -136,7 +136,7 @@ public abstract class DBconnector {
 		}
 	}
 	
-	public static int getExerciseAmount(String username){//0seccess  -1fail
+	public static ArrayList<app.model.dayAmount> getExerciseAmount(String username){//0seccess  -1fail
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
@@ -150,7 +150,7 @@ public abstract class DBconnector {
 			System.out.println("Successfully select");
 			return ret;
 		}catch(SQLException e){
-			return -1;
+			return null;
 		}
 	}
 }

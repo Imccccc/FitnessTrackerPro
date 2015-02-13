@@ -3,9 +3,6 @@ package app.controller;
 import java.util.Optional;
 
 import org.controlsfx.dialog.Dialogs;
-
-import com.apple.eawt.AppEvent.PrintFilesEvent;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
