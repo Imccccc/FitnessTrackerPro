@@ -1,6 +1,7 @@
 package DBconnector;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public abstract class DBconnector {
 	
@@ -19,7 +20,8 @@ public abstract class DBconnector {
 		login("lhc","123");
 		//createActivity("qwe", 0);
 		//createActivity("asd", 1);
-		reportToday(5.8);
+		//reportToday(5.9);
+		getExerciseAmount("lhc\\'");
 	}
 	
 	public static boolean isLoggedIn(){
@@ -134,6 +136,22 @@ public abstract class DBconnector {
 		}
 	}
 	
-	
+	public static int getExerciseAmount(String username){//0seccess  -1fail
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
+			ArrayList<app.model.dayAmount> ret=new ArrayList<app.model.dayAmount>();
+			while(result.next()){
+				app.model.dayAmount temp=new app.model.dayAmount();
+				temp.date=result.getDate("date");
+				temp.amount=result.getDouble("calories");
+				ret.add(temp);
+			}
+			System.out.println("Successfully select");
+			return ret;
+		}catch(SQLException e){
+			return -1;
+		}
+	}
 }
 
