@@ -1,5 +1,6 @@
 package DBconnector;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -22,6 +23,8 @@ public abstract class DBconnector {
 		//createActivity("asd", 1);
 		//reportToday(5.9);
 		getExerciseAmount("lhc\\'");
+		
+		getAvgRating(1);
 	}
 	
 	public static boolean isLoggedIn(){
@@ -113,7 +116,22 @@ public abstract class DBconnector {
 			return -1;
 		}
 	}
-	
+	public static double getAvgRating(int planid){
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT avg(rating) from rating where planid = "+planid);
+			Double res = 0.0;
+			if(result.next()){
+				res = result.getDouble(1)*100;	
+				res = (double) Math.round(res)/100;
+				System.out.println("Successfully get avg rating"+ res);
+			}
+			return res;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return -1;
+		}	
+	}
 	public static int reportToday(double calories){//0seccess  -1fail
 		try{
 			Statement stmt = con.createStatement();
