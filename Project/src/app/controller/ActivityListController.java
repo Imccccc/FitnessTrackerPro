@@ -1,5 +1,8 @@
 package app.controller;
 
+import java.sql.Savepoint;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.controlsfx.control.ButtonBar;
@@ -9,6 +12,8 @@ import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -28,9 +33,13 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
+import app.model.DayPlan;
+import app.model.RealActivityPlan;
 import app.model.Unit;
+import app.model.WeekPlan;
 
 
 public class ActivityListController {
@@ -138,7 +147,7 @@ public class ActivityListController {
      */
     @FXML
     private void initialize() {
-    	
+    	loadWeekPlan();
         // Initialize the list with the activities.
     	activities.addAll(new Activity("Adam", Unit.TIMES),
     						new Activity("Alex", Unit.TIMES),
@@ -186,7 +195,25 @@ public class ActivityListController {
     	initializeListeners();
     }
     
-    @FXML
+    private void loadWeekPlan() {
+		loadDayPlan(1, mondayActivities);
+		loadDayPlan(2, tuesdayActivities);
+		loadDayPlan(3, wednesdayActivities);
+		loadDayPlan(4, thursdayActivities);
+		loadDayPlan(5, fridayActivities);
+		loadDayPlan(6, saturdayActivities);
+		loadDayPlan(0, sundayActivities);
+	}
+
+	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
+		DayPlan dayplan = MainApp.weekPlan.getDayPlan(index);
+		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
+            ActivityPlan a = entry.getValue();
+            dayList.add(a);
+        }
+	}
+
+	@FXML
     public void addActivityButtonClicked(){
     	actitvityName = new TextField();
     	ObservableList<String> choices =  FXCollections.observableArrayList();
@@ -225,6 +252,7 @@ public class ActivityListController {
     @FXML
     public void editPlanButtonClicked(){
     	if(dragable){
+    		saveWeekPlan();
     		editPlanButton.setText("Edit");
     	}
     	else{
@@ -233,7 +261,28 @@ public class ActivityListController {
     	dragable = !dragable;
     }
     
-    @FXML
+    private void saveWeekPlan() {
+		modifyDayPlan(1, mondayActivities);
+		modifyDayPlan(2, tuesdayActivities);
+		modifyDayPlan(3, wednesdayActivities);
+		modifyDayPlan(4, thursdayActivities);
+		modifyDayPlan(5, fridayActivities);
+		modifyDayPlan(6, saturdayActivities);
+		modifyDayPlan(0, sundayActivities);
+		
+		// Write weekPlan back to file
+	}
+
+	private void modifyDayPlan(int i, ObservableList<ActivityPlan> activitiesList) {
+		MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>();
+		for(ActivityPlan activityPlan : activitiesList){
+			mapProperty.put(activityPlan.getActivity().getActvityName(), activityPlan);
+		}
+		DayPlan dayPlan = new DayPlan(mapProperty);
+		MainApp.weekPlan.setDayPlan(i, dayPlan);
+	}
+
+	@FXML
     public void clearPlanButtonClicked(){
     	sundayActivities.clear();
     	mondayActivities.clear();

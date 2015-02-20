@@ -3,6 +3,7 @@ package app;
 import java.io.IOException;
 
 import app.model.Activity;
+import app.model.WeekPlan;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-
+	public static WeekPlan weekPlan;
     private Stage primaryStage;
     private AnchorPane rootLayout;
      
