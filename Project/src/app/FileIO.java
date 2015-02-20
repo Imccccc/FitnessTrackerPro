@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.io.*;
 
 public class FileIO {
-	public static void write(Object obj, String path){
+	public static void write(ArrayList al, String path){
 		try {
 			FileOutputStream fos = new FileOutputStream(path);
 			ObjectOutputStream oos=new ObjectOutputStream(fos);
-			oos.writeObject(obj);
+			oos.writeObject(al);
 			oos.close();
 			fos.close();
 		} catch (Exception e) {
@@ -16,31 +16,37 @@ public class FileIO {
 		}
 	}
 	
-	public static Object read(String path){
-		Object ret;
+	public static ArrayList read(String path){
+		FileInputStream fis=null;
+		ObjectInputStream ois=null;
+	
 		try {
-			FileInputStream fis = new FileInputStream(path);
-			ObjectInputStream ois=new ObjectInputStream(fis);
-			ret=ois.readObject();
-			ois.close();
-			fis.close();
+			fis = new FileInputStream(path);
+			ois=new ObjectInputStream(fis);
+			return (ArrayList)ois.readObject();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return null;
+		} finally {
+			try {
+				ois.close();
+				fis.close();
+			} catch (IOException e) {}
 		}
-		return ret;
+		return null;
 	}
 	
 	
 	
 	public static void main(String args[]){
 		TestClass a1=new TestClass();
-		TestClass a2=null;
+		TestClass a2=new TestClass();
 		a1.init();
-		write(a1, "d:\\a.txt");
-		
-		System.out.println((TestClass)read("d:\\a.txt"));
-		
+		a2.init2();
+		ArrayList<TestClass> t=new ArrayList<TestClass>();
+		t.add(a1);
+		t.add(a2);
+		write(t, "d:\\a.txt");
+		System.out.println((ArrayList)read("d:\\a.txt"));
 	}
 }
 
@@ -57,6 +63,14 @@ class TestClass implements Serializable{
 		a.add("qwe1");
 		a.add("qwe2");
 		a.add("qwe3");
+	}
+	public void init2(){
+		i=1232;
+		s="zxc2";
+		a=new ArrayList<String>(3);
+		a.add("qwe12");
+		a.add("qwe22");
+		a.add("qwe32");
 	}
 
 	@Override
