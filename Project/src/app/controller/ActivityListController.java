@@ -2,22 +2,32 @@ package app.controller;
 
 import java.util.Optional;
 
+import org.controlsfx.control.ButtonBar;
+import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.control.action.AbstractAction;
+import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import app.MainApp;
+import javafx.scene.layout.GridPane;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.Unit;
@@ -31,6 +41,8 @@ public class ActivityListController {
 	
 	@FXML
 	private Button editPlanButton;
+	@FXML
+	private Button addActivityButton;
 	@FXML
 	private TableView<Activity> activityList;
 	@FXML
@@ -94,9 +106,24 @@ public class ActivityListController {
 	        FXCollections.observableArrayList();
 	public static final ObservableList<ActivityPlan> saturdayActivities = 
 	        FXCollections.observableArrayList();
+
+	TextField actitvityName;
+	ChoiceBox choiceBox;
 	
-	// Reference to the main application.
-    private MainApp mainApp;
+	final Action actionLogin = new AbstractAction("Confirm") {
+	    // This method is called when the login button is clicked ...
+	    public void handle(ActionEvent ae) {
+	        Dialog d = (Dialog) ae.getSource();
+	        String newActName = actitvityName.getText();
+	        Unit newActUnit = choiceBox.getSelectionModel().getSelectedItem().equals("Times")?Unit.TIMES:Unit.MINUTE;
+	        System.out.println(newActName);
+	        System.out.println(newActUnit.toString());
+	        System.out.println(newActName);
+	        activities.add(new Activity(newActName, newActUnit));
+	        d.hide();
+	    }
+	};
+
 
     /**
      * The constructor.
@@ -129,7 +156,7 @@ public class ActivityListController {
     						new Activity("Trudy", Unit.TIMES),
     						new Activity("Williams", Unit.TIMES),
     						new Activity("Zach", Unit.TIMES));
-    	//sundayActivities.addAll("");
+
     	activityList.setItems(activities);
     	nameList.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
     	
@@ -159,16 +186,40 @@ public class ActivityListController {
     	initializeListeners();
     }
     
-    /**
-     * Is called by the main application to give a reference back to itself.
-     * 
-     * @param mainApp
-     */
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
+    @FXML
+    public void addActivityButtonClicked(){
+    	actitvityName = new TextField();
+    	ObservableList<String> choices =  FXCollections.observableArrayList();
+    	choices.add("Times");
+    	choices.add("Minute");
+    	choiceBox = new ChoiceBox<>(choices); 
+    	choiceBox.setValue("Times");
+    	
+    	Dialog dlg = new Dialog( addActivityButton, "Add new activity");
 
-        // Add observable list data to the table
-        //personTable.setItems(mainApp.getPersonData());
+    	GridPane grid = new GridPane();
+    	grid.setHgap(10);
+    	grid.setVgap(10);
+    	grid.setPadding(new Insets(0, 10, 0, 10));
+
+    	grid.add(new Label("Activity Name:"), 0, 0);
+    	grid.add(actitvityName, 1, 0);
+    	grid.add(new Label("Choose Unit:"), 0, 1);
+    	grid.add(choiceBox, 1, 1);
+
+ 	    ButtonBar.setType(actionLogin, ButtonType.OK_DONE);
+    	actionLogin.disabledProperty().set(true);
+
+        // Do some validation (using the Java 8 lambda syntax).
+    	actitvityName.textProperty().addListener((observable, oldValue, newValue) -> {
+            actionLogin.disabledProperty().set(newValue.trim().isEmpty());
+        });
+    	
+    	dlg.setMasthead("Please add a new activity by entering the activity name and select how this activity will be measured");
+    	dlg.setContent(grid);
+    	dlg.getActions().addAll(actionLogin, Dialog.Actions.CANCEL);
+
+    	dlg.show();
     }
     
     @FXML

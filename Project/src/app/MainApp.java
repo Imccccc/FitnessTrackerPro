@@ -1,8 +1,7 @@
 package app;
 
 import java.io.IOException;
-import app.controller.ActivityListController;
-import app.controller.HomeTabController;
+
 import app.model.Activity;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -10,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
@@ -52,10 +50,6 @@ public class MainApp extends Application {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
             rootLayout = (AnchorPane)loader.load();
-
-            // Give the controller access to the main app.
-            //ActivityListController controller = loader.getController();
-            //controller.setMainApp(this);
             
             // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
