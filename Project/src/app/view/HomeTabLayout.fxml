@@ -31,6 +31,6 @@
             </TableView>
          </children>
       </AnchorPane>
-      <Button layoutX="112.0" layoutY="523.0" mnemonicParsing="false" text="Record My Data" />
+      <Button layoutX="112.0" layoutY="523.0" mnemonicParsing="false" onMouseClicked="#buttonClickHnadler" text="Add New Activity" />
    </children>
 </AnchorPane>

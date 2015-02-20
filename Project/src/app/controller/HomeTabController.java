@@ -4,18 +4,27 @@ import java.util.Optional;
 
 import org.controlsfx.dialog.Dialogs;
 
-import javafx.beans.property.IntegerProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.scene.Node;
+import javafx.scene.control.Dialog;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.util.Pair;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.RealActivityPlan;
 import app.model.Unit;
-import app.MainApp;
 
 
 public class HomeTabController {
@@ -34,7 +43,6 @@ public class HomeTabController {
 
     
     // Reference to the main application.
-    private MainApp mainApp;
 
     /**
      * The constructor.
@@ -69,11 +77,6 @@ public class HomeTabController {
      * Is called by the main application to give a reference back to itself.
      * 
      */
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-
-        // Add observable list data to the table
-    }
     
     public void clickHandler(){
     	RealActivityPlan temp;
@@ -82,11 +85,73 @@ public class HomeTabController {
    			Optional<String> response = Dialogs.create()
 			        .title("Text Input Count")
 			        .message("Please enter your planned count:")
-			        .showTextInput("15");
+			        .showTextInput(Integer.toString(temp.getRealCount()));
    			response.ifPresent(count -> temp.setRealCount(Integer.parseInt(count)));
+    	}
+    }
+    
+    public boolean openNewDialog(){
+    	try{
+    		Dialog<Pair<String, String>> dialog = new Dialog<>();
+    		dialog.setTitle("Add new Activity");
+    		dialog.setHeaderText("Select from the activity from Drop Down"
+    				+ "\nThen input the count");
+
+    		ButtonType loginButtonType = new ButtonType("Record", ButtonData.OK_DONE);
+    		dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+    		
+    		GridPane grid = new GridPane();
+    		grid.setHgap(10);
+    		grid.setVgap(10);
+    		grid.setPadding(new Insets(20, 150, 10, 10));
+    		
+    		ComboBox<String> activitylist = new ComboBox<String>();
+    		activitylist.getItems().addAll(
+    				new String("c1"),
+    				new String("c2"),
+    				new String("c1"));
+    		activitylist.setPromptText("Activity");
+    		
+    		ComboBox<String> unitlist = new ComboBox<String>();
+    		unitlist.getItems().addAll(
+    				new String("time"),
+    				new String("mins"));
+    		unitlist.setPromptText("Unit");
+    		
+    		grid.add(new Label("Activity:"), 0, 0);
+    		grid.add(activitylist, 1, 0);
+    		grid.add(new Label(" Count :"), 0, 1);
+    		grid.add(unitlist, 1, 1);
+
+    		dialog.getDialogPane().setContent(grid);
+    		dialog.setResultConverter(dialogButton -> {
+    		    if (dialogButton == loginButtonType) {
+    		        return new Pair<>(activitylist.getValue() , unitlist.getValue());
+    		    }
+    		    return null;
+    		});
+    		
+    		Optional<Pair<String, String>> result = dialog.showAndWait();
+
+    		result.ifPresent(ActivityUnit -> {
+    		    System.out.println("Activity=" + ActivityUnit.getKey() + ", Unit=" + ActivityUnit.getValue());
+    		    if(ActivityUnit.getKey()!=null && ActivityUnit.getValue() != null){
+    		    	Activity temp = new Activity(ActivityUnit.getKey(), Unit.TIMES);
+    		    }
+    		});
+    		return true;
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		System.out.println("Something wrong");
+    		return false;
     	}
     	
     }
     
+    
+    public void buttonClickHnadler(){
+    	 System.out.println("Button clicked");
+    	 boolean okClicked = openNewDialog();
+    }
     
 }

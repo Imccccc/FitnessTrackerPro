@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.effect.BlendMode;
@@ -17,7 +16,6 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.Unit;
@@ -95,8 +93,6 @@ public class ActivityListController {
 	public static final ObservableList<ActivityPlan> saturdayActivities = 
 	        FXCollections.observableArrayList();
 	
-	// Reference to the main application.
-    private MainApp mainApp;
 
     /**
      * The constructor.
@@ -159,17 +155,6 @@ public class ActivityListController {
     	initializeListeners();
     }
     
-    /**
-     * Is called by the main application to give a reference back to itself.
-     * 
-     * @param mainApp
-     */
-    public void setMainApp(MainApp mainApp) {
-        this.mainApp = mainApp;
-
-        // Add observable list data to the table
-        //personTable.setItems(mainApp.getPersonData());
-    }
     
     @FXML
     public void editPlanButtonClicked(){
