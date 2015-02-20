@@ -1,36 +1,50 @@
 package app;
 
-
 import java.util.ArrayList;
 import java.io.*;
 
 public class FileIO {
-	public static void main(String args[]){
-		A a1=new A();
-		A a2=null;
-		a1.init();
-		
+	public static void write(Object obj, String path){
 		try {
-			FileOutputStream fos = new FileOutputStream("D:\\a.txt");
+			FileOutputStream fos = new FileOutputStream(path);
 			ObjectOutputStream oos=new ObjectOutputStream(fos);
-			oos.writeObject(a1);
+			oos.writeObject(obj);
 			oos.close();
 			fos.close();
-			
-			FileInputStream fis = new FileInputStream("D:\\a.txt");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static Object read(String path){
+		Object ret;
+		try {
+			FileInputStream fis = new FileInputStream(path);
 			ObjectInputStream ois=new ObjectInputStream(fis);
-			a2=(A)ois.readObject();
+			ret=ois.readObject();
 			ois.close();
 			fis.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		System.out.println(a2);
+		return ret;
+	}
+	
+	
+	
+	public static void main(String args[]){
+		TestClass a1=new TestClass();
+		TestClass a2=null;
+		a1.init();
+		write(a1, "d:\\a.txt");
+		
+		System.out.println((TestClass)read("d:\\a.txt"));
 		
 	}
 }
 
-class A implements Serializable{
+class TestClass implements Serializable{
 	private static final long serialVersionUID = 1L;
 	int i;
 	String s;
@@ -47,7 +61,7 @@ class A implements Serializable{
 
 	@Override
 	public String toString() {
-		return "A [i=" + i + ", s=" + s + ", a=" + a + "]";
+		return "TestClass [i=" + i + ", s=" + s + ", a=" + a + "]";
 	}
 	
 	
