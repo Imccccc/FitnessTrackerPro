@@ -24,30 +24,36 @@ public class FileIO {
 			fis = new FileInputStream(path);
 			ois=new ObjectInputStream(fis);
 			return (ArrayList)ois.readObject();
-		} catch (Exception e) {
+		}
+		catch(FileNotFoundException e){
+			return null;
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
 				ois.close();
 				fis.close();
-			} catch (IOException e) {}
+			} catch (Exception e) {
+				return null;
+			}
 		}
 		return null;
 	}
 	
 	
 	
-	public static void main(String args[]){
-		TestClass a1=new TestClass();
-		TestClass a2=new TestClass();
-		a1.init();
-		a2.init2();
-		ArrayList<TestClass> t=new ArrayList<TestClass>();
-		t.add(a1);
-		t.add(a2);
-		write(t, "d:\\a.txt");
-		System.out.println((ArrayList)read("d:\\a.txt"));
-	}
+//	public static void main(String args[]){
+//		TestClass a1=new TestClass();
+//		TestClass a2=new TestClass();
+//		a1.init();
+//		a2.init2();
+//		ArrayList<TestClass> t=new ArrayList<TestClass>();
+//		t.add(a1);
+//		t.add(a2);
+//		write(t, "d:\\a.txt");
+//		System.out.println((ArrayList)read("d:\\a.txt"));
+//	}
 }
 
 class TestClass implements Serializable{

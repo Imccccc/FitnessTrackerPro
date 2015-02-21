@@ -1,6 +1,7 @@
 package app;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import app.model.Activity;
 import app.model.WeekPlan;
@@ -37,12 +38,14 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("AddressApp");
-
+        // Load weekPlan
+        weekPlan = ClassSerializer.WeekPlanUnserializer();
         initRootLayout();
 
     }
-
-    /**
+    
+    
+	/**
      * Initializes the root layout.
      */
     public void initRootLayout() {
