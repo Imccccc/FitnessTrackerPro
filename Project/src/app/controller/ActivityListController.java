@@ -1,8 +1,6 @@
 package app.controller;
 
-import java.sql.Savepoint;
-import java.util.ArrayList;
-import java.util.Map;
+
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -37,7 +35,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import app.ClassSerializer;
-import app.FileIO;
 import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
@@ -104,8 +101,8 @@ public class ActivityListController {
 	@FXML
 	private TableColumn<ActivityPlan, Number> saturdayList_cntCol;
 	
-	public static final ObservableList<Activity> activities = 
-	        FXCollections.observableArrayList();
+//	public static final ObservableList<Activity> activities = 
+//	        FXCollections.observableArrayList();
 	public static final ObservableList<ActivityPlan> sundayActivities = 
 	        FXCollections.observableArrayList();
 	public static final ObservableList<ActivityPlan> mondayActivities = 
@@ -130,11 +127,11 @@ public class ActivityListController {
 	        Dialog d = (Dialog) ae.getSource();
 	        String newActName = actitvityName.getText();
 	        Unit newActUnit = choiceBox.getSelectionModel().getSelectedItem().equals("Times")?Unit.TIMES:Unit.MINUTE;
-	        System.out.println(newActName);
-	        System.out.println(newActUnit.toString());
-	        System.out.println(newActName);
-	        activities.add(new Activity(newActName, newActUnit));
-	        ClassSerializer.ActivitySerializer(activities);
+//	        System.out.println(newActName);
+//	        System.out.println(newActUnit.toString());
+//	        System.out.println(newActName);
+	        MainApp.activities.add(new Activity(newActName, newActUnit));
+	        ClassSerializer.ActivitySerializer(MainApp.activities);
 	        d.hide();
 	    }
 	};
@@ -153,7 +150,7 @@ public class ActivityListController {
      */
     @FXML
     private void initialize() {
-    	activities.addAll(ClassSerializer.ActivityUnserializer());
+    	// Load weekPlan into plan table
     	loadWeekPlan();
         // Initialize the list with the activities.
 //    	activities.addAll(new Activity("Adam", Unit.TIMES),
@@ -173,7 +170,7 @@ public class ActivityListController {
 //    						new Activity("Williams", Unit.TIMES),
 //    						new Activity("Zach", Unit.TIMES));
 
-    	activityList.setItems(activities);
+    	activityList.setItems(MainApp.activities);
     	nameList.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
     	
     	// Set all 7 days data binding
@@ -310,6 +307,7 @@ public class ActivityListController {
     	thursdayActivities.clear();
     	fridayActivities.clear();
     	saturdayActivities.clear();
+    	saveWeekPlan();
     }
     
     private void initializeListeners()
