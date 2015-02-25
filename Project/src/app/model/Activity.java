@@ -16,16 +16,14 @@ public class Activity {
     private final ObjectProperty<Unit> unit;
     
     
-    /**
-     * Constructor with some initial data.
-     * 
-     * @param firstName
-     * @param lastName
-     */
-    
     public Activity(String name, Unit unit) {
         this.activityName = new SimpleStringProperty(name);
         this.unit = new SimpleObjectProperty<Unit>(unit);
+    }
+    
+    public Activity(Activity a) {
+        this.activityName = new SimpleStringProperty(a.getActvityName());
+        this.unit = new SimpleObjectProperty<Unit>(a.getUnit());
     }
     
     public String getActvityName() {
