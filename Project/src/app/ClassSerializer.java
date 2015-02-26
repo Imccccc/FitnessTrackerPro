@@ -1,14 +1,10 @@
 package app;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.Map.Entry;
-
-import com.sun.javafx.collections.MappingChange.Map;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -115,7 +111,7 @@ public class ClassSerializer {
 			}
 			assert(input.equals("</WeekPlan>"));
 			
-			WeekPlan weekPlan = new WeekPlan(new SimpleListProperty<>(dayPlanList));
+			WeekPlan weekPlan = new WeekPlan(new SimpleListProperty<>(dayPlanList), "Current Plan");
 			scan.close();
 			return weekPlan;
 		}
@@ -123,4 +119,109 @@ public class ClassSerializer {
 			return null;
 		}
 	}
+	
+	public static void WishListSerializer(ObservableMap<String, WeekPlan> wishList){
+		try {
+			File file = new File("./wishList");
+			PrintWriter pw = new PrintWriter(file);
+			pw.println("<WishList>");
+			for(WeekPlan weekPlan : wishList.values()){
+				pw.println("<WishPlan>");
+				pw.println("<Name>");
+				pw.println(weekPlan.getPlanName());
+				pw.println("</Name>");
+				for(int i=0; i < 7; i++){
+					pw.println("<Day"+i+">");
+					DayPlan dayPlan = weekPlan.getDayPlan(i);
+					for(Entry<String, ActivityPlan> entry : dayPlan.getDayPlan().entrySet()){
+			            ActivityPlan a = entry.getValue();
+			            pw.println(a.getActivity().getActvityName()+"|"+a.getActivity().getUnit().toString()+"|"+a.getPlannedCount());
+			        }
+					pw.println("</Day"+i+">");
+				}
+				pw.println("</WishPlan>");
+			}		
+			pw.println("</WishList>");
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ObservableMap<String, WeekPlan> WishListUnserializer(){
+		try{
+			File file = new File("./wishList");
+			Scanner scan = new Scanner(file);
+			String planName;
+			ObservableMap<String, WeekPlan> wishList = FXCollections.observableHashMap();
+			
+			String input;
+			input = scan.nextLine();
+			
+			if(!input.equals("<WishList>"))	{
+				scan.close();
+				return null;
+			}
+			
+			input = scan.nextLine();
+			
+			while(input.equals("<WishPlan>")){
+				// Get name
+				input = scan.nextLine();
+				assert( input.equals("<Name>") );
+
+				planName = scan.nextLine();
+				
+				input = scan.nextLine();
+				assert( input.equals("</Name>"));
+				
+				input = scan.nextLine();
+				
+				ObservableList<DayPlan> dayPlanList = FXCollections.observableArrayList();
+				// Get plan
+				for (int i = 0; i < 7; i++) {
+					assert (input.equals("<Day" + i + ">"));
+					ObservableMap<String, ActivityPlan> observableMap = FXCollections.observableHashMap();
+					input = scan.nextLine();
+					
+					while (!input.equals("</Day" + i + ">")) {
+						String[] info = input.split("\\|");
+						//System.out.println(input);
+						ActivityPlan actPlan = new ActivityPlan(new Activity(
+								info[0], info[1].equals("TIMES") ? Unit.TIMES: Unit.MINUTE),
+								Integer.parseInt(info[2]));
+						observableMap.put(info[0], actPlan);
+						
+						input = scan.nextLine();
+					}
+					
+					// Generate dayPlan List and add into weekPlan
+					//System.out.println(planName+"||"+i+"||"+observableMap.size());
+					DayPlan dayPlan = new DayPlan(new SimpleMapProperty<>(observableMap));
+					dayPlanList.add(dayPlan);
+					
+					input = scan.nextLine();
+				}
+				
+				assert(input.equals("</WishPlan>"));
+				
+				// Generate weekPlan using dayPlan list
+				WeekPlan weekPlan = new WeekPlan(new SimpleListProperty<>(dayPlanList), planName);
+				
+				//Insert into the wishList
+				wishList.put(planName, weekPlan);
+				
+				input = scan.nextLine();
+			}
+			
+			assert(input.equals("</WishList>"));
+						
+			scan.close();
+			return wishList;
+		}
+		catch(FileNotFoundException e){
+			return null;
+		}
+	}
+	
 }

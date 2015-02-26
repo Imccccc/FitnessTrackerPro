@@ -4,9 +4,7 @@ import java.util.Optional;
 
 import org.controlsfx.dialog.Dialogs;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.scene.Node;
 import javafx.scene.control.Dialog;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,10 +13,8 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 import app.model.Activity;

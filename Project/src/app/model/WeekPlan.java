@@ -3,14 +3,18 @@ package app.model;
 import java.io.Serializable;
 
 import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class WeekPlan implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private final SimpleListProperty<DayPlan> dayPlanList;
+	private final StringProperty planNameProperty;
 
 	
-	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList){
+	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name){
 		this.dayPlanList = dayPlanList;
+		this.planNameProperty = new SimpleStringProperty(name);
 	}
 	
 	/*Index:
@@ -25,5 +29,17 @@ public class WeekPlan implements Serializable{
 
 	public void setDayPlan(int index, DayPlan dayplan){
 		this.dayPlanList.set(index, dayplan);
+	}
+	
+	public StringProperty getPlanNameProperty(){
+		return this.planNameProperty;
+	}
+	
+	public String getPlanName(){
+		return this.planNameProperty.get();
+	}
+	
+	public void setPlanName(String name){
+		this.planNameProperty.set(name);
 	}
 }

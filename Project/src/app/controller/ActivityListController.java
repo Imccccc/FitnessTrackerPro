@@ -39,7 +39,6 @@ import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
-import app.model.RealActivityPlan;
 import app.model.Unit;
 import app.model.WeekPlan;
 
@@ -101,8 +100,7 @@ public class ActivityListController {
 	@FXML
 	private TableColumn<ActivityPlan, Number> saturdayList_cntCol;
 	
-//	public static final ObservableList<Activity> activities = 
-//	        FXCollections.observableArrayList();
+
 	public static final ObservableList<ActivityPlan> sundayActivities = 
 	        FXCollections.observableArrayList();
 	public static final ObservableList<ActivityPlan> mondayActivities = 
@@ -119,7 +117,7 @@ public class ActivityListController {
 	        FXCollections.observableArrayList();
 
 	TextField actitvityName;
-	ChoiceBox choiceBox;
+	ChoiceBox<String> choiceBox;
 	
 	final Action actionLogin = new AbstractAction("Confirm") {
 	    // This method is called when the login button is clicked ...
@@ -282,7 +280,7 @@ public class ActivityListController {
     	dayPlanList.add(generateDayPlan(saturdayActivities));   	
     	SimpleListProperty<DayPlan> dayPlanListProperty = new SimpleListProperty<>(dayPlanList);
     	
-    	WeekPlan newWeekPlan = new WeekPlan(dayPlanListProperty);
+    	WeekPlan newWeekPlan = new WeekPlan(dayPlanListProperty, "Current Plan");
     	MainApp.weekPlan = newWeekPlan;
        	ClassSerializer.WeekPlanSerializer(MainApp.weekPlan);
 	}
