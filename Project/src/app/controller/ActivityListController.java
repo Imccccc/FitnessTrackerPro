@@ -39,6 +39,7 @@ import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
+import app.model.RealActivityPlan;
 import app.model.Unit;
 import app.model.WeekPlan;
 
@@ -179,27 +180,7 @@ public class ActivityListController {
     	initializeListeners();
     }
     
-	public static void updateWeekPlan() {
-    	sundayActivities.clear();
-    	mondayActivities.clear();
-    	tuesdayActivities.clear();
-    	wednesdayActivities.clear();
-    	thursdayActivities.clear();
-    	fridayActivities.clear();
-    	saturdayActivities.clear();
-		
-		loadDayPlan(1, mondayActivities);
-		loadDayPlan(2, tuesdayActivities);
-		loadDayPlan(3, wednesdayActivities);
-		loadDayPlan(4, thursdayActivities);
-		loadDayPlan(5, fridayActivities);
-		loadDayPlan(6, saturdayActivities);
-		loadDayPlan(0, sundayActivities);
-		
-		saveWeekPlan();
-	}
-    
-    private static void loadWeekPlan() {    	
+    private void loadWeekPlan() {    	
     	if(MainApp.weekPlan==null)	{
     		System.out.println("Empty week plan");
     		return;
@@ -214,7 +195,7 @@ public class ActivityListController {
 		loadDayPlan(0, sundayActivities);
 	}
 
-	private static void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
+	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
 		DayPlan dayplan = MainApp.weekPlan.getDayPlan(index);
 		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
             ActivityPlan a = entry.getValue();
@@ -270,7 +251,7 @@ public class ActivityListController {
     	dragable = !dragable;
     }
     
-    private static void saveWeekPlan() {
+    private void saveWeekPlan() {
 
     	ObservableList<DayPlan> dayPlanList = FXCollections.observableArrayList();
     	dayPlanList.add(generateDayPlan(sundayActivities));
@@ -287,7 +268,7 @@ public class ActivityListController {
        	ClassSerializer.WeekPlanSerializer(MainApp.weekPlan);
 	}
 
-	private static DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
+	private DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
 		ObservableMap<String, ActivityPlan> omap = FXCollections.observableHashMap();
 		for(ActivityPlan activityPlan : activitiesList){
 			omap.put(activityPlan.getActivity().getActvityName(), activityPlan);
@@ -435,11 +416,27 @@ public class ActivityListController {
     						.title("Text Input Count")
     						.message("Please enter your planned count:")
     						.showTextInput("15");
-    			
+
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> sundayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : sundayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    					sundayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				});
     			}
     			else{// Comes from other dayList
+    				for(ActivityPlan a : sundayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
     				sundayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
     			}
     			dragEvent.setDropCompleted(true);
@@ -544,11 +541,25 @@ public class ActivityListController {
     						.showTextInput("15");
     			
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> mondayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
-    			}
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : mondayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    	  				mondayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				});   			}
     			else{// Comes from other dayList
-    				mondayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
-    			}
+    				for(ActivityPlan a : mondayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
+    				mondayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));    			}
     			dragEvent.setDropCompleted(true);
     		}
     	});
@@ -652,9 +663,25 @@ public class ActivityListController {
     						.showTextInput("15");
     			
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> tuesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : tuesdayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    	  				tuesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				});   
     			}
     			else{// Comes from other dayList
+    				for(ActivityPlan a : tuesdayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
     				tuesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
     			}
     			dragEvent.setDropCompleted(true);
@@ -759,9 +786,25 @@ public class ActivityListController {
     						.showTextInput("15");
     			
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> wednesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : wednesdayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    	  				wednesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				});   
     			}
     			else{// Comes from other dayList
+    				for(ActivityPlan a : wednesdayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
     				wednesdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
     			}
     			dragEvent.setDropCompleted(true);
@@ -866,9 +909,25 @@ public class ActivityListController {
     						.showTextInput("15");
     			
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> thursdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : thursdayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    	  				thursdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				}); 
     			}
     			else{// Comes from other dayList
+    				for(ActivityPlan a : thursdayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
     				thursdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
     			}
     			dragEvent.setDropCompleted(true);
@@ -973,9 +1032,25 @@ public class ActivityListController {
     						.showTextInput("15");
     			
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> fridayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : fridayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    	  				fridayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				}); 
     			}
     			else{// Comes from other dayList
+    				for(ActivityPlan a : fridayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
     				fridayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
     			}
     			dragEvent.setDropCompleted(true);
@@ -1080,9 +1155,25 @@ public class ActivityListController {
     						.showTextInput("15");
     			
     				// Add activity to the correspond observableList
-    				response.ifPresent(count -> saturdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count))));
+    				response.ifPresent((count)->{
+    	  				for(ActivityPlan a : saturdayActivities){
+        					if(a.getActivity().getActvityName().equals(info[0])){
+            					int temp = a.getPlannedCount();
+            					a.setPlannedCount(temp + Integer.parseInt(count));
+            					return;
+        					}
+        				}
+    	  				saturdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(count)));
+    				}); 
     			}
     			else{// Comes from other dayList
+    				for(ActivityPlan a : saturdayActivities){
+    					if(a.getActivity().getActvityName().equals(info[0])){
+        					int temp = a.getPlannedCount();
+        					a.setPlannedCount(temp + Integer.parseInt(info[2]));
+        					return;
+    					}
+    				}
     				saturdayActivities.add(new ActivityPlan(info[0], info[1].equals("TIMES")?Unit.TIMES:Unit.MINUTE, Integer.parseInt(info[2])));
     			}
     			dragEvent.setDropCompleted(true);

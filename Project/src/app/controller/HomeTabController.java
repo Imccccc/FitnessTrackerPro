@@ -6,7 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Map.Entry;
+
+import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
+
 import javafx.collections.FXCollections;
 import javafx.scene.control.Dialog;
 import javafx.collections.ObservableList;
@@ -106,6 +109,7 @@ public class HomeTabController {
     	temp = HomePageTable.getSelectionModel().getSelectedItem();
     	if(temp != null){
    			Optional<String> response = Dialogs.create()
+   					.style(DialogStyle.NATIVE)
 			        .title("Text Input Count")
 			        .message("Please enter your planned count:")
 			        .showTextInput(Integer.toString(temp.getRealCount()));
@@ -152,12 +156,19 @@ public class HomeTabController {
 
     		result.ifPresent(Activityname -> {
     			Activity temp = null;
+    			Activity temp2 = null;
     		    System.out.println("Activity=" + Activityname );
     		    for (Activity a : MainApp.activities) {
 					if (a.getActvityName().equals(Activityname)) {
 						temp = new Activity(a);
 					}
 				}
+    		    for(RealActivityPlan a :activityData){
+    		    	temp2 = a.getActivityPlan().getActivity();
+    		    	if (temp2.getActvityName().equals(Activityname)) {
+						return;
+					}
+    		    }
     		    activityData.add(new RealActivityPlan(new ActivityPlan(temp, 0), 0));
     			ClassSerializer.TodayPlanSerializer(activityData, today);
     		});
