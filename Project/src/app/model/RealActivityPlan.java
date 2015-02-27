@@ -33,4 +33,5 @@ public class RealActivityPlan {
 	public IntegerProperty realCountProperty() {
 		return realCount;
 	}
+	
 }
