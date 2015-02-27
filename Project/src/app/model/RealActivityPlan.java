@@ -14,10 +14,6 @@ public class RealActivityPlan {
 		this.realCount = new SimpleIntegerProperty(realCount);
 	}
 	
-	public void setActivityPlan(ActivityPlan activityPlan) {
-		this.activityPlan.set(activityPlan);
-	}
-	
 	public ActivityPlan getActivityPlan() {
 		return this.activityPlan.get();
 	}

@@ -3,6 +3,7 @@ package app;
 import java.io.IOException;
 
 import app.model.Activity;
+import app.model.WeekPlan;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,13 +13,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-
+	// Global variable
+	public static WeekPlan weekPlan;
+	public static ObservableList<Activity> activities = 
+	        FXCollections.observableArrayList();
+	
+	
     private Stage primaryStage;
     private AnchorPane rootLayout;
-     
-    /**
-     * The data as an observable list of Persons.
-     */
+
     private ObservableList<Activity> activityData = FXCollections.observableArrayList();
 
     /**
@@ -35,13 +38,19 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("AddressApp");
-
+        this.primaryStage.setTitle("Fitness Tracker Pro");
+        
+        // Load weekPlan
+        weekPlan = ClassSerializer.WeekPlanUnserializer();
+        // Load activity list
+        activities.addAll(ClassSerializer.ActivityUnserializer());
+        
         initRootLayout();
 
     }
-
-    /**
+    
+    
+	/**
      * Initializes the root layout.
      */
     public void initRootLayout() {

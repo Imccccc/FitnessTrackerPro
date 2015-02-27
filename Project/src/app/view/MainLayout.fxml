@@ -32,6 +32,11 @@
                         <fx:include fx:id="ShareTab" source="ShareTabLayout.fxml" /> 
                      </content>
                   </Tab>
+                  <Tab text="WishList">
+                  	 <content>
+                  	 	<fx:include fx:id="WishListTab" source="WishListTabLayout.fxml" />
+                  	 </content>
+                  </Tab>
                </tabs>
             </TabPane>
          </children>
