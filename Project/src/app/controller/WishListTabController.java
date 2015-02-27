@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import org.controlsfx.dialog.Dialog;
 
 import app.ClassSerializer;
+import app.MainApp;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.WeekPlan;
@@ -115,8 +116,18 @@ public class WishListTabController {
 		loadWeekPlan(text);
 		
 		Dialog dlg = new Dialog(button, "Plan Detail");
+		GridPane gPane = new GridPane();
+		gPane.setMaxSize(1000, 600);
+		gPane.setMinSize(1000, 600);
+		gPane.getRowConstraints().add(new RowConstraints(550));
+		gPane.getRowConstraints().add(new RowConstraints(50));
+		gPane.getColumnConstraints().add(new ColumnConstraints(880));
+		gPane.getColumnConstraints().add(new ColumnConstraints(60));
+		gPane.getColumnConstraints().add(new ColumnConstraints(60));
+		
 		SplitPane sp = new SplitPane();
-		sp.setMaxSize(1000, 600);
+		sp.setMaxSize(1000, 550);
+		sp.setMinSize(1000, 550);
 		final TableView<ActivityPlan> sundayList = new TableView<ActivityPlan>();
 		makeColumn(sundayList);	
 		sundayList.setItems(sundayActivities);
@@ -142,7 +153,27 @@ public class WishListTabController {
 		sp.getItems().addAll(sundayList, mondayList, tuesdayList, wednesdayList, thursdayList, fridayList, saturdayList);
 		sp.setDividerPositions(0.1428, 0.2856, 0.4284, 0.5714, 0.7142, 0.8571, 1);
 
-		dlg.setContent(sp);
+		gPane.add(sp, 0, 0);
+		
+		Button applyButton = new Button("Apply");
+		applyButton.setOnAction((event) -> {
+    	    MainApp.weekPlan = wishList.get(text);
+    	    ActivityListController.updateWeekPlan();
+    	    dlg.hide();
+    	}); 
+		gPane.add(applyButton, 1, 1);
+		
+		Button deleteButton = new Button("Delete");
+		deleteButton.setOnAction((event) -> {
+    	    if(wishList.remove(text)==null)
+    	    	System.out.println("No such Plan");
+    	    ClassSerializer.WishListSerializer(wishList);
+    	    initialize();
+    	    dlg.hide();
+    	}); 
+		gPane.add(deleteButton, 2, 1);
+		
+		dlg.setContent(gPane);
 		dlg.show();
 	}
 	
