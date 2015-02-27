@@ -1,93 +1,6 @@
 <WishList>
 <WishPlan>
 <Name>
-First Plan
-</Name>
-<Day0>
-Water Aerobics|MINUTE|15
-</Day0>
-<Day1>
-</Day1>
-<Day2>
-Water Aerobics|MINUTE|15
-</Day2>
-<Day3>
-</Day3>
-<Day4>
-</Day4>
-<Day5>
-</Day5>
-<Day6>
-</Day6>
-</WishPlan>
-<WishPlan>
-<Name>
-Second Plan
-</Name>
-<Day0>
-Water Aerobics|MINUTE|15
-</Day0>
-<Day1>
-</Day1>
-<Day2>
-Jumping Rope|TIMES|15
-</Day2>
-<Day3>
-</Day3>
-<Day4>
-</Day4>
-<Day5>
-</Day5>
-<Day6>
-</Day6>
-</WishPlan>
-<WishPlan>
-<Name>
-Third Plan
-</Name>
-<Day0>
-Water Aerobics|MINUTE|15
-</Day0>
-<Day1>
-</Day1>
-<Day2>
-Jumping Rope|TIMES|15
-</Day2>
-<Day3>
-Football|MINUTE|15
-</Day3>
-<Day4>
-</Day4>
-<Day5>
-</Day5>
-<Day6>
-</Day6>
-</WishPlan>
-<WishPlan>
-<Name>
-Forth Plan
-</Name>
-<Day0>
-Water Aerobics|MINUTE|15
-</Day0>
-<Day1>
-Water Aerobics|MINUTE|15
-</Day1>
-<Day2>
-Jumping Rope|TIMES|15
-</Day2>
-<Day3>
-Football|MINUTE|15
-</Day3>
-<Day4>
-</Day4>
-<Day5>
-</Day5>
-<Day6>
-</Day6>
-</WishPlan>
-<WishPlan>
-<Name>
 Fifth Plan
 </Name>
 <Day0>
@@ -100,8 +13,8 @@ Water Aerobics|MINUTE|15
 Jumping Rope|TIMES|15
 </Day2>
 <Day3>
-Football|MINUTE|15
 Water Aerobics|MINUTE|15
+Football|MINUTE|15
 </Day3>
 <Day4>
 </Day4>
@@ -133,6 +46,51 @@ Water Aerobics|MINUTE|15
 </Day5>
 <Day6>
 Water Aerobics|MINUTE|15
+</Day6>
+</WishPlan>
+<WishPlan>
+<Name>
+Forth Plan
+</Name>
+<Day0>
+Water Aerobics|MINUTE|15
+</Day0>
+<Day1>
+Water Aerobics|MINUTE|15
+</Day1>
+<Day2>
+Jumping Rope|TIMES|15
+</Day2>
+<Day3>
+Football|MINUTE|15
+</Day3>
+<Day4>
+</Day4>
+<Day5>
+</Day5>
+<Day6>
+</Day6>
+</WishPlan>
+<WishPlan>
+<Name>
+Third Plan
+</Name>
+<Day0>
+Water Aerobics|MINUTE|15
+</Day0>
+<Day1>
+</Day1>
+<Day2>
+Jumping Rope|TIMES|15
+</Day2>
+<Day3>
+Football|MINUTE|15
+</Day3>
+<Day4>
+</Day4>
+<Day5>
+</Day5>
+<Day6>
 </Day6>
 </WishPlan>
 <WishPlan>
@@ -186,6 +144,27 @@ Football|MINUTE|15
 </Day5>
 <Day6>
 Football|MINUTE|15
+</Day6>
+</WishPlan>
+<WishPlan>
+<Name>
+First Plan
+</Name>
+<Day0>
+Water Aerobics|MINUTE|15
+</Day0>
+<Day1>
+</Day1>
+<Day2>
+Water Aerobics|MINUTE|15
+</Day2>
+<Day3>
+</Day3>
+<Day4>
+</Day4>
+<Day5>
+</Day5>
+<Day6>
 </Day6>
 </WishPlan>
 </WishList>
