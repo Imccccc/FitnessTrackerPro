@@ -1,6 +1,7 @@
 package app.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,13 +9,34 @@ import javafx.beans.property.StringProperty;
 
 public class WeekPlan implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private final SimpleListProperty<DayPlan> dayPlanList;
-	private final StringProperty planNameProperty;
+	private SimpleListProperty<DayPlan> dayPlanList;
+	private StringProperty planNameProperty;
+	private StringProperty planType;
+	private SimpleListProperty<Rating> ratingList;
 
 	
 	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name){
 		this.dayPlanList = dayPlanList;
 		this.planNameProperty = new SimpleStringProperty(name);
+		this.planType=new SimpleStringProperty("");
+		this.ratingList=new SimpleListProperty<Rating>();
+	}
+	
+	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name, String plantype){
+		this(dayPlanList, name);
+		this.planType=new SimpleStringProperty(plantype);
+	}
+	
+	public void addRating(Rating rating){
+		ratingList.add(rating);
+	}
+	
+	public String getPlanType(){
+		return planType.get();
+	}
+	
+	public SimpleListProperty<Rating> getRating(){
+		return ratingList;
 	}
 	
 	/*Index:
