@@ -41,6 +41,7 @@ import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.Unit;
 import app.model.WeekPlan;
+import apple.laf.JRSUIConstants.State;
 
 
 public class ActivityListController {
@@ -125,9 +126,6 @@ public class ActivityListController {
 	        Dialog d = (Dialog) ae.getSource();
 	        String newActName = actitvityName.getText();
 	        Unit newActUnit = choiceBox.getSelectionModel().getSelectedItem().equals("Times")?Unit.TIMES:Unit.MINUTE;
-//	        System.out.println(newActName);
-//	        System.out.println(newActUnit.toString());
-//	        System.out.println(newActName);
 	        MainApp.activities.add(new Activity(newActName, newActUnit));
 	        ClassSerializer.ActivitySerializer(MainApp.activities);
 	        d.hide();
@@ -150,23 +148,6 @@ public class ActivityListController {
     private void initialize() {
     	// Load weekPlan into plan table
     	loadWeekPlan();
-        // Initialize the list with the activities.
-//    	activities.addAll(new Activity("Adam", Unit.TIMES),
-//    						new Activity("Alex", Unit.TIMES),
-//    						new Activity("Alfred", Unit.TIMES),
-//    						new Activity("Albert", Unit.TIMES),
-//    						new Activity("Brenda", Unit.TIMES),
-//    						new Activity("Connie", Unit.TIMES),
-//    						new Activity("Derek", Unit.TIMES),
-//    						new Activity("Donny", Unit.TIMES),
-//    						new Activity("Lynne", Unit.TIMES),
-//    						new Activity("Myrtle", Unit.TIMES),
-//    						new Activity("Rose", Unit.TIMES),
-//    						new Activity("Rudolph", Unit.TIMES),
-//    						new Activity("Tony", Unit.TIMES),
-//    						new Activity("Trudy", Unit.TIMES),
-//    						new Activity("Williams", Unit.TIMES),
-//    						new Activity("Zach", Unit.TIMES));
 
     	activityList.setItems(MainApp.activities);
     	nameList.setCellValueFactory(cellData -> cellData.getValue().ActvityNameProperty());
@@ -197,6 +178,26 @@ public class ActivityListController {
     	initializeListeners();
     }
     
+	public static void updateWeekPlan() {
+    	sundayActivities.clear();
+    	mondayActivities.clear();
+    	tuesdayActivities.clear();
+    	wednesdayActivities.clear();
+    	thursdayActivities.clear();
+    	fridayActivities.clear();
+    	saturdayActivities.clear();
+		
+		loadDayPlan(1, mondayActivities);
+		loadDayPlan(2, tuesdayActivities);
+		loadDayPlan(3, wednesdayActivities);
+		loadDayPlan(4, thursdayActivities);
+		loadDayPlan(5, fridayActivities);
+		loadDayPlan(6, saturdayActivities);
+		loadDayPlan(0, sundayActivities);
+		
+		saveWeekPlan();
+	}
+    
     private void loadWeekPlan() {    	
     	if(MainApp.weekPlan==null)	{
     		System.out.println("Empty week plan");
@@ -212,7 +213,7 @@ public class ActivityListController {
 		loadDayPlan(0, sundayActivities);
 	}
 
-	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
+	private static void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
 		DayPlan dayplan = MainApp.weekPlan.getDayPlan(index);
 		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
             ActivityPlan a = entry.getValue();
@@ -268,7 +269,7 @@ public class ActivityListController {
     	dragable = !dragable;
     }
     
-    private void saveWeekPlan() {
+    private static void saveWeekPlan() {
 
     	ObservableList<DayPlan> dayPlanList = FXCollections.observableArrayList();
     	dayPlanList.add(generateDayPlan(sundayActivities));
@@ -285,7 +286,7 @@ public class ActivityListController {
        	ClassSerializer.WeekPlanSerializer(MainApp.weekPlan);
 	}
 
-	private DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
+	private static DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
 		ObservableMap<String, ActivityPlan> omap = FXCollections.observableHashMap();
 		for(ActivityPlan activityPlan : activitiesList){
 			omap.put(activityPlan.getActivity().getActvityName(), activityPlan);
@@ -1087,4 +1088,5 @@ public class ActivityListController {
     		}
     	});
     }
+
 }
