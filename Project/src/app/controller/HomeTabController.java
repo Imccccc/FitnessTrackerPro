@@ -1,14 +1,12 @@
 package app.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Map.Entry;
-
 import org.controlsfx.dialog.Dialogs;
-
-import com.mysql.fabric.xmlrpc.base.Data;
-
 import javafx.collections.FXCollections;
 import javafx.scene.control.Dialog;
 import javafx.collections.ObservableList;
@@ -21,14 +19,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import javafx.util.Pair;
 import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.RealActivityPlan;
-import app.model.Unit;
-
+import app.ClassSerializer;
 
 public class HomeTabController {
 	@FXML
@@ -45,25 +41,35 @@ public class HomeTabController {
     private ObservableList<RealActivityPlan> activityData = FXCollections.observableArrayList();
     Calendar c;
     int dayOfWeek;
-    Date date = new Date();
-    // Reference to the main application.
-
+    Date date;
+	DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+	String today;
+    
     /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     
     public HomeTabController() {
+    	date = new Date();
+		today = formatter.format(date);
+
     	c = Calendar.getInstance();
     	c.setTime(date);
     	dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
     	
+    	
     	if(MainApp.weekPlan==null)	{
     		System.out.println("Empty week plan");
-    		return;
-    	}
-    	
-    	loadDayPlan(dayOfWeek, activityData);
+    		return;}
+    	if (ClassSerializer.TodayPlanUnserializer(today)!=null) {
+    		activityData.addAll(ClassSerializer.TodayPlanUnserializer(today));
+			System.out.println("Load day plan from TodayPlan.Fitness");
+		}else{
+	    	loadDayPlan(dayOfWeek-1, activityData);
+			System.out.println("Load day plan from week plan");
+			ClassSerializer.TodayPlanSerializer(activityData, today);
+		}
     }
     
 	private void loadDayPlan(int index, ObservableList<RealActivityPlan> dayList) {
@@ -86,12 +92,14 @@ public class HomeTabController {
     	UserCount.setCellValueFactory(cellData -> cellData.getValue().realCountProperty());
     	
         HomePageTable.setItems(activityData);
+       // System.out.println("initialize");
     }
     
     /**
      * Is called by the main application to give a reference back to itself.
      * 
      */
+    
     
     public void clickHandler(){
     	RealActivityPlan temp;
@@ -102,6 +110,7 @@ public class HomeTabController {
 			        .message("Please enter your planned count:")
 			        .showTextInput(Integer.toString(temp.getRealCount()));
    			response.ifPresent(count -> temp.setRealCount(Integer.parseInt(count)));
+			ClassSerializer.TodayPlanSerializer(activityData, today);
     	}
     }
     
@@ -150,6 +159,7 @@ public class HomeTabController {
 					}
 				}
     		    activityData.add(new RealActivityPlan(new ActivityPlan(temp, 0), 0));
+    			ClassSerializer.TodayPlanSerializer(activityData, today);
     		});
     		return true;
     	}catch(Exception e){
@@ -160,15 +170,9 @@ public class HomeTabController {
     	
     }
     
-    
-    private int RealActivityPlan(ActivityPlan activityPlan) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	public void buttonClickHnadler(){
     	 System.out.println("Button clicked");
     	 boolean okClicked = openNewDialog();
     }
-    
 }

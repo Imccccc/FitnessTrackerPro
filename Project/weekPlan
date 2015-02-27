@@ -3,7 +3,6 @@
 Water Aerobics|MINUTE|15
 </Day0>
 <Day1>
-Water Aerobics|MINUTE|15
 </Day1>
 <Day2>
 Jumping Rope|TIMES|15
@@ -12,9 +11,11 @@ Jumping Rope|TIMES|15
 Football|MINUTE|15
 </Day3>
 <Day4>
-Jumping Rope|TIMES|15
+Basketball|MINUTE|15
+Calisthenics|MINUTE|35
 </Day4>
 <Day5>
+Skateboarding|MINUTE|15
 </Day5>
 <Day6>
 </Day6>

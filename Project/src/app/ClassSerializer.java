@@ -1,10 +1,16 @@
 package app;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.Map.Entry;
+
+import com.mysql.fabric.xmlrpc.base.Data;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -14,6 +20,7 @@ import javafx.collections.ObservableMap;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
+import app.model.RealActivityPlan;
 import app.model.Unit;
 import app.model.WeekPlan;
 
@@ -224,4 +231,84 @@ public class ClassSerializer {
 		}
 	}
 	
+	public static void TodayPlanSerializer(ObservableList<RealActivityPlan> todayList, String date){
+		System.out.println("TodayPlanSerializer called");
+		try {
+			File file = new File("./TodayPlan.Fitness");
+			PrintWriter pw = new PrintWriter(file);
+			pw.println("<Date>\n" + date + "\n</Date>");
+			Activity temp; 
+			for(RealActivityPlan real : todayList){
+				temp = real.getActivityPlan().getActivity();
+				pw.println(temp.getActvityName()+"|"+temp.getUnit().toString()+"|" + 
+				real.getActivityPlan().getPlannedCount()+"|"+real.getRealCount());
+			}
+			pw.println();
+			pw.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ObservableList<RealActivityPlan> TodayPlanUnserializer(String date){
+		try {
+			String input;
+			File file = new File("./TodayPlan.Fitness");
+			Scanner scan = new Scanner(file);
+			ObservableList<RealActivityPlan> today =FXCollections.observableArrayList();
+			if (!scan.hasNextLine()) {
+				return null;
+			}
+			input = scan.nextLine();
+			if (input.equals("<Date>")) {
+				input = scan.nextLine();
+				if(input.equals(date)){
+					input = scan.nextLine();
+					input = scan.nextLine();
+					while (!input.isEmpty()) {
+						System.out.println("TodayPlanUnserializer "+input);
+						String[] info = input.split("\\|");
+						//System.out.println(info[0]+info[1]+info[2]+info[3]);
+						ActivityPlan Plan = new ActivityPlan(new Activity(
+								info[0], info[1].equals("TIMES") ? Unit.TIMES: Unit.MINUTE),
+								Integer.parseInt(info[2]));
+						RealActivityPlan realPlan = new RealActivityPlan(Plan, Integer.parseInt(info[3]));
+						today.add(realPlan);
+						input = scan.nextLine();
+					}
+				}else{
+					System.out.println("Should Add to history");
+					String day = new String(input);
+					//System.out.println("day = " + day);
+					String content = new Scanner(file).useDelimiter("\\Z").next();
+					//System.out.println(content);
+					HistorySerializer(content);
+					PrintWriter out = new PrintWriter(file);
+					out.print("");
+					out.close();
+					//System.out.println("Clear file ./TodayPlan.Fitness");
+					return null;
+				}
+			}
+			return today;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("艹！！！！出错了！！！麻痹！！！！");
+			return null;
+		}
+	}
+	
+	public static void HistorySerializer(String dayplan){
+		try{
+			File file = new File("./History.Fitness");
+			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./History.Fitness", true)));
+			out.println("<DayHistory>");
+			out.print(dayplan);
+			out.println("</DayHistory>");
+			out.close();
+			
+		}catch(Exception e){
+			
+		}
+	}
 }
