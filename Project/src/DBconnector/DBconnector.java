@@ -2,16 +2,10 @@ package DBconnector;
 
 import java.sql.*;
 import java.util.ArrayList;
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.SimpleListProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
-import app.model.Activity;
-import app.model.ActivityPlan;
-import app.model.DayPlan;
-import app.model.Unit;
-import app.model.WeekPlan;
+
+import javafx.beans.property.*;
+import javafx.collections.*;
+import app.model.*;
 
 public abstract class DBconnector {
 	
@@ -210,7 +204,8 @@ public abstract class DBconnector {
 				Statement stmt2 = con.createStatement();
 				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
 				
-				SimpleListProperty<DayPlan> dayplanlist = new SimpleListProperty<DayPlan>();
+				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
+				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
@@ -232,7 +227,7 @@ public abstract class DBconnector {
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
 					System.out.println(weekday+" "+dayPlan.toString());
-					///dayplanlist.add(weekday,dayPlan);
+					dayplanlist.add(dayPlan);
 					
 				}
 				System.out.println("next dayplanlist:");
