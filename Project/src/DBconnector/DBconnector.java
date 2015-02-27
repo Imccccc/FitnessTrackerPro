@@ -2,6 +2,17 @@ package DBconnector;
 
 import java.sql.*;
 import java.util.ArrayList;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
+import app.model.Activity;
+import app.model.ActivityPlan;
+import app.model.DayPlan;
+import app.model.Unit;
+import app.model.WeekPlan;
+
 public abstract class DBconnector {
 	
 	
@@ -23,6 +34,9 @@ public abstract class DBconnector {
 		getExerciseAmount("lhc\\'");
 		
 		getAvgRating(1);
+		
+		
+		System.out.print(getPlans().size());
 	}
 	
 	public static boolean isLoggedIn(){
@@ -168,6 +182,74 @@ public abstract class DBconnector {
 		}catch(SQLException e){
 			return null;
 		}
+	}
+	
+	public static ArrayList<WeekPlan> getPlans(){
+		try{
+			
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan AS sp LEFT JOIN rating AS r ON sp.`planid` = r.`planid` AND sp.`username` = r.`username`");
+			int planid = -1;
+			int weekday = -1;
+			String planname = "";
+			String planType = "";
+			int rating = -1;
+			String comment = "";
+			
+			
+			ArrayList<WeekPlan> wps = new ArrayList();
+			
+			while(result.next()){
+				
+				planid = result.getInt("planid");
+				planname = result.getString("planname");
+				planType = result.getString("plantype");
+				rating = result.getInt("rating");
+				comment = result.getString("comments");
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
+				
+				SimpleListProperty<DayPlan> dayplanlist = new SimpleListProperty<DayPlan>();
+				while(result2.next()){
+					
+					weekday = result2.getInt("weekday");
+					
+					Statement stmt3 = con.createStatement();
+					ResultSet result3 = stmt3.executeQuery("SELECT * FROM plan p INNER JOIN activity a ON p.`activityid` = a.`activityid` WHERE p.`planid`= "+planid+" AND p.`weekday` = "+weekday);
+					
+					ObservableMap<String, ActivityPlan> map = FXCollections.observableHashMap();
+					while(result3.next()){
+						Activity ac = new Activity(result3.getString("name"),result3.getInt("unitsecond")==0?Unit.TIMES:Unit.MINUTE);
+						
+						ActivityPlan ap = new ActivityPlan(ac,result3.getInt("amount"));
+										
+						map.put(result3.getString("name"), ap);
+						
+					}
+//					System.out.println(map.toString());
+					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
+					DayPlan dayPlan = new DayPlan(mapProperty);
+					
+					System.out.println(weekday+" "+dayPlan.toString());
+					///dayplanlist.add(weekday,dayPlan);
+					
+				}
+				System.out.println("next dayplanlist:");
+				
+				WeekPlan wp = new WeekPlan(dayplanlist,planname);
+			
+				wps.add(wp);
+							
+			}
+			return wps;
+			
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			return null;
+		}
+		
 	}
 }
 
