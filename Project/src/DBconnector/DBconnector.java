@@ -266,5 +266,40 @@ public abstract class DBconnector {
 		}
 		return 0;
 	}
+	
+	public static int getActivityID(Activity ac){
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM activity WHERE name='"+ac.getActvityName()+"'");
+			while(result.next()){
+				return result.getInt("activityid");
+			}
+			stmt.executeUpdate("INSERT INTO activity (name,unitsecond) VALUES ('"+ac.getActvityName()+"','"+(ac.getUnit()==app.model.Unit.MINUTE?1:0)+"')");
+			result = stmt.executeQuery("SELECT * FROM activity WHERE name='"+ac.getActvityName()+"'");
+			while(result.next()){
+				return result.getInt("activityid");
+			}
+			return -1;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public static int newPlan(String plantype){
+		if (!isLoggedIn()) return -1;
+		try{
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("INSERT INTO sharedplan (username,plantype) VALUES ('"+username+"','"+plantype+"')");
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan order by planid DESC");
+			while(result.next()){
+				return result.getInt("planid");
+			}
+			return -1;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return -1;
+		}
+	}
 }
 

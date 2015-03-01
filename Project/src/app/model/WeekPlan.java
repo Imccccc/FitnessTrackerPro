@@ -11,7 +11,7 @@ public class WeekPlan implements Serializable{
 	private final SimpleListProperty<DayPlan> dayPlanList;
 	private final StringProperty planNameProperty;
 	private SimpleListProperty<Rating> ratingList;
-
+	private StringProperty planType;
 	
 	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name){
 		this.dayPlanList = dayPlanList;
