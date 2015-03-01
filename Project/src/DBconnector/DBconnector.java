@@ -246,5 +246,25 @@ public abstract class DBconnector {
 		}
 		
 	}
+	
+	public static int writePlan(WeekPlan plan){
+		int planid=newPlan(plan.getPlanType());
+		for (int weekday=0;weekday<7;weekday++){
+			app.model.DayPlan t=plan.getDayPlan(weekday);
+			for (app.model.ActivityPlan ac:t.getDayPlan().values()){
+				int activityID=getActivityID(ac.getActivity());
+				int amount=ac.getPlannedCount();
+				try{
+					Statement stmt = con.createStatement();
+					stmt.executeUpdate("INSERT INTO plan (planid,weekday,activityid,amount) VALUES "
+							+ "('"+planid+"','"+weekday+"','"+activityID+"','"+amount+"')");
+				}catch(SQLException e){
+					e.printStackTrace();
+					return -1;
+				}
+			}
+		}
+		return 0;
+	}
 }
 
