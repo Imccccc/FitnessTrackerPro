@@ -182,24 +182,26 @@ public abstract class DBconnector {
 		try{
 			
 			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan AS sp LEFT JOIN rating AS r ON sp.`planid` = r.`planid` AND sp.`username` = r.`username`");
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan");
 			int planid = -1;
 			int weekday = -1;
 			String planname = "";
 			String planType = "";
-			int rating = -1;
-			String comment = "";
+			String spusername = "";
+			//int rating = -1;
+			//String comment = "";
 			
 			
-			ArrayList<WeekPlan> wps = new ArrayList();
+			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
 			
 			while(result.next()){
 				
 				planid = result.getInt("planid");
 				planname = result.getString("planname");
-				planType = result.getString("plantype");
-				rating = result.getInt("rating");
-				comment = result.getString("comments");
+				planType = result.getString("plantype"); 
+				spusername = result.getString("username"); 
+				//rating = result.getInt("rating");
+				//comment = result.getString("comments");
 				
 				Statement stmt2 = con.createStatement();
 				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
@@ -232,7 +234,15 @@ public abstract class DBconnector {
 				}
 				System.out.println("next dayplanlist:");
 				
-				WeekPlan wp = new WeekPlan(dayplanlist,planname);
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername);
+				
+				Statement stmt5 = con.createStatement();
+				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
+				while(result5.next()){
+					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
+					wp.addRating(r);
+					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+				}
 			
 				wps.add(wp);
 							
