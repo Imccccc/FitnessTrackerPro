@@ -6,40 +6,64 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="640" maxWidth="1000" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.MainController">
    <children>
-      <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <rowConstraints>
+          <RowConstraints minHeight="40.0" prefHeight="40.0" />
+          <RowConstraints minHeight="600.0" prefHeight="600.0" />
+        </rowConstraints>
+        <columnConstraints>
+        	<ColumnConstraints minWidth="1000.0" prefWidth="1000.0" />
+        </columnConstraints>
          <children>
-            <TabPane prefHeight="375.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <tabs>
-                  <Tab text="Home">
-                     <content>
-						<fx:include fx:id="Hometab" source="HomeTabLayout.fxml" />
-                     </content>
-                  </Tab>
-                  <Tab text="Plan">
-                     <content>
-						<fx:include fx:id="Plantab" source="PlanTabLayout.fxml" />
-                     </content>
-                  </Tab>
-                  <Tab text="Stat">
-                     <content>
-                        <fx:include fx:id="StatTab" source="StatTabLayout.fxml" /> 
-                     </content>
-                  </Tab>
-                  <Tab text="Share">
-                     <content>
-                        <fx:include fx:id="ShareTab" source="ShareTabLayout.fxml" /> 
-                     </content>
-                  </Tab>
-                  <Tab text="WishList">
-                  	 <content>
-                  	 	<fx:include fx:id="WishListTab" source="WishListTabLayout.fxml" />
-                  	 </content>
-                  </Tab>
-               </tabs>
-            </TabPane>
+            <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="200.0">
+              <items>
+                <Button fx:id="registerButton" onAction="#registerButtonClicked" mnemonicParsing="false" text="Register" />
+                <Button fx:id="loginButton" onAction="#loginButtonClicked" mnemonicParsing="false" text="Login" />
+              </items>
+            </ToolBar>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" GridPane.rowIndex="1">
+               <children>
+                  <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <tabs>
+                        <Tab text="Home">
+                           <content>
+      						<fx:include fx:id="Hometab" source="HomeTabLayout.fxml" />
+                           </content>
+                        </Tab>
+                        <Tab text="Plan">
+                           <content>
+      						<fx:include fx:id="Plantab" source="PlanTabLayout.fxml" />
+                           </content>
+                        </Tab>
+                        <Tab text="Stat">
+                           <content>
+                              <fx:include fx:id="StatTab" source="StatTabLayout.fxml" /> 
+                           </content>
+                        </Tab>
+                        <Tab text="Share">
+                           <content>
+                              <fx:include fx:id="ShareTab" source="ShareTabLayout.fxml" /> 
+                           </content>
+                        </Tab>
+                        <Tab text="WishList">
+                        	 <content>
+                        	 	<fx:include fx:id="WishListTab" source="WishListTabLayout.fxml" />
+                        	 </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
          </children>
-      </AnchorPane>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+      </GridPane>
    </children>
 </AnchorPane>
