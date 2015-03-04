@@ -2,8 +2,6 @@ package app.controller;
 
 import java.util.Date;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
 import app.model.ActivityPlan;
 import app.model.RealDayPlan;
 import app.model.RealActivityPlan;
@@ -81,8 +79,7 @@ public class PlansCreator {
 	
 	public ObservableList<RealDayPlan> create() {
 		todayDate = new Date();
-		System.out.println(todayDate);
-		weekPlan.add(new RealDayPlan(mapP7, new Date(todayDate.getTime() - 6*24*3600*1000)));
+		//weekPlan.add(new RealDayPlan(mapP7, new Date(todayDate.getTime() - 6*24*3600*1000)));
 		weekPlan.add(new RealDayPlan(mapP6, new Date(todayDate.getTime() - 5*24*3600*1000)));
 		weekPlan.add(new RealDayPlan(mapP5, new Date(todayDate.getTime() - 4*24*3600*1000)));
 		weekPlan.add(new RealDayPlan(mapP4, new Date(todayDate.getTime() - 3*24*3600*1000)));
