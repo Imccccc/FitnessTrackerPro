@@ -14,13 +14,16 @@ public abstract class DBconnector {
 	final static String DBuser="408";
 	final static String DBpass="408";
 	final static String DBdatabase="fitness";
-	
-	
+
 	public static String username=null;
 	static Connection con=null;
 	
-	public static void main(String args[]){
+	static{
 		connect();
+		//login("lhc","123");
+	}
+	
+	public static void main(String args[]){
 		login("lhc","123");
 		//createActivity("qwe", 0);
 		//createActivity("asd", 1);
@@ -58,20 +61,32 @@ public abstract class DBconnector {
 			e.printStackTrace();
 		}
 		con=null;
+		username=null;
 	}
-	
-	public static int login(String username, String password){//0 success -1fail -2dne -3wrong pass
+
+
+	public static int login(String username, String password){//0 success -1other error  -2not exist user -3wrong password
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return -1;
+		}
+
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"' AND password='"+password+"'");
+			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"'");
 			if(!result.next()){  
-				System.out.println("Failed login");
+				System.out.println("not existing username");
 				DBconnector.username=null;
-				return -1;
+				return -2;
 			}else{
-				System.out.println("Success login");
-				DBconnector.username=username;
-				return 0;
+				if (password.equals(result.getString("password"))){
+					System.out.println("Success login");
+					DBconnector.username=username;
+					return 0;
+				}else{
+					System.out.println("wrong password");
+					return -3;
+				}
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -79,10 +94,22 @@ public abstract class DBconnector {
 		}
 	}
 	
-	public static int createUser(String username, String password){//0 success -1fail -2already exist
+
+	public static int createUser(String username, String password){//0 success -1other error -2existing
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return -1;
+		}
+
 		try{
 			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"'");
+			if(result.next()){  
+				System.out.println("Existing username");
+				return -2;
+			}
 			stmt.executeUpdate("INSERT INTO account (username,password) VALUES ('"+username+"','"+password+"')");
+			DBconnector.username=username;
 			System.out.println("Successfully creating account");
 			return 0;
 		}catch(SQLException e){
@@ -91,27 +118,11 @@ public abstract class DBconnector {
 		}
 	}
 	
-	public static int createActivity(String name, int unitsecond){// +num=id -1fail
-		try{
-			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM activity WHERE name='"+name+"'");
-			if (result.next()==true) {
-				System.out.println("Activity exists");
-				return -1;
-			}
-			stmt.executeUpdate("INSERT INTO activity (name,unitsecond) VALUES ('"+name+"','"+unitsecond+"')");
-			result = stmt.executeQuery("SELECT * FROM activity WHERE name='"+name+"'");
-			result.next();
-			int ret=result.getInt("activityid");
-			System.out.println("Successfully creating activity at ID"+ret);
-			return ret;
-		}catch(SQLException e){
-			e.printStackTrace();
+	public static int addRating(int planid, double rating, String comments){//0seccess  -1fail
+		if (username==null) {
+			System.out.println("Not logged in");
 			return -1;
 		}
-	}
-	
-	public static int addRating(int planid, double rating, String comments){//0seccess  -1fail
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("INSERT INTO rating (username,planid,rating,comments) VALUES ('"+username+"','"+planid+"','"+rating+"','"+comments+"')");
@@ -123,6 +134,10 @@ public abstract class DBconnector {
 		}
 	}
 	public static double getAvgRating(int planid){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return -1;
+		}
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT avg(rating) from rating where planid = "+planid);
@@ -139,6 +154,10 @@ public abstract class DBconnector {
 		}	
 	}
 	public static int reportToday(double calories){//0seccess  -1fail
+		if (username==null) {
+			System.out.println("Not logged in");
+			return -1;
+		}
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("INSERT INTO personalexerciseamount (username,date,calories) VALUES ('"+username+"',curdate(),"+calories+")");
@@ -161,6 +180,10 @@ public abstract class DBconnector {
 	}
 	
 	public static ArrayList<app.model.dayAmount> getExerciseAmount(String username){//0seccess  -1fail
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return null;
+		}
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
@@ -179,6 +202,10 @@ public abstract class DBconnector {
 	}
 	
 	public static ArrayList<WeekPlan> getPlans(){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return null;
+		}
 		try{
 			
 			Statement stmt = con.createStatement();
@@ -224,7 +251,6 @@ public abstract class DBconnector {
 						map.put(result3.getString("name"), ap);
 						
 					}
-//					System.out.println(map.toString());
 					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
@@ -258,7 +284,11 @@ public abstract class DBconnector {
 	}
 	
 	public static int writePlan(WeekPlan plan){
-		int planid=newPlan(plan.getPlanType());
+		if (username==null) {
+			System.out.println("Not logged in");
+			return -1;
+		}
+		int planid=newPlan(plan);
 		for (int weekday=0;weekday<7;weekday++){
 			app.model.DayPlan t=plan.getDayPlan(weekday);
 			for (app.model.ActivityPlan ac:t.getDayPlan().values()){
@@ -296,11 +326,12 @@ public abstract class DBconnector {
 		}
 	}
 	
-	public static int newPlan(String plantype){
-		if (!isLoggedIn()) return -1;
+	public static int newPlan(WeekPlan plan){
+		if (username==null) return -1;
 		try{
 			Statement stmt = con.createStatement();
-			stmt.executeUpdate("INSERT INTO sharedplan (username,plantype) VALUES ('"+username+"','"+plantype+"')");
+			stmt.executeUpdate("INSERT INTO sharedplan (username,plantype,planname) VALUES ('"
+			+username+"','"+plan.getPlanType()+"','"+plan.getPlanName()+"')");
 			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan order by planid DESC");
 			while(result.next()){
 				return result.getInt("planid");
