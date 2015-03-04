@@ -9,12 +9,6 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
 import DBconnector.DBconnector;
-import aleksPack10.moved.anim.Hide;
-
-import com.apple.laf.AquaButtonBorder.Toolbar;
-import com.oracle.xmlns.internal.webservices.jaxws_databinding.ExistingAnnotationsType;
-import com.sun.media.jai.opimage.DivideByConstCRIF;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -25,8 +19,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Popup;
-import jdk.internal.org.objectweb.asm.util.CheckAnnotationAdapter;
 
 public class MainController {
 	@FXML
@@ -158,17 +150,20 @@ public class MainController {
 		if(DBconnector.username != null){
 			registerButton.setText("Logout");
 			loginButton.setText(DBconnector.username);
-			loginButton.setDisable(true);
+			//loginButton.setDisable(true);
 		}
 		else{
 			registerButton.setText("Register");
 			loginButton.setText("Login");
-			loginButton.setDisable(false);
+			//loginButton.setDisable(false);
 		}
 	}
 	
 	@FXML
 	public void loginButtonClicked(){
+		if(DBconnector.username != null){
+			return;
+		}
 		username = new TextField();
 		password = new PasswordField();
 		AtomicBoolean username_flag = new AtomicBoolean(true);
@@ -227,7 +222,7 @@ public class MainController {
 			}
 
 			// Check with DB
-			int ret = DBconnector.login(usernameString, usernameString);  //0 success -1fail -2dne -3wrong pass			
+			int ret = DBconnector.login(usernameString, passString);  //0 success -1fail -2dne -3wrong pass			
 			if(ret==-2){
 				// Do not exist current username
 				showMessageDialog("Login Dialog", "The username you entered does not exist!");
