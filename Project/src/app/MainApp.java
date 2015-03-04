@@ -2,6 +2,7 @@ package app;
 
 import java.io.IOException;
 
+import DBconnector.DBconnector;
 import app.model.Activity;
 import app.model.WeekPlan;
 import javafx.application.Application;
@@ -46,7 +47,8 @@ public class MainApp extends Application {
         activities.addAll(ClassSerializer.ActivityUnserializer());
         
         initRootLayout();
-
+        //DBconnector.login("lhc","123");
+        //DBconnector.writePlan(weekPlan);
     }
     
     
@@ -67,6 +69,7 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
     }
     
     /**

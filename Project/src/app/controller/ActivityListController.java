@@ -194,7 +194,7 @@ public class ActivityListController {
 		loadDayPlan(0, sundayActivities);
 	}
 
-	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
+	private static void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
 		DayPlan dayplan = MainApp.weekPlan.getDayPlan(index);
 		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
             ActivityPlan a = entry.getValue();
@@ -250,7 +250,7 @@ public class ActivityListController {
     	dragable = !dragable;
     }
     
-    private void saveWeekPlan() {
+    private static void saveWeekPlan() {
 
     	ObservableList<DayPlan> dayPlanList = FXCollections.observableArrayList();
     	dayPlanList.add(generateDayPlan(sundayActivities));
@@ -267,7 +267,7 @@ public class ActivityListController {
        	ClassSerializer.WeekPlanSerializer(MainApp.weekPlan);
 	}
 
-	private DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
+	private static DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
 		ObservableMap<String, ActivityPlan> omap = FXCollections.observableHashMap();
 		for(ActivityPlan activityPlan : activitiesList){
 			omap.put(activityPlan.getActivity().getActvityName(), activityPlan);
@@ -1179,4 +1179,24 @@ public class ActivityListController {
     		}
     	});
     }
+
+	public static void updateWeekPlan() {
+    	sundayActivities.clear();
+    	mondayActivities.clear();
+    	tuesdayActivities.clear();
+    	wednesdayActivities.clear();
+    	thursdayActivities.clear();
+    	fridayActivities.clear();
+    	saturdayActivities.clear();
+    	
+		loadDayPlan(1, mondayActivities);
+		loadDayPlan(2, tuesdayActivities);
+		loadDayPlan(3, wednesdayActivities);
+		loadDayPlan(4, thursdayActivities);
+		loadDayPlan(5, fridayActivities);
+		loadDayPlan(6, saturdayActivities);
+		loadDayPlan(0, sundayActivities);
+    	saveWeekPlan();
+		
+	}
 }

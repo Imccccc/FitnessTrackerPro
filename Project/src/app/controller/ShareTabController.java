@@ -1,12 +1,9 @@
 package app.controller;
 
-
 import java.util.Map.Entry;
 
 import org.controlsfx.dialog.Dialog;
 
-import app.ClassSerializer;
-import app.MainApp;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.WeekPlan;
@@ -20,19 +17,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-public class WishListTabController {
-	
-	public static ObservableMap<String, WeekPlan> wishList;
-	
+public class ShareTabController {
+
 	@FXML
-	private AnchorPane wishListPane;
-	@FXML
-	private ScrollPane wishListScrollPane;
+	private ScrollPane shareTabScrollPane;
+	
+	private ObservableMap<String, WeekPlan> shareMap;
 	
 	private static WeekPlan popUpPlan;
 	
@@ -51,11 +45,11 @@ public class WishListTabController {
 	public static final ObservableList<ActivityPlan> saturdayActivities = 
 	        FXCollections.observableArrayList();
 	
-    /**
+	 /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
-    public WishListTabController() {
+    public ShareTabController() {
     }
     
     /**
@@ -80,15 +74,18 @@ public class WishListTabController {
         column4.setPercentWidth(25);
         grid.getColumnConstraints().addAll(column1, column2, column3, column4);
     	
-        wishList = ClassSerializer.WishListUnserializer();
-        //System.out.println(wishList.size());       
+//        wishList = ClassSerializer.WishListUnserializer();
+//        //System.out.println(wishList.size());       
+//      
+        int shareMap_size = 40;
         
-       	Button[] button = new Button[wishList.size()];
-       	String[] planNameSet = new String[wishList.size()];
-       	wishList.keySet().toArray(planNameSet);
+       	Button[] button = new Button[shareMap_size];
+       	//String[] planNameSet = new String[shareMap_size];
+       	//wishList.keySet().toArray(planNameSet);
        	
-        for(int i=0; i<wishList.size(); i++){
-        	button[i] = new Button(planNameSet[i]);
+        for(int i=0; i<shareMap_size; i++){
+        	//button[i] = new Button(planNameSet[i]);
+        	button[i] = new Button("Button"+i);
         	button[i].setMaxSize(220, 180);
         	button[i].setOnAction((event) -> {
         	    // Button was clicked, do something...
@@ -97,7 +94,7 @@ public class WishListTabController {
         	}); 
         }
         
-        int numRow = (int) Math.ceil(wishList.size() / 4.0);
+        int numRow = (int) Math.ceil(shareMap_size / 4.0);
         
         for(int i=0; i < numRow; i++){
         	for(int j=0; j < 4; j++){
@@ -108,7 +105,7 @@ public class WishListTabController {
         	grid.getRowConstraints().add(new RowConstraints(200));
         }    	
 
-    	wishListScrollPane.setContent(grid);
+    	shareTabScrollPane.setContent(grid);
     }
 
 	private void popupPlan(Button button, String text) {
@@ -157,18 +154,18 @@ public class WishListTabController {
 		
 		Button applyButton = new Button("Apply");
 		applyButton.setOnAction((event) -> {
-    	    MainApp.weekPlan = wishList.get(text);
-    	    ActivityListController.updateWeekPlan();
+    	    //MainApp.weekPlan = wishList.get(text);
+    	    //ActivityListController.updateWeekPlan();
     	    dlg.hide();
     	}); 
 		gPane.add(applyButton, 1, 1);
 		
 		Button deleteButton = new Button("Delete");
 		deleteButton.setOnAction((event) -> {
-    	    if(wishList.remove(text)==null)
-    	    	System.out.println("No such Plan");
-    	    ClassSerializer.WishListSerializer(wishList);
-    	    initialize();
+//    	    if(wishList.remove(text)==null)
+//    	    	System.out.println("No such Plan");
+//    	    ClassSerializer.WishListSerializer(wishList);
+//    	    initialize();
     	    dlg.hide();
     	}); 
 		gPane.add(deleteButton, 2, 1);
@@ -178,7 +175,7 @@ public class WishListTabController {
 	}
 	
     private void loadWeekPlan(String planName) {    	
-    	popUpPlan = wishList.get(planName);
+    	popUpPlan = shareMap.get(planName);
     	
     	sundayActivities.clear();
     	mondayActivities.clear();
@@ -219,5 +216,4 @@ public class WishListTabController {
 
 		tableView.getColumns().addAll(name_Col, count_Col);
 	}
-	  
 }
