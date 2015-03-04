@@ -28,12 +28,12 @@ public abstract class DBconnector {
 		//createActivity("qwe", 0);
 		//createActivity("asd", 1);
 		//reportToday(5.9);
-		getExerciseAmount("lhc\\'");
+		//getExerciseAmount("lhc\\'");
 		
-		getAvgRating(1);
+		//getAvgRating(1);
 		
 		
-		System.out.print(getPlans().size());
+		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 	}
 	
 	public static boolean isLoggedIn(){
@@ -341,6 +341,11 @@ public abstract class DBconnector {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	public static String SQLSpecialChar(String input){
+		if (input==null) return null;
+		return input.replaceAll("(['\\\\])", "\\\\$1");
 	}
 }
 
