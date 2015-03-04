@@ -47,8 +47,8 @@ public class MainApp extends Application {
         activities.addAll(ClassSerializer.ActivityUnserializer());
         
         initRootLayout();
-        DBconnector.login("lhc","123");
-        DBconnector.writePlan(weekPlan);
+        //DBconnector.login("lhc","123");
+        //DBconnector.writePlan(weekPlan);
     }
     
     
