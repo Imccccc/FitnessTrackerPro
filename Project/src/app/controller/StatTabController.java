@@ -51,10 +51,8 @@ public class StatTabController {
     	for(RealDayPlan dayPlan : chartPlans) {
     		dayNames.add(dayName[dayPlan.getDate().getDay() + 1].substring(0, 3)); //add to our ObservableList of dayNames
     	}
-    	//xAxis = new CategoryAxis();
     	xAxis.setCategories(dayNames);
     	xAxis.setLabel("Week");
-    	//yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
 
     	seriesRealData = new XYChart.Series<String, Number>();

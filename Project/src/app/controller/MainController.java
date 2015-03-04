@@ -8,7 +8,12 @@ import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
+import DBconnector.DBconnector;
+import aleksPack10.moved.anim.Hide;
+
+import com.apple.laf.AquaButtonBorder.Toolbar;
 import com.oracle.xmlns.internal.webservices.jaxws_databinding.ExistingAnnotationsType;
+import com.sun.media.jai.opimage.DivideByConstCRIF;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,9 +37,15 @@ public class MainController {
 	TextField username;
 	PasswordField password;
 	PasswordField password_confirm;
+	
 
 	@FXML
 	public void registerButtonClicked(){
+		if(DBconnector.username != null){
+			DBconnector.username = null;
+			UpdateToolBar();
+			return;
+		}
 		username = new TextField();
 		password = new PasswordField();
 		password_confirm = new PasswordField();
@@ -94,9 +105,20 @@ public class MainController {
 			if(!checkPassword(passString, passConfString))
 				return;
 
-			showMessageDialog("Registration Dialog", "Congratulations! Your registration succeed!");
-			
-			d.hide();
+			int ret = DBconnector.createUser(usernameString, passString);//0 success -1fail -2already exist
+			if(ret==-2){
+				showMessageDialog("Registration Dialog", "Sorry, your username has been already taken. Please choose another one.");
+			}
+			else if(ret==-1){
+				showMessageDialog("Registration Dialog", "Sorry, some errors just happen. Please try again.");
+			}
+			else if(ret==0){
+				showMessageDialog("Registration Dialog", "Congratulations! Your registration succeed!");
+
+				d.hide();
+				DBconnector.username = usernameString;
+				UpdateToolBar();
+			}
 		}
 
 	};
@@ -113,27 +135,15 @@ public class MainController {
 		return true;
 	}
 
-	private boolean checkUsername(String usernameString) {
+	private boolean checkUsername(String usernameString) { // Only check alphanumeric
 		if(!usernameString.matches("[A-Za-z0-9]+")){
 			showMessageDialog("Registration Dialog", "Error! Your username is not alphanumeric! Please only include number and character in your username.");			
 			return false;
 		}
-//		if(usernameString.length() < 6 || usernameString.length() > 32){
-//			showMessageDialog("Error! Your username must in the range of 6~32. Please enter again.");
-//			return false;
-//		}
-		if(existUsername(usernameString)){
-			showMessageDialog("Registration Dialog", "Sorry, your username has already existed. Please enter another one.");
-			return false;
-		}
+
 		return true;
 	}
 	
-	
-	private boolean existUsername(String usernameString) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	private void showMessageDialog(String title, String message){
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -142,6 +152,19 @@ public class MainController {
 		alert.setContentText(message);
 
 		alert.showAndWait();	
+	}
+	
+	private void UpdateToolBar() {
+		if(DBconnector.username != null){
+			registerButton.setText("Logout");
+			loginButton.setText(DBconnector.username);
+			loginButton.setDisable(true);
+		}
+		else{
+			registerButton.setText("Register");
+			loginButton.setText("Login");
+			loginButton.setDisable(false);
+		}
 	}
 	
 	@FXML
@@ -189,35 +212,42 @@ public class MainController {
 		public void handle(ActionEvent ae) {			
 			Dialog d = (Dialog) ae.getSource();
 			
+			// Validate the username (whether alphanumeric)
 			String usernameString = username.getText();
 			if(!usernameString.matches("[A-Za-z0-9]+")){
 				showMessageDialog("Login Dialog", "Error! Your username is not alphanumeric! Your username sholud only contain numbers and characters..");			
 				return;
 			}
 			
+			// Validate the password (whether length in 6~32)
 			String passString = password.getText();
 			if(passString.length() < 6 || passString.length() > 32){
 				showMessageDialog("Login Dialog", "Error! Your password should in the range of 6~32. Please enter again.");
 				return;
 			}
 
-			if(!checkUsernamePassworPair(usernameString, passString)){				
-				return;
+			// Check with DB
+			int ret = DBconnector.login(usernameString, usernameString);  //0 success -1fail -2dne -3wrong pass			
+			if(ret==-2){
+				// Do not exist current username
+				showMessageDialog("Login Dialog", "The username you entered does not exist!");
 			}
-
-			showMessageDialog("Login Dialog", "Welcome back to the Fitness Track Pro! Your login request succeed!");
+			else if(ret==-3){
+				// Wrong password
+				showMessageDialog("Login Dialog", "Wrong password! please try again.");
+			}
+			else if(ret==0){
+				// Success
+				showMessageDialog("Login Dialog", "Welcome back to the Fitness Track Pro! Your login request succeed!");
 			
-			d.hide();
-		}
-
-		private boolean checkUsernamePassworPair(String usernameString, String passString) {
-			// TODO Auto-generated method stub
-			// Should contain two cases, they popup different error messages
-			// Case 1: Username does not exist
-			
-			// Case 2: Username exists, but password does not match
-			
-			return true;
+				d.hide();
+				DBconnector.username = usernameString;
+				UpdateToolBar();
+			}
+			else{
+				// Other error
+				showMessageDialog("Login Dialog", "Sorry, some error happens, please try again.");
+			}
 		}
 
 	};

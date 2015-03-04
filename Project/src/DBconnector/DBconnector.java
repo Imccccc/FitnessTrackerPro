@@ -16,7 +16,7 @@ public abstract class DBconnector {
 	final static String DBdatabase="fitness";
 	
 	
-	static String username=null;
+	public static String username=null;
 	static Connection con=null;
 	
 	public static void main(String args[]){
@@ -60,7 +60,7 @@ public abstract class DBconnector {
 		con=null;
 	}
 	
-	public static int login(String username, String password){//0 success -1fail
+	public static int login(String username, String password){//0 success -1fail -2dne -3wrong pass
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"' AND password='"+password+"'");
@@ -79,7 +79,7 @@ public abstract class DBconnector {
 		}
 	}
 	
-	public static int createUser(String username, String password){//0 success -1fail
+	public static int createUser(String username, String password){//0 success -1fail -2already exist
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("INSERT INTO account (username,password) VALUES ('"+username+"','"+password+"')");
