@@ -2,6 +2,11 @@ package DBconnector;
 
 import java.sql.*;
 import java.util.ArrayList;
+
+import javafx.beans.property.*;
+import javafx.collections.*;
+import app.model.*;
+
 public abstract class DBconnector {
 	
 	
@@ -23,6 +28,9 @@ public abstract class DBconnector {
 		getExerciseAmount("lhc\\'");
 		
 		getAvgRating(1);
+		
+		
+		System.out.print(getPlans().size());
 	}
 	
 	public static boolean isLoggedIn(){
@@ -167,6 +175,140 @@ public abstract class DBconnector {
 			return ret;
 		}catch(SQLException e){
 			return null;
+		}
+	}
+	
+	public static ArrayList<WeekPlan> getPlans(){
+		try{
+			
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan");
+			int planid = -1;
+			int weekday = -1;
+			String planname = "";
+			String planType = "";
+			String spusername = "";
+			//int rating = -1;
+			//String comment = "";
+			
+			
+			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
+			
+			while(result.next()){
+				
+				planid = result.getInt("planid");
+				planname = result.getString("planname");
+				planType = result.getString("plantype"); 
+				spusername = result.getString("username"); 
+				//rating = result.getInt("rating");
+				//comment = result.getString("comments");
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
+				
+				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
+				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				while(result2.next()){
+					
+					weekday = result2.getInt("weekday");
+					
+					Statement stmt3 = con.createStatement();
+					ResultSet result3 = stmt3.executeQuery("SELECT * FROM plan p INNER JOIN activity a ON p.`activityid` = a.`activityid` WHERE p.`planid`= "+planid+" AND p.`weekday` = "+weekday);
+					
+					ObservableMap<String, ActivityPlan> map = FXCollections.observableHashMap();
+					while(result3.next()){
+						Activity ac = new Activity(result3.getString("name"),result3.getInt("unitsecond")==0?Unit.TIMES:Unit.MINUTE);
+						
+						ActivityPlan ap = new ActivityPlan(ac,result3.getInt("amount"));
+										
+						map.put(result3.getString("name"), ap);
+						
+					}
+//					System.out.println(map.toString());
+					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
+					DayPlan dayPlan = new DayPlan(mapProperty);
+					
+					System.out.println(weekday+" "+dayPlan.toString());
+					dayplanlist.add(dayPlan);
+					
+				}
+				System.out.println("next dayplanlist:");
+				
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername);
+				
+				Statement stmt5 = con.createStatement();
+				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
+				while(result5.next()){
+					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
+					wp.addRating(r);
+					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+				}
+			
+				wps.add(wp);
+							
+			}
+			return wps;
+			
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public static int writePlan(WeekPlan plan){
+		int planid=newPlan(plan.getPlanType());
+		for (int weekday=0;weekday<7;weekday++){
+			app.model.DayPlan t=plan.getDayPlan(weekday);
+			for (app.model.ActivityPlan ac:t.getDayPlan().values()){
+				int activityID=getActivityID(ac.getActivity());
+				int amount=ac.getPlannedCount();
+				try{
+					Statement stmt = con.createStatement();
+					stmt.executeUpdate("INSERT INTO plan (planid,weekday,activityid,amount) VALUES "
+							+ "('"+planid+"','"+weekday+"','"+activityID+"','"+amount+"')");
+				}catch(SQLException e){
+					e.printStackTrace();
+					return -1;
+				}
+			}
+		}
+		return 0;
+	}
+	
+	public static int getActivityID(Activity ac){
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM activity WHERE name='"+ac.getActvityName()+"'");
+			while(result.next()){
+				return result.getInt("activityid");
+			}
+			stmt.executeUpdate("INSERT INTO activity (name,unitsecond) VALUES ('"+ac.getActvityName()+"','"+(ac.getUnit()==app.model.Unit.MINUTE?1:0)+"')");
+			result = stmt.executeQuery("SELECT * FROM activity WHERE name='"+ac.getActvityName()+"'");
+			while(result.next()){
+				return result.getInt("activityid");
+			}
+			return -1;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public static int newPlan(String plantype){
+		if (!isLoggedIn()) return -1;
+		try{
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("INSERT INTO sharedplan (username,plantype) VALUES ('"+username+"','"+plantype+"')");
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan order by planid DESC");
+			while(result.next()){
+				return result.getInt("planid");
+			}
+			return -1;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return -1;
 		}
 	}
 }
