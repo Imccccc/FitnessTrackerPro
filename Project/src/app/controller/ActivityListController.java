@@ -39,7 +39,6 @@ import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
-import app.model.RealActivityPlan;
 import app.model.Unit;
 import app.model.WeekPlan;
 

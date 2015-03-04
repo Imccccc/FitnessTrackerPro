@@ -184,6 +184,6 @@ public class HomeTabController {
 
 	public void buttonClickHnadler(){
     	 System.out.println("Button clicked");
-    	 boolean okClicked = openNewDialog();
+    	 openNewDialog();
     }
 }
