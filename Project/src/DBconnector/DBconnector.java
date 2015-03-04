@@ -16,7 +16,7 @@ public abstract class DBconnector {
 	final static String DBdatabase="fitness";
 	
 	
-	static String username=null;
+	public static String username=null;
 	static Connection con=null;
 	
 	public static void main(String args[]){
@@ -59,19 +59,24 @@ public abstract class DBconnector {
 		}
 		con=null;
 	}
-	
-	public static int login(String username, String password){//0 success -1fail
+
+	public static int login(String username, String password){//0 success -1other error  -2not exist user -3wrong password
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"' AND password='"+password+"'");
+			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"'");
 			if(!result.next()){  
-				System.out.println("Failed login");
+				System.out.println("not existing username");
 				DBconnector.username=null;
-				return -1;
+				return -2;
 			}else{
-				System.out.println("Success login");
-				DBconnector.username=username;
-				return 0;
+				if (password.equals(result.getString("password"))){
+					System.out.println("Success login");
+					DBconnector.username=username;
+					return 0;
+				}else{
+					System.out.println("wrong password");
+					return -3;
+				}
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -79,9 +84,14 @@ public abstract class DBconnector {
 		}
 	}
 	
-	public static int createUser(String username, String password){//0 success -1fail
+	public static int createUser(String username, String password){//0 success -1other error -2existing
 		try{
 			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"'");
+			if(result.next()){  
+				System.out.println("Existing username");
+				return -2;
+			}
 			stmt.executeUpdate("INSERT INTO account (username,password) VALUES ('"+username+"','"+password+"')");
 			System.out.println("Successfully creating account");
 			return 0;
