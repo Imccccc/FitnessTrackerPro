@@ -9,8 +9,7 @@ import app.model.*;
 
 public abstract class DBconnector {
 	
-	//weekplan avg
-	//getplan(str);
+	
 	final static String DBaddress="jdbc:mysql://98.223.107.97/";
 	final static String DBuser="408";
 	final static String DBpass="408";
@@ -29,14 +28,9 @@ public abstract class DBconnector {
 		
 		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 		
-		System.out.println(getPlans().size());
+		System.out.println("getplans1:"+getPlans().size());
 		
-		String str = "1|2";
-		String[] substr = str.split("\\|");
-		for(String s: substr)
-			System.out.println("..........."+s);
-		System.out.println("----"+str.split("|").length);
-		System.out.println(getPlans(str).size());
+		System.out.println("getplans2:"+getPlans("1|3").size());
 		
 	}
 	
@@ -223,17 +217,16 @@ public abstract class DBconnector {
 		try{
 			String[] subfilter = filters.split("\\|");
 			
-			System.out.println(subfilter.toString());
 			String where = "";
+
 			for(int i = 0 ; i< (subfilter.length-1); i++){
-			//	System.out.print(subfilter[i]);
-			//	if(!subfilter[i].equals("|"))
 				where += (" plantype LIKE '"+subfilter[i]+"' OR ");
 			}
 			where += ("plantype LIKE '"+subfilter[subfilter.length-1]+"'");
 		
+			System.out.println(where);
 			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan "+where);
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan where "+where);
 			int planid = -1;
 			int weekday = -1;
 			String planname = "";
@@ -248,8 +241,6 @@ public abstract class DBconnector {
 				planname = result.getString("planname");
 				planType = result.getString("plantype"); 
 				spusername = result.getString("username"); 
-				//rating = result.getInt("rating");
-				//comment = result.getString("comments");
 				
 				Statement stmt2 = con.createStatement();
 				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
@@ -280,8 +271,9 @@ public abstract class DBconnector {
 					
 				}
 				System.out.println("next dayplanlist:");
+				Double rate = getAvgRating(planid);
 				
-				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername);
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
 				
 				Statement stmt5 = con.createStatement();
 				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
@@ -357,8 +349,8 @@ public abstract class DBconnector {
 					
 				}
 				System.out.println("next dayplanlist:");
-				
-				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername);
+				Double rate = getAvgRating(planid);
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
 				
 				Statement stmt5 = con.createStatement();
 				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);

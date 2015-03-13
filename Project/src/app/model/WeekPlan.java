@@ -32,10 +32,12 @@ public class WeekPlan implements Serializable{
 		this.planType=new SimpleStringProperty(plantype);
 	}
 	
-	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name, String plantype,String username){
+	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name, String plantype,String username,Double rate){
 		this(dayPlanList, name,plantype);
 		this.planUserName = new SimpleStringProperty(username);
+		this.avgRatig = rate;
 	}
+	
 	
 	public void addRating(Rating rating){
 		ratingList.add(rating);
