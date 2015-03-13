@@ -25,15 +25,13 @@ public abstract class DBconnector {
 	
 	public static void main(String args[]){
 		login("lhc","123");
-		//createActivity("qwe", 0);
-		//createActivity("asd", 1);
-		//reportToday(5.9);
-		//getExerciseAmount("lhc\\'");
-		
-		//getAvgRating(1);
-		
 		
 		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
+		
+		System.out.println("getplans1:"+getPlans().size());
+		
+		System.out.println("getplans2:"+getPlans("1|3").size());
+		
 	}
 	
 	public static boolean isLoggedIn(){
@@ -70,6 +68,8 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return -1;
 		}
+		username=SQLSpecialChar(username);
+		password=SQLSpecialChar(password);
 
 		try{
 			Statement stmt = con.createStatement();
@@ -100,6 +100,8 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return -1;
 		}
+		username=SQLSpecialChar(username);
+		password=SQLSpecialChar(password);
 
 		try{
 			Statement stmt = con.createStatement();
@@ -123,6 +125,8 @@ public abstract class DBconnector {
 			System.out.println("Not logged in");
 			return -1;
 		}
+		comments=SQLSpecialChar(comments);
+		
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("INSERT INTO rating (username,planid,rating,comments) VALUES ('"+username+"','"+planid+"','"+rating+"','"+comments+"')");
@@ -133,6 +137,7 @@ public abstract class DBconnector {
 			return -1;
 		}
 	}
+	
 	public static double getAvgRating(int planid){
 		if (con==null) {
 			System.out.println("Connot connect to database");
@@ -153,6 +158,7 @@ public abstract class DBconnector {
 			return -1;
 		}	
 	}
+	
 	public static int reportToday(double calories){//0seccess  -1fail
 		if (username==null) {
 			System.out.println("Not logged in");
@@ -184,6 +190,8 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return null;
 		}
+		username=SQLSpecialChar(username);
+		
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
@@ -197,6 +205,91 @@ public abstract class DBconnector {
 			System.out.println("Successfully select");
 			return ret;
 		}catch(SQLException e){
+			return null;
+		}
+	}
+	
+	public static ArrayList<WeekPlan> getPlans(String filters){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return null;
+		}
+		try{
+			String[] subfilter = filters.split("\\|");
+			
+			String where = "";
+
+			for(int i = 0 ; i< (subfilter.length-1); i++){
+				where += (" plantype LIKE '"+subfilter[i]+"' OR ");
+			}
+			where += ("plantype LIKE '"+subfilter[subfilter.length-1]+"'");
+		
+			System.out.println(where);
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan where "+where);
+			int planid = -1;
+			int weekday = -1;
+			String planname = "";
+			String planType = "";
+			String spusername = "";
+			
+			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
+			
+			while(result.next()){
+				
+				planid = result.getInt("planid");
+				planname = result.getString("planname");
+				planType = result.getString("plantype"); 
+				spusername = result.getString("username"); 
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
+				
+				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
+				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				while(result2.next()){
+					
+					weekday = result2.getInt("weekday");
+					
+					Statement stmt3 = con.createStatement();
+					ResultSet result3 = stmt3.executeQuery("SELECT * FROM plan p INNER JOIN activity a ON p.`activityid` = a.`activityid` WHERE p.`planid`= "+planid+" AND p.`weekday` = "+weekday);
+					
+					ObservableMap<String, ActivityPlan> map = FXCollections.observableHashMap();
+					while(result3.next()){
+						Activity ac = new Activity(result3.getString("name"),result3.getInt("unitsecond")==0?Unit.TIMES:Unit.MINUTE);
+						
+						ActivityPlan ap = new ActivityPlan(ac,result3.getInt("amount"));
+										
+						map.put(result3.getString("name"), ap);
+						
+					}
+					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
+					DayPlan dayPlan = new DayPlan(mapProperty);
+					
+					System.out.println(weekday+" "+dayPlan.toString());
+					dayplanlist.add(weekday,dayPlan);
+					
+				}
+				System.out.println("next dayplanlist:");
+				Double rate = getAvgRating(planid);
+				
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
+				
+				Statement stmt5 = con.createStatement();
+				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
+				while(result5.next()){
+					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
+					wp.addRating(r);
+					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+				}
+			
+				wps.add(wp);
+							
+			}
+			return wps;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -215,9 +308,6 @@ public abstract class DBconnector {
 			String planname = "";
 			String planType = "";
 			String spusername = "";
-			//int rating = -1;
-			//String comment = "";
-			
 			
 			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
 			
@@ -255,12 +345,12 @@ public abstract class DBconnector {
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
 					System.out.println(weekday+" "+dayPlan.toString());
-					dayplanlist.add(dayPlan);
+					dayplanlist.add(weekday,dayPlan);
 					
 				}
 				System.out.println("next dayplanlist:");
-				
-				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername);
+				Double rate = getAvgRating(planid);
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
 				
 				Statement stmt5 = con.createStatement();
 				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);

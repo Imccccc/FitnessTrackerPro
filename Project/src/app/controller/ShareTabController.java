@@ -1,22 +1,31 @@
 package app.controller;
 
+import java.util.ArrayList;
 import java.util.Map.Entry;
-
+import org.controlsfx.control.ButtonBar;
+import org.controlsfx.control.Rating;
+import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.action.AbstractAction;
+import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
+import DBconnector.DBconnector;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.WeekPlan;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -26,9 +35,12 @@ public class ShareTabController {
 	@FXML
 	private ScrollPane shareTabScrollPane;
 	
-	private ObservableMap<String, WeekPlan> shareMap;
+	private ArrayList<WeekPlan> shareList;
 	
 	private static WeekPlan popUpPlan;
+	
+	private TextArea commentArea;
+	private Rating rating;
 	
 	public static final ObservableList<ActivityPlan> sundayActivities = 
 	        FXCollections.observableArrayList();
@@ -58,61 +70,99 @@ public class ShareTabController {
      */
     @FXML
     private void initialize() {
+        shareList= DBconnector.getPlans();
+        System.out.println("ShareList Size: "+shareList.size());       
+ 
+    	updateLayout();
+
+    }
+
+	private void updateLayout() {
+    	
     	GridPane grid = new GridPane();
-    	grid.setMinSize(1000, 600);
+    	grid.setMinSize(750, 600);
     	grid.setHgap(10);
     	grid.setVgap(10);
-    	grid.setPadding(new Insets(0, 20, 0, 20)); 
+    	grid.setPadding(new Insets(0, 5, 0, 5)); 
     	
-    	ColumnConstraints column1 = new ColumnConstraints();
-        column1.setPercentWidth(25);
-        ColumnConstraints column2 = new ColumnConstraints();
-        column2.setPercentWidth(25);
-    	ColumnConstraints column3 = new ColumnConstraints();
-        column3.setPercentWidth(25);
-        ColumnConstraints column4 = new ColumnConstraints();
-        column4.setPercentWidth(25);
-        grid.getColumnConstraints().addAll(column1, column2, column3, column4);
+        grid.getColumnConstraints().addAll(new ColumnConstraints(200), new ColumnConstraints(475), new ColumnConstraints(75));
     	
-//        wishList = ClassSerializer.WishListUnserializer();
-//        //System.out.println(wishList.size());       
-//      
-        int shareMap_size = 40;
+
+        int shareList_size = shareList.size();
         
-       	Button[] button = new Button[shareMap_size];
-       	//String[] planNameSet = new String[shareMap_size];
-       	//wishList.keySet().toArray(planNameSet);
+       	Button[] button = new Button[shareList_size];
        	
-        for(int i=0; i<shareMap_size; i++){
-        	//button[i] = new Button(planNameSet[i]);
-        	button[i] = new Button("Button"+i);
-        	button[i].setMaxSize(220, 180);
-        	button[i].setOnAction((event) -> {
-        	    // Button was clicked, do something...
-        		Button b = (Button) event.getSource();
-        	    popupPlan(b, b.getText());
-        	}); 
+        for(int i=0; i<shareList_size; i++){
+        	button[i] = new Button(shareList.get(i).getPlanName());
+        	button[i].setMaxSize(180, 90);
+        	button[i].setMinSize(180, 90);
+        	button[i].setOnAction(new EventHandler<ActionEvent>() {
+				int index;
+				@Override
+				public void handle(ActionEvent event) {
+					Button b = (Button) event.getSource();
+	        		System.out.println(b.getText());
+	        		popupPlan(b, index);			
+				}
+				public EventHandler<ActionEvent> init(int i)
+				{
+					this.index = i;
+					return this;
+				}
+			}.init(i)); 
         }
         
-        int numRow = (int) Math.ceil(shareMap_size / 4.0);
         
-        for(int i=0; i < numRow; i++){
-        	for(int j=0; j < 4; j++){
-        		if(4*i+j < button.length)
-        			grid.add(button[4*i+j], j, i);
-        		
+        for(int i=0; i < shareList_size; i++){
+        	grid.add(button[i], 0, i);
+        	
+        	GridPane CLGrid = new GridPane();
+        	CLGrid.setHgap(10);
+        	CLGrid.setPadding(new Insets(5, 0, 5, 5));
+        	int comment_num = 5;
+        	for(int i1=0;i1<comment_num;i1++){
+        		CLGrid.add(new Label("Here is the"+i1+"th comment"), 0, i1);
         	}
-        	grid.getRowConstraints().add(new RowConstraints(200));
+        	grid.add(CLGrid, 1, i);    	
+        	
+        	GridPane RCGrid = new GridPane();
+        	RCGrid.setMinSize(175, 100);
+        	RCGrid.setHgap(10);
+        	RCGrid.setPadding(new Insets(15, 5, 5, 5));
+        	RCGrid.getColumnConstraints().add(new ColumnConstraints(175));
+        	RCGrid.getRowConstraints().addAll(new RowConstraints(30), new RowConstraints(50));
+        	String rating = "4.3/5";
+        	Button commentButton = new Button("Comment");
+        	commentButton.setOnAction(new EventHandler<ActionEvent>() {
+				int index;
+
+				@Override
+				public void handle(ActionEvent event) {
+					Button b = (Button) event.getSource();
+	        		popupCommentDlg(b, index);			
+				}
+				public EventHandler<ActionEvent> init(int i)
+				{
+					this.index = i;
+					return this;
+				}
+        	}.init(i));
+        	RCGrid.add(new Label(rating), 0, 0);
+        	RCGrid.add(commentButton, 0, 1);        	
+        	grid.add(RCGrid, 2, i);
+        	grid.getRowConstraints().add(new RowConstraints(100));
         }    	
 
     	shareTabScrollPane.setContent(grid);
-    }
+		
+	}
 
-	private void popupPlan(Button button, String text) {
+	private void popupPlan(Button button, int index) {
+		popUpPlan = shareList.get(index);
 		
-		loadWeekPlan(text);
+		loadWeekPlan();
 		
-		Dialog dlg = new Dialog(button, "Plan Detail");
+		Dialog dlg = new Dialog(button, "Plan Detail: "+popUpPlan.getPlanName());
 		GridPane gPane = new GridPane();
 		gPane.setMaxSize(1000, 600);
 		gPane.setMinSize(1000, 600);
@@ -174,8 +224,7 @@ public class ShareTabController {
 		dlg.show();
 	}
 	
-    private void loadWeekPlan(String planName) {    	
-    	popUpPlan = shareMap.get(planName);
+    private void loadWeekPlan() {    	
     	
     	sundayActivities.clear();
     	mondayActivities.clear();
@@ -216,4 +265,64 @@ public class ShareTabController {
 
 		tableView.getColumns().addAll(name_Col, count_Col);
 	}
+	
+	private void popupCommentDlg(Button b, int index) {
+		commentArea = new TextArea();
+		commentArea.setMinSize(300, 100);
+		commentArea.setMaxSize(300, 100);
+		commentArea.setWrapText(true);
+    	rating = new Rating();       	  	
+    	rating.setMaxSize(175, 30);
+    	rating.setPrefSize(175, 30);
+    	rating.setMinSize(175, 30);
+
+		Dialog dlg = new Dialog( b, "Comment page");
+		
+		GridPane grid = new GridPane();
+		grid.setMaxSize(320, 200);
+		grid.setMinSize(320, 200);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(0, 10, 0, 10));
+
+		grid.add(new Label("Indicate your rating:"), 0, 0);
+		grid.add(rating, 1, 0);
+		grid.add(new Label("Your comment:"), 0, 1);
+		GridPane.setColumnSpan(commentArea, 2);
+		grid.add(commentArea, 0, 2);
+
+
+		ButtonBar.setType(actionComment, ButtonType.OK_DONE);
+		actionComment.disabledProperty().set(true);
+
+		// Do some validation (using the Java 8 lambda syntax).
+		commentArea.textProperty().addListener((observable, oldValue, newValue) -> {
+			actionComment.disabledProperty().set(newValue.trim().isEmpty());
+		});
+
+//
+//		dlg.setMasthead("Please enter a username and set password to register an account");
+		dlg.setContent(grid);
+		dlg.getActions().addAll(actionComment, Dialog.Actions.CANCEL);
+
+		dlg.show();
+	}
+	
+	final Action actionComment = new AbstractAction("Submit") {
+		// This method is called when the login button is clicked ...
+		public void handle(ActionEvent ae) {			
+			Dialog d = (Dialog) ae.getSource();
+
+			String comment = commentArea.getText();
+			double rate = rating.getRating();
+
+			System.out.println("Comment: "+comment);
+			System.out.println("Rating:  "+rate);
+			//TODO: update to the database
+			
+			d.hide();
+
+		}
+	};
+
 }

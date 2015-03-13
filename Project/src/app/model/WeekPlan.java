@@ -15,6 +15,7 @@ public class WeekPlan implements Serializable{
 	private SimpleListProperty<Rating> ratingList;
 	private StringProperty planType;
 	private StringProperty planUserName;
+	private double avgRatig;
 	
 	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name){
 		this.dayPlanList = dayPlanList;
@@ -23,6 +24,7 @@ public class WeekPlan implements Serializable{
 		this.planUserName=new SimpleStringProperty("");
 		ObservableList<Rating> observabledayplanlist = FXCollections.observableArrayList();
 		this.ratingList=new SimpleListProperty<Rating>(observabledayplanlist);
+		this.avgRatig = 0;
 	}
 	
 	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name, String plantype){
@@ -30,10 +32,12 @@ public class WeekPlan implements Serializable{
 		this.planType=new SimpleStringProperty(plantype);
 	}
 	
-	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name, String plantype,String username){
+	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name, String plantype,String username,Double rate){
 		this(dayPlanList, name,plantype);
 		this.planUserName = new SimpleStringProperty(username);
+		this.avgRatig = rate;
 	}
+	
 	
 	public void addRating(Rating rating){
 		ratingList.add(rating);
@@ -75,6 +79,10 @@ public class WeekPlan implements Serializable{
 	
 	public String getPlanUserName(){
 		return planUserName.get();
+	}
+	
+	public double getAvg(){
+		return this.avgRatig;
 	}
 	
 }
