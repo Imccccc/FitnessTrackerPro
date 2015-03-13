@@ -20,12 +20,7 @@
                </yAxis>
             </AreaChart>
             
-            <MenuButton layoutX="359.0" layoutY="53.0" mnemonicParsing="false" text="Week Plan">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Weekly Plan" />
-                  <MenuItem mnemonicParsing="false" text="Monthly Plan" />
-               </items>
-            </MenuButton>
+            <ComboBox fx:id="timeScaleBox" layoutX="359.0" layoutY="53.0" prefHeight="26.0" prefWidth="109.0" />
             <ComboBox fx:id="planNameBox" layoutX="489.0" layoutY="53.0" prefHeight="26.0" prefWidth="109.0" />
             
          </children>
