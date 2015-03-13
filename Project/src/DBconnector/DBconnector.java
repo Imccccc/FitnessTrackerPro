@@ -25,15 +25,11 @@ public abstract class DBconnector {
 	
 	public static void main(String args[]){
 		login("lhc","123");
-		//createActivity("qwe", 0);
-		//createActivity("asd", 1);
-		//reportToday(5.9);
-		//getExerciseAmount("lhc\\'");
-		
-		//getAvgRating(1);
-		
 		
 		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
+		
+		System.out.println(getPlans().size());
+		
 	}
 	
 	public static boolean isLoggedIn(){
@@ -70,6 +66,8 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return -1;
 		}
+		username=SQLSpecialChar(username);
+		password=SQLSpecialChar(password);
 
 		try{
 			Statement stmt = con.createStatement();
@@ -100,6 +98,8 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return -1;
 		}
+		username=SQLSpecialChar(username);
+		password=SQLSpecialChar(password);
 
 		try{
 			Statement stmt = con.createStatement();
@@ -123,6 +123,8 @@ public abstract class DBconnector {
 			System.out.println("Not logged in");
 			return -1;
 		}
+		comments=SQLSpecialChar(comments);
+		
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("INSERT INTO rating (username,planid,rating,comments) VALUES ('"+username+"','"+planid+"','"+rating+"','"+comments+"')");
@@ -133,6 +135,7 @@ public abstract class DBconnector {
 			return -1;
 		}
 	}
+	
 	public static double getAvgRating(int planid){
 		if (con==null) {
 			System.out.println("Connot connect to database");
@@ -184,6 +187,8 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return null;
 		}
+		username=SQLSpecialChar(username);
+		
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
@@ -215,9 +220,6 @@ public abstract class DBconnector {
 			String planname = "";
 			String planType = "";
 			String spusername = "";
-			//int rating = -1;
-			//String comment = "";
-			
 			
 			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
 			
@@ -255,7 +257,7 @@ public abstract class DBconnector {
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
 					System.out.println(weekday+" "+dayPlan.toString());
-					dayplanlist.add(dayPlan);
+					dayplanlist.add(weekday,dayPlan);
 					
 				}
 				System.out.println("next dayplanlist:");
