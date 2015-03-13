@@ -2,7 +2,7 @@ package DBconnector;
 
 import java.sql.*;
 import java.util.ArrayList;
-
+import java.util.Comparator;
 import javafx.beans.property.*;
 import javafx.collections.*;
 import app.model.*;
@@ -31,6 +31,10 @@ public abstract class DBconnector {
 		System.out.println("getplans1:"+getPlans().size());
 		
 		System.out.println("getplans2:"+getPlans("1|3").size());
+		
+		System.out.println("getplans2:"+getPlans("1|3",true).size());
+		
+		System.out.println("getplans2:"+getPlans(true).toString());
 		
 	}
 	
@@ -224,7 +228,6 @@ public abstract class DBconnector {
 			}
 			where += ("plantype LIKE '"+subfilter[subfilter.length-1]+"'");
 		
-			System.out.println(where);
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan where "+where);
 			int planid = -1;
@@ -270,7 +273,7 @@ public abstract class DBconnector {
 					dayplanlist.add(weekday,dayPlan);
 					
 				}
-				System.out.println("next dayplanlist:");
+	//			System.out.println("next dayplanlist:");
 				Double rate = getAvgRating(planid);
 				
 				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
@@ -280,7 +283,7 @@ public abstract class DBconnector {
 				while(result5.next()){
 					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
 					wp.addRating(r);
-					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+	//				System.out.println("rating:"+r.toString()+" by "+r.getUsername());
 				}
 			
 				wps.add(wp);
@@ -293,6 +296,7 @@ public abstract class DBconnector {
 			return null;
 		}
 	}
+	
 	
 	public static ArrayList<WeekPlan> getPlans(){
 		if (con==null) {
@@ -317,8 +321,6 @@ public abstract class DBconnector {
 				planname = result.getString("planname");
 				planType = result.getString("plantype"); 
 				spusername = result.getString("username"); 
-				//rating = result.getInt("rating");
-				//comment = result.getString("comments");
 				
 				Statement stmt2 = con.createStatement();
 				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
@@ -344,7 +346,175 @@ public abstract class DBconnector {
 					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
-					System.out.println(weekday+" "+dayPlan.toString());
+	//				System.out.println(weekday+" "+dayPlan.toString());
+					dayplanlist.add(weekday,dayPlan);
+					
+				}
+		//		System.out.println("next dayplanlist:");
+				Double rate = getAvgRating(planid);
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
+				
+				Statement stmt5 = con.createStatement();
+				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
+				while(result5.next()){
+					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
+					wp.addRating(r);
+		//			System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+				}
+			
+				wps.add(wp);
+							
+			}
+			return wps;
+			
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	//get filtered plans order by avgrating desc if parameter is true
+	public static ArrayList<WeekPlan> getPlans(String filters,boolean order){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return null;
+		}
+		try{
+			String[] subfilter = filters.split("\\|");
+			
+			String where = "";
+
+			for(int i = 0 ; i< (subfilter.length-1); i++){
+				where += (" plantype LIKE '"+subfilter[i]+"' OR ");
+			}
+			where += ("plantype LIKE '"+subfilter[subfilter.length-1]+"'");
+		
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan where "+where);
+			int planid = -1;
+			int weekday = -1;
+			String planname = "";
+			String planType = "";
+			String spusername = "";
+			
+			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
+			
+			while(result.next()){
+				
+				planid = result.getInt("planid");
+				planname = result.getString("planname");
+				planType = result.getString("plantype"); 
+				spusername = result.getString("username"); 
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
+				
+				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
+				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				while(result2.next()){
+					
+					weekday = result2.getInt("weekday");
+					
+					Statement stmt3 = con.createStatement();
+					ResultSet result3 = stmt3.executeQuery("SELECT * FROM plan p INNER JOIN activity a ON p.`activityid` = a.`activityid` WHERE p.`planid`= "+planid+" AND p.`weekday` = "+weekday);
+					
+					ObservableMap<String, ActivityPlan> map = FXCollections.observableHashMap();
+					while(result3.next()){
+						Activity ac = new Activity(result3.getString("name"),result3.getInt("unitsecond")==0?Unit.TIMES:Unit.MINUTE);
+						
+						ActivityPlan ap = new ActivityPlan(ac,result3.getInt("amount"));
+										
+						map.put(result3.getString("name"), ap);
+						
+					}
+					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
+					DayPlan dayPlan = new DayPlan(mapProperty);
+					
+//					System.out.println(weekday+" "+dayPlan.toString());
+					dayplanlist.add(weekday,dayPlan);
+					
+				}
+				Double rate = getAvgRating(planid);
+				
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername,rate);
+				
+				Statement stmt5 = con.createStatement();
+				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
+				while(result5.next()){
+					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
+					wp.addRating(r);
+					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+				}
+			
+				wps.add(wp);
+				wps.sort(new Comparator<WeekPlan>(){
+					@Override
+					public int compare(WeekPlan arg0, WeekPlan arg1) {
+						return arg0.getAvg()>arg1.getAvg()?-1:arg0.getAvg()==arg1.getAvg()?0:1;
+					}
+				});
+							
+			}
+			return wps;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	//get plans order by avgrating desc if parameter is true
+	public static ArrayList<WeekPlan> getPlans(boolean order){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return null;
+		}
+		try{
+			
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan");
+			int planid = -1;
+			int weekday = -1;
+			String planname = "";
+			String planType = "";
+			String spusername = "";
+			
+			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
+			
+			while(result.next()){
+				
+				planid = result.getInt("planid");
+				planname = result.getString("planname");
+				planType = result.getString("plantype"); 
+				spusername = result.getString("username"); 
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
+				
+				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
+				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				while(result2.next()){
+					
+					weekday = result2.getInt("weekday");
+					
+					Statement stmt3 = con.createStatement();
+					ResultSet result3 = stmt3.executeQuery("SELECT * FROM plan p INNER JOIN activity a ON p.`activityid` = a.`activityid` WHERE p.`planid`= "+planid+" AND p.`weekday` = "+weekday);
+					
+					ObservableMap<String, ActivityPlan> map = FXCollections.observableHashMap();
+					while(result3.next()){
+						Activity ac = new Activity(result3.getString("name"),result3.getInt("unitsecond")==0?Unit.TIMES:Unit.MINUTE);
+						
+						ActivityPlan ap = new ActivityPlan(ac,result3.getInt("amount"));
+										
+						map.put(result3.getString("name"), ap);
+						
+					}
+					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
+					DayPlan dayPlan = new DayPlan(mapProperty);
+					
+	//				System.out.println(weekday+" "+dayPlan.toString());
 					dayplanlist.add(weekday,dayPlan);
 					
 				}
@@ -361,7 +531,12 @@ public abstract class DBconnector {
 				}
 			
 				wps.add(wp);
-							
+				wps.sort(new Comparator<WeekPlan>(){
+					@Override
+					public int compare(WeekPlan arg0, WeekPlan arg1) {
+						return arg0.getAvg()>arg1.getAvg()?-1:arg0.getAvg()==arg1.getAvg()?0:1;
+					}
+				});		
 			}
 			return wps;
 			
