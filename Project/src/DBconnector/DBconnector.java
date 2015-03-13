@@ -9,7 +9,8 @@ import app.model.*;
 
 public abstract class DBconnector {
 	
-	
+	//weekplan avg
+	//getplan(str);
 	final static String DBaddress="jdbc:mysql://98.223.107.97/";
 	final static String DBuser="408";
 	final static String DBpass="408";
@@ -29,6 +30,13 @@ public abstract class DBconnector {
 		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 		
 		System.out.println(getPlans().size());
+		
+		String str = "1|2";
+		String[] substr = str.split("\\|");
+		for(String s: substr)
+			System.out.println("..........."+s);
+		System.out.println("----"+str.split("|").length);
+		System.out.println(getPlans(str).size());
 		
 	}
 	
@@ -156,6 +164,7 @@ public abstract class DBconnector {
 			return -1;
 		}	
 	}
+	
 	public static int reportToday(double calories){//0seccess  -1fail
 		if (username==null) {
 			System.out.println("Not logged in");
@@ -202,6 +211,93 @@ public abstract class DBconnector {
 			System.out.println("Successfully select");
 			return ret;
 		}catch(SQLException e){
+			return null;
+		}
+	}
+	
+	public static ArrayList<WeekPlan> getPlans(String filters){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return null;
+		}
+		try{
+			String[] subfilter = filters.split("\\|");
+			
+			System.out.println(subfilter.toString());
+			String where = "";
+			for(int i = 0 ; i< (subfilter.length-1); i++){
+			//	System.out.print(subfilter[i]);
+			//	if(!subfilter[i].equals("|"))
+				where += (" plantype LIKE '"+subfilter[i]+"' OR ");
+			}
+			where += ("plantype LIKE '"+subfilter[subfilter.length-1]+"'");
+		
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan "+where);
+			int planid = -1;
+			int weekday = -1;
+			String planname = "";
+			String planType = "";
+			String spusername = "";
+			
+			ArrayList<WeekPlan> wps = new ArrayList<WeekPlan>();
+			
+			while(result.next()){
+				
+				planid = result.getInt("planid");
+				planname = result.getString("planname");
+				planType = result.getString("plantype"); 
+				spusername = result.getString("username"); 
+				//rating = result.getInt("rating");
+				//comment = result.getString("comments");
+				
+				Statement stmt2 = con.createStatement();
+				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
+				
+				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
+				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				while(result2.next()){
+					
+					weekday = result2.getInt("weekday");
+					
+					Statement stmt3 = con.createStatement();
+					ResultSet result3 = stmt3.executeQuery("SELECT * FROM plan p INNER JOIN activity a ON p.`activityid` = a.`activityid` WHERE p.`planid`= "+planid+" AND p.`weekday` = "+weekday);
+					
+					ObservableMap<String, ActivityPlan> map = FXCollections.observableHashMap();
+					while(result3.next()){
+						Activity ac = new Activity(result3.getString("name"),result3.getInt("unitsecond")==0?Unit.TIMES:Unit.MINUTE);
+						
+						ActivityPlan ap = new ActivityPlan(ac,result3.getInt("amount"));
+										
+						map.put(result3.getString("name"), ap);
+						
+					}
+					MapProperty<String, ActivityPlan> mapProperty = new SimpleMapProperty<>(map);
+					DayPlan dayPlan = new DayPlan(mapProperty);
+					
+					System.out.println(weekday+" "+dayPlan.toString());
+					dayplanlist.add(weekday,dayPlan);
+					
+				}
+				System.out.println("next dayplanlist:");
+				
+				WeekPlan wp = new WeekPlan(dayplanlist,planname,planType,spusername);
+				
+				Statement stmt5 = con.createStatement();
+				ResultSet result5 = stmt5.executeQuery("SELECT * FROM rating WHERE planid = "+planid);
+				while(result5.next()){
+					Rating r = new Rating(result5.getString("username"),result5.getDouble("rating"),result5.getString("comments"));
+					wp.addRating(r);
+					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
+				}
+			
+				wps.add(wp);
+							
+			}
+			return wps;
+			
+		}catch(SQLException e){
+			e.printStackTrace();
 			return null;
 		}
 	}
