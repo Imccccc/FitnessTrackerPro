@@ -20,11 +20,12 @@ public abstract class DBconnector {
 	
 	static{
 		connect();
+		createUser("lhc3","123'");
 		//login("lhc","123");
 	}
 	
 	public static void main(String args[]){
-		login("lhc","123");
+		login("lhc3","123'");
 		
 		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 		
@@ -72,8 +73,6 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return -1;
 		}
-		username=SQLSpecialChar(username);
-		password=SQLSpecialChar(password);
 
 		try{
 			Statement stmt = con.createStatement();
@@ -194,7 +193,6 @@ public abstract class DBconnector {
 			System.out.println("Connot connect to database");
 			return null;
 		}
-		username=SQLSpecialChar(username);
 		
 		try{
 			Statement stmt = con.createStatement();
@@ -596,7 +594,7 @@ public abstract class DBconnector {
 		try{
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate("INSERT INTO sharedplan (username,plantype,planname) VALUES ('"
-			+username+"','"+plan.getPlanType()+"','"+plan.getPlanName()+"')");
+			+username+"','"+SQLSpecialChar(plan.getPlanType())+"','"+SQLSpecialChar(plan.getPlanName())+"')");
 			ResultSet result = stmt.executeQuery("SELECT * FROM sharedplan order by planid DESC");
 			while(result.next()){
 				return result.getInt("planid");
