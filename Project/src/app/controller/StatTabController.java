@@ -61,12 +61,13 @@ public class StatTabController {
     
     @FXML
     private void initialize() {
-    	dayName = new DateFormatSymbols().getWeekdays(); //add day name to a string
+    	dayName = new DateFormatSymbols(Locale.ENGLISH).getWeekdays(); //add day name to a string
     	//PlansCreator weekPlanCreator = new PlansCreator();
     	//chartPlans = weekPlanCreator.create(); //get the last 7-day activity plan as weekPlan
     	start(7);
     	//xAxis = new CategoryAxis();
     	//xAxis.setCategories(dayNames);
+    	System.out.println(dayNames);
     	xAxis.setLabel("Week");
     	//yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
@@ -196,6 +197,7 @@ public class StatTabController {
 					MapProperty<String, RealActivityPlan> Map;
 					
 					while(!input.equals("</DayHistory>") && !input.equals("")) { //
+						
 						String info[] = input.split("\\|");
 						try{
 							if(info[1].equals("MINUTE")){
@@ -204,10 +206,11 @@ public class StatTabController {
 							else {
 								map.put(info[0], new RealActivityPlan(new ActivityPlan(info[0], Unit.TIMES, Integer.parseInt(info[2])), Integer.parseInt(info[3])));
 							}
-						}catch(Exception e){
-							System.out.println("input is "+input);
 						}
-						if (scan.hasNextLine()) {
+						catch(Exception e){
+							System.out.println("Input is "+ input);
+						}
+						if(scan.hasNextLine()){
 							input = scan.nextLine();
 						}
 					}

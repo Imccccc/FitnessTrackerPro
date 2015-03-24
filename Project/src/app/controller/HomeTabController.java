@@ -1,9 +1,12 @@
 package app.controller;
 
+import impl.org.controlsfx.i18n.Localization;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Map.Entry;
 
@@ -107,6 +110,7 @@ public class HomeTabController {
     public void clickHandler(){
     	RealActivityPlan temp;
     	temp = HomePageTable.getSelectionModel().getSelectedItem();
+    	Localization.setLocale(new Locale("en", "EN"));
     	if(temp != null){
    			Optional<String> response = Dialogs.create()
    					.style(DialogStyle.NATIVE)
