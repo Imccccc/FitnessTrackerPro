@@ -66,7 +66,7 @@ public class StatTabController {
     	//chartPlans = weekPlanCreator.create(); //get the last 7-day activity plan as weekPlan
     	start(7);
     	//xAxis = new CategoryAxis();
-    	xAxis.setCategories(dayNames);
+    	//xAxis.setCategories(dayNames);
     	xAxis.setLabel("Week");
     	//yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
@@ -119,7 +119,7 @@ public class StatTabController {
     	Collections.sort(dayPlanNames);
     	planNameBox.setItems(dayPlanNames);
     	planNameBox.setValue(dayPlanNames.get(0));
-    	System.out.println("Item in the planNameBox :"+planNameBox.getValue());
+    	//System.out.println("Item in the planNameBox :"+planNameBox.getValue());
     	setWeekActivityData();
     	planNameBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
     		public void changed (ObservableValue ov, Number value, Number newValue) {
@@ -138,7 +138,7 @@ public class StatTabController {
     	int maxRange = 0;
     	
     	for(RealDayPlan dayPlan : chartPlans) {
-    		System.out.println("Now it's finding :"+planNameBox.getValue());
+    		//System.out.println("Now it's finding :"+planNameBox.getValue());
     		
     		if(dayPlan.getDayPlan().get(planNameBox.getValue()) != null) { 
     			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(0, 3), 
@@ -151,8 +151,8 @@ public class StatTabController {
     					if(dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount() > maxRange) {
     						maxRange = dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount();
     					}
-    					System.out.println("The real count of "+planNameBox.getValue()+" at "+dayPlan.getDate().toString()+" is "+dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount());
-    					System.out.println("The planned count is "+dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount());
+    					//System.out.println("The real count of "+planNameBox.getValue()+" at "+dayPlan.getDate().toString()+" is "+dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount());
+    					//System.out.println("The planned count is "+dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount());
     		}
     		else {
     			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(0, 3), 0));
@@ -195,16 +195,21 @@ public class StatTabController {
 					ObservableMap<String, RealActivityPlan> map = FXCollections.observableHashMap();
 					MapProperty<String, RealActivityPlan> Map;
 					
-					while(!input.equals("</DayHistory>")) { //
+					while(!input.equals("</DayHistory>") && !input.equals("")) { //
 						String info[] = input.split("\\|");
-
-						if(info[1].equals("MINUTE")){
-							map.put(info[0], new RealActivityPlan(new ActivityPlan(info[0], Unit.MINUTE, Integer.parseInt(info[2])), Integer.parseInt(info[3])));
+						try{
+							if(info[1].equals("MINUTE")){
+								map.put(info[0], new RealActivityPlan(new ActivityPlan(info[0], Unit.MINUTE, Integer.parseInt(info[2])), Integer.parseInt(info[3])));
+							}
+							else {
+								map.put(info[0], new RealActivityPlan(new ActivityPlan(info[0], Unit.TIMES, Integer.parseInt(info[2])), Integer.parseInt(info[3])));
+							}
+						}catch(Exception e){
+							System.out.println("input is "+input);
 						}
-						else {
-							map.put(info[0], new RealActivityPlan(new ActivityPlan(info[0], Unit.TIMES, Integer.parseInt(info[2])), Integer.parseInt(info[3])));
+						if (scan.hasNextLine()) {
+							input = scan.nextLine();
 						}
-						input = scan.nextLine();
 					}
 					//end adding real activities for one day
 					Map = new SimpleMapProperty<>(map);
