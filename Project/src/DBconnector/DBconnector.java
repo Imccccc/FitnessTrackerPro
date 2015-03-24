@@ -204,6 +204,7 @@ public abstract class DBconnector {
 				temp.amount=result.getDouble("calories");
 				ret.add(temp);
 			}
+			if (ret.isEmpty()) return null;
 			System.out.println("Successfully select");
 			return ret;
 		}catch(SQLException e){
