@@ -11,17 +11,17 @@
       <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="210.0" prefWidth="210.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
          
-            <AreaChart fx:id="areaChart" layoutX="17.0" layoutY="109.0" prefHeight="365.0" prefWidth="622.0">
+            <AreaChart fx:id="areaChart" layoutX="31.0" layoutY="91.0" prefHeight="447.0" prefWidth="868.0">
                <xAxis>
                   <CategoryAxis side="BOTTOM" fx:id="xAxis" />
                </xAxis>
                <yAxis>
-                  <NumberAxis side="LEFT" fx:id="yAxis"/>
+                  <NumberAxis fx:id="yAxis" side="LEFT" />
                </yAxis>
             </AreaChart>
             
-            <ComboBox fx:id="timeScaleBox" layoutX="359.0" layoutY="53.0" prefHeight="26.0" prefWidth="109.0" />
-            <ComboBox fx:id="planNameBox" layoutX="489.0" layoutY="53.0" prefHeight="26.0" prefWidth="109.0" />
+            <ComboBox fx:id="timeScaleBox" layoutX="518.0" layoutY="40.0" prefHeight="26.0" prefWidth="109.0" />
+            <ComboBox fx:id="planNameBox" layoutX="656.0" layoutY="40.0" prefHeight="26.0" prefWidth="109.0" />
             
          </children>
       </AnchorPane>

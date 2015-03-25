@@ -6,11 +6,16 @@ import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
+
+import org.w3c.dom.css.Counter;
 
 import app.model.ActivityPlan;
 import app.model.DayPlan;
@@ -52,7 +57,9 @@ public class StatTabController {
     
     private XYChart.Series<String, Number> seriesPlannedData;
     
-    private String dayName[];
+    private String weekDayName[];
+    
+    private String monthDayName[];
     
     
     public StatTabController() {
@@ -61,18 +68,13 @@ public class StatTabController {
     
     @FXML
     private void initialize() {
-    	dayName = new DateFormatSymbols().getWeekdays(); //add day name to a string
+    	weekDayName = new DateFormatSymbols().getWeekdays(); //add day name to a string
+    	monthDayName = getMonthDayName();
     	//PlansCreator weekPlanCreator = new PlansCreator();
     	//chartPlans = weekPlanCreator.create(); //get the last 7-day activity plan as weekPlan
     	start(7);
     	//xAxis = new CategoryAxis();
-    	xAxis.setCategories(dayNames);
-    	xAxis.setLabel("Week");
-    	//yAxis = new NumberAxis();
-        yAxis.setAutoRanging(false);
-    	seriesRealData = new XYChart.Series<String, Number>();
-    	seriesPlannedData = new XYChart.Series<String, Number>();  	
-    	areaChart.setTitle("Statistics");
+    	
     	
     	timeScaleBox.getItems().addAll(
         		"Week",
@@ -91,18 +93,45 @@ public class StatTabController {
     	
     }
     
-    private void start(int length) {
-    	dayNames = FXCollections.observableArrayList();
-    	chartPlans = loadChartData(length);
-    	
-    	for(RealDayPlan dayPlan : chartPlans) {
-    		dayNames.add(dayName[dayPlan.getDate().getDay() + 1].substring(0, 3)); //add to our ObservableList of dayNames
+    
+    private String[] getMonthDayName() {
+    	monthDayName = new String[30];
+    	LocalDate today = LocalDate.now();
+    	for(int i = 30; i>0; i--) {
+    		monthDayName[30 - i] = today.minusDays(i-1).toString().substring(4,10);
     	}
-    	addWeekPlanName();
+    	
+    	return monthDayName;
     }
     
     
-    private void addWeekPlanName() {
+    private void start(int length) {
+    	
+    	dayNames = FXCollections.observableArrayList();
+    	chartPlans = getChartData(loadChartData(), length);
+    	
+    		//for(RealDayPlan dayPlan : chartPlans) {
+    			//dayNames.add(weekDayName[dayPlan.getDate().getDay() + 1].substring(0, 3)); //add to our ObservableList of dayNames
+    		//}
+    		for(RealDayPlan dayPlan : chartPlans) {
+    			dayNames.add(dayPlan.getDate().toString().substring(4,10));
+    			System.out.println(dayPlan.getDate().toString().substring(4,10));
+    		}
+    		
+    	addPlanNames();
+    	xAxis = new CategoryAxis(dayNames);
+    	xAxis.setCategories(dayNames);
+    	//xAxis.setLabel("Week");
+    	//yAxis = new NumberAxis();
+        yAxis.setAutoRanging(false);
+    	seriesRealData = new XYChart.Series<String, Number>();
+    	seriesPlannedData = new XYChart.Series<String, Number>();  	
+    	areaChart.setTitle("Statistics");
+    }
+    
+    
+
+	private void addPlanNames() {
     	Collection<RealActivityPlan> tmpActivityPlans = FXCollections.observableArrayList();
     	ObservableList<String> dayPlanNames = FXCollections.observableArrayList();
     	for(RealDayPlan dayPlan : chartPlans) {
@@ -114,22 +143,22 @@ public class StatTabController {
     		}
     	}
     	
-    	
-    	
     	Collections.sort(dayPlanNames);
     	planNameBox.setItems(dayPlanNames);
     	planNameBox.setValue(dayPlanNames.get(0));
     	System.out.println("Item in the planNameBox :"+planNameBox.getValue());
-    	setWeekActivityData();
+    	setActivityData();
     	planNameBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
     		public void changed (ObservableValue ov, Number value, Number newValue) {
-    			setWeekActivityData();
+    			setActivityData();
     		}
 		});
     	planNameBox.setTooltip(new Tooltip("Select activity name please"));
     }
     
-    private void setWeekActivityData() {
+	
+	
+    private void setActivityData() {
     	seriesRealData = new XYChart.Series<String, Number>();
     	seriesPlannedData = new XYChart.Series<String, Number>();
     	seriesRealData.setName("RealData");
@@ -141,12 +170,12 @@ public class StatTabController {
     		System.out.println("Now it's finding :"+planNameBox.getValue());
     		
     		if(dayPlan.getDayPlan().get(planNameBox.getValue()) != null) { 
-    			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(0, 3), 
+    			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 
     					dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount()));	//add data of selected activity to series
     					if(dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount() > maxRange) {
     						maxRange = dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount(); //update max-Range of the yAxis
     					}
-    			seriesPlannedData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(0, 3),
+    			seriesPlannedData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10),
     					dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount()));// add data of planned activity to series
     					if(dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount() > maxRange) {
     						maxRange = dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount();
@@ -155,8 +184,8 @@ public class StatTabController {
     					System.out.println("The planned count is "+dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount());
     		}
     		else {
-    			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(0, 3), 0));
-    			seriesPlannedData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(0, 3), 0));
+    			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 0));
+    			seriesPlannedData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 0));
     		}
     	}
     	yAxis.setUpperBound(maxRange+5-maxRange%5);
@@ -166,7 +195,25 @@ public class StatTabController {
     }
     
     
-    private ObservableList<RealDayPlan> loadChartData(int length) {
+    
+    private ObservableList<RealDayPlan> getChartData(ObservableList<RealDayPlan> plans, int length) {
+    	if(plans.size() < length) {
+    		return plans;
+    	}
+    	else {
+    		ObservableList<RealDayPlan> graphPlans = FXCollections.observableArrayList();
+    		int index = plans.size() - length;
+    		while(index < plans.size()) {
+    			graphPlans.add(plans.get(index));
+    			index++;
+    		}
+    		return graphPlans;
+    	}
+	}
+    
+    
+    
+    private ObservableList<RealDayPlan> loadChartData() {
     	
     	ObservableList<RealDayPlan> plans = FXCollections.observableArrayList();
     	Date date = new Date();
@@ -177,8 +224,8 @@ public class StatTabController {
 			String input;
 			input = scan.nextLine();
 			
-			int counter = 0;
-			while (input.equals("<DayHistory>") && counter < length-1) {	
+			//int counter = 0;
+			while (input.equals("<DayHistory>")) {	
 				input = scan.nextLine();
 				if (input.equals("<Date>")){
 					input = scan.nextLine(); //Date
@@ -209,7 +256,7 @@ public class StatTabController {
 					//end adding real activities for one day
 					Map = new SimpleMapProperty<>(map);
 					plans.add(new RealDayPlan(Map, date));
-					counter++;
+					//counter++;
 					
 				}
 				else {
@@ -262,7 +309,6 @@ public class StatTabController {
 			Map = new SimpleMapProperty<>(map);
 			plans.add(new RealDayPlan(Map, new Date()));
     		scan.close();
-    		
     		return plans;
     	}
     	catch(FileNotFoundException e){
