@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -19,8 +20,10 @@
          <children>
             <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="200.0">
               <items>
-                <Button fx:id="registerButton" onAction="#registerButtonClicked" mnemonicParsing="false" text="Register" />
-                <Button fx:id="loginButton" onAction="#loginButtonClicked" mnemonicParsing="false" text="Login" />
+                <Button fx:id="registerButton" mnemonicParsing="false" onAction="#registerButtonClicked" text="Register" />
+                <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonClicked" text="Login" />
+                  <Button fx:id="searchButton" mnemonicParsing="false" onMouseClicked="#searchClick" text="Search" />
+                  <TextField fx:id="searchField" text="Compete" />
               </items>
             </ToolBar>
             <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" GridPane.rowIndex="1">
@@ -58,6 +61,8 @@
             </AnchorPane>
          </children>
          <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />
