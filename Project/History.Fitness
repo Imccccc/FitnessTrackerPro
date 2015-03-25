@@ -42,29 +42,13 @@ Walking|MINUTE|20|20
 <Date>
 23/03/2015
 </Date>
+Football|MINUTE|30|0
 Skateboarding|MINUTE|15|20
 </DayHistory>
 <DayHistory>
 <Date>
 24/03/2015
 </Date>
-</DayHistory>
-</DayHistory>
-<DayHistory>
-<Date>
-12/03/2015
-</Date>
-</DayHistory>
-<DayHistory>
-<Date>
-23/03/2015
-</Date>
-Football|MINUTE|30|0
-</DayHistory>
-<DayHistory>
-<Date>
-24/03/2015
-</Date>
-Football|MINUTE|15|0
-Jumping Rope|TIMES|15|0
+Football|MINUTE|15|10
+Jumping Rope|TIMES|15|20
 </DayHistory>

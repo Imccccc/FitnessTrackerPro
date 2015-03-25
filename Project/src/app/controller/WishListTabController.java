@@ -71,13 +71,17 @@ public class WishListTabController {
     	grid.setPadding(new Insets(0, 20, 0, 20)); 
     	
     	ColumnConstraints column1 = new ColumnConstraints();
-        column1.setPercentWidth(25);
+        column1.setMinWidth(220);
+        column1.setMaxWidth(220);
         ColumnConstraints column2 = new ColumnConstraints();
-        column2.setPercentWidth(25);
+        column2.setMinWidth(220);
+        column2.setMaxWidth(220);
     	ColumnConstraints column3 = new ColumnConstraints();
-        column3.setPercentWidth(25);
+    	column3.setMinWidth(220);
+        column3.setMaxWidth(220);
         ColumnConstraints column4 = new ColumnConstraints();
-        column4.setPercentWidth(25);
+        column4.setMinWidth(220);
+        column4.setMaxWidth(220);
         grid.getColumnConstraints().addAll(column1, column2, column3, column4);
     	
         wishList = ClassSerializer.WishListUnserializer();
@@ -89,7 +93,7 @@ public class WishListTabController {
        	
         for(int i=0; i<wishList.size(); i++){
         	button[i] = new Button(planNameSet[i]);
-        	button[i].setMaxSize(220, 180);
+        	button[i].setMaxSize(210, 180);
         	button[i].setOnAction((event) -> {
         	    // Button was clicked, do something...
         		Button b = (Button) event.getSource();
