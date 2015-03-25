@@ -360,7 +360,7 @@ public abstract class DBconnector {
 					wp.addRating(r);
 		//			System.out.println("rating:"+r.toString()+" by "+r.getUsername());
 				}
-			
+				wp.setPlanID(planid);
 				wps.add(wp);
 							
 			}

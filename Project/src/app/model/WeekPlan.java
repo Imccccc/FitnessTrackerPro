@@ -2,6 +2,7 @@ package app.model;
 
 import java.io.Serializable;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -16,7 +17,16 @@ public class WeekPlan implements Serializable{
 	private StringProperty planType;
 	private StringProperty planUserName;
 	private double avgRatig;
+	private int planID=0;
 	
+	public int getPlanID() {
+		return planID;
+	}
+
+	public void setPlanID(int planID) {
+		this.planID = planID;
+	}
+
 	public WeekPlan(SimpleListProperty<DayPlan> dayPlanList, String name){
 		this.dayPlanList = dayPlanList;
 		this.planNameProperty = new SimpleStringProperty(name);
