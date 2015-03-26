@@ -113,20 +113,22 @@ public class StatTabController {
     		//for(RealDayPlan dayPlan : chartPlans) {
     			//dayNames.add(weekDayName[dayPlan.getDate().getDay() + 1].substring(0, 3)); //add to our ObservableList of dayNames
     		//}
+		if(chartPlans != null){
     		for(RealDayPlan dayPlan : chartPlans) {
     			dayNames.add(dayPlan.getDate().toString().substring(4,10));
     			System.out.println(dayPlan.getDate().toString().substring(4,10));
     		}
-    		
-    	addPlanNames();
-    	xAxis = new CategoryAxis(dayNames);
-    	xAxis.setCategories(dayNames);
-    	//xAxis.setLabel("Week");
-    	//yAxis = new NumberAxis();
-        yAxis.setAutoRanging(false);
-    	seriesRealData = new XYChart.Series<String, Number>();
-    	seriesPlannedData = new XYChart.Series<String, Number>();  	
-    	areaChart.setTitle("Statistics");
+
+   			addPlanNames();
+    		xAxis = new CategoryAxis(dayNames);
+    		xAxis.setCategories(dayNames);
+    		//xAxis.setLabel("Week");
+	   		//yAxis = new NumberAxis();
+	       	yAxis.setAutoRanging(false);
+	   		seriesRealData = new XYChart.Series<String, Number>();
+	   		seriesPlannedData = new XYChart.Series<String, Number>();  	
+	    	areaChart.setTitle("Statistics");
+    	}
     }
     
     
@@ -197,6 +199,10 @@ public class StatTabController {
     
     
     private ObservableList<RealDayPlan> getChartData(ObservableList<RealDayPlan> plans, int length) {
+    	if(plans == null){
+    		return null;
+    	}
+    	
     	if(plans.size() < length) {
     		return plans;
     	}
@@ -222,6 +228,9 @@ public class StatTabController {
 			File file = new File("./History.Fitness");
 			Scanner scan = new Scanner(file);
 			String input;
+			if(!scan.hasNextLine()){
+				return null;
+			}
 			input = scan.nextLine();
 			
 			//int counter = 0;

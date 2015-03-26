@@ -87,8 +87,8 @@ public class ShareTabController {
     private void initialize() {
         shareList= DBconnector.getPlans();
         System.out.println("ShareList Size: "+shareList.size());       
- 
     	updateLayout();
+    	
     	cb1.setOnAction(this::handleCheckboxAction);
     	cb2.setOnAction(this::handleCheckboxAction);
     	cb3.setOnAction(this::handleCheckboxAction);
@@ -99,7 +99,6 @@ public class ShareTabController {
     	cb3.setText("Chest");
     	cb4.setText("Core");
     	cb5.setText("Leg");
-    	
     	cblist.add(cb1);
     	cblist.add(cb2);
     	cblist.add(cb3);
