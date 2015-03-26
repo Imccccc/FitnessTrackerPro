@@ -1,5 +1,6 @@
 package app.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -14,6 +15,7 @@ import org.controlsfx.dialog.Dialogs;
 import DBconnector.DBconnector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
@@ -25,6 +27,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 
 public class MainController {
 	@FXML
@@ -266,6 +269,29 @@ public class MainController {
 				d.hide();
 				DBconnector.username = usernameString;
 				UpdateToolBar();
+				
+				
+				FXMLLoader loader = new FXMLLoader(
+						  getClass().getResource(
+						    "/app/view/ShareTabLayout.fxml"
+						  )
+						);
+				
+				try {
+					Pane pane = (Pane) loader.load();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+						ShareTabController controller = 
+						    loader.<ShareTabController>getController();
+						
+						if(controller == null){
+							System.out.println("wocao |||||||||||||||||||||\n"
+									+ "fahfuhfuef");
+						}else{
+							controller.updateLayout();
+						}
 			}
 			else{
 				// Other error
