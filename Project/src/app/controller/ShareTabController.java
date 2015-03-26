@@ -14,6 +14,7 @@ import DBconnector.DBconnector;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.WeekPlan;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -84,10 +85,8 @@ public class ShareTabController {
      * after the fxml file has been loaded.
      */
     @FXML
-    private void initialize() {
-        //shareList= DBconnector.getPlans();
-        //System.out.println("ShareList Size: "+shareList.size());       
-    	//updateLayout();
+    private void initialize() {       
+    	updateLayout();
     	
     	cb1.setOnAction(this::handleCheckboxAction);
     	cb2.setOnAction(this::handleCheckboxAction);
@@ -107,7 +106,8 @@ public class ShareTabController {
     }
 
 	public void updateLayout() {
-		shareList= DBconnector.getPlans();
+        shareList= DBconnector.getPlans();
+        //System.out.println("ShareList Size: "+shareList.size());
 		
     	GridPane grid = new GridPane();
     	grid.setMinSize(750, 600);
@@ -147,11 +147,19 @@ public class ShareTabController {
         	grid.add(button[i], 0, i);
         	
         	GridPane CLGrid = new GridPane();
-        	CLGrid.setHgap(10);
+        	CLGrid.setHgap(0);
         	CLGrid.setPadding(new Insets(5, 0, 5, 5));
-        	int comment_num = 5;
-        	for(int i1=0;i1<comment_num;i1++){
-        		CLGrid.add(new Label("Here is the"+i1+"th comment"), 0, i1);
+        	
+        	// Print recent 5 comments
+        	SimpleListProperty<app.model.Rating> ratings = shareList.get(i).getRating();
+        	int comment_num = ratings.size();
+        	for(int i1 = 1; i1 <= comment_num ;i1++){
+        		CLGrid.add(new Label(ratings.get(comment_num-i1).getUsername()), 0, i1-1);
+        		CLGrid.add(new Label(": "), 1, i1-1);
+        		CLGrid.add(new Label(ratings.get(comment_num-i1).getComments()), 2, i1-1);
+        	}
+        	if(comment_num==0){
+        		CLGrid.add(new Label("No comment right now"), 0, 0);
         	}
         	grid.add(CLGrid, 1, i);    	
         	
@@ -161,7 +169,7 @@ public class ShareTabController {
         	RCGrid.setPadding(new Insets(15, 5, 5, 5));
         	RCGrid.getColumnConstraints().add(new ColumnConstraints(175));
         	RCGrid.getRowConstraints().addAll(new RowConstraints(30), new RowConstraints(50));
-        	String rating = "4.3/5";
+        	String rating = shareList.get(i).getAvg()+"/5";
         	Button commentButton = new Button("Comment");
         	commentButton.setOnAction(new EventHandler<ActionEvent>() {
 				int index;
@@ -186,8 +194,8 @@ public class ShareTabController {
     	shareTabScrollPane.setContent(grid);
 		
 	}
-
-	private void popupPlan(Button button, int index) {
+    
+    private void popupPlan(Button button, int index) {
 		popUpPlan = shareList.get(index);
 		
 		loadWeekPlan();
@@ -321,7 +329,34 @@ public class ShareTabController {
 		GridPane.setColumnSpan(commentArea, 2);
 		grid.add(commentArea, 0, 2);
 
+		final Action actionComment = new AbstractAction("Submit") {
+			WeekPlan plan;
+			
+			// This method is called when the login button is clicked ...
+			public void handle(ActionEvent ae) {			
+				Dialog d = (Dialog) ae.getSource();
 
+				String comment = commentArea.getText();
+				double rate = rating.getRating();
+
+				System.out.println("Comment: "+comment);
+				System.out.println("Rating:  "+rate);
+				
+				// Update to the database
+				DBconnector.addRating(plan.getPlanID(), rate, comment);
+				
+				// Call update to show the comment u just leaved
+				updateLayout();
+				
+				d.hide();
+			}
+			
+			public Action init(WeekPlan plan){
+				this.plan = plan;
+				return this;
+			}
+		}.init(shareList.get(index));		
+		
 		ButtonBar.setType(actionComment, ButtonType.OK_DONE);
 		actionComment.disabledProperty().set(true);
 
@@ -337,23 +372,6 @@ public class ShareTabController {
 
 		dlg.show();
 	}
-	
-	final Action actionComment = new AbstractAction("Submit") {
-		// This method is called when the login button is clicked ...
-		public void handle(ActionEvent ae) {			
-			Dialog d = (Dialog) ae.getSource();
-
-			String comment = commentArea.getText();
-			double rate = rating.getRating();
-
-			System.out.println("Comment: "+comment);
-			System.out.println("Rating:  "+rate);
-			//TODO: update to the database
-			
-			d.hide();
-
-		}
-	};
 	
 	private void handleCheckboxAction(ActionEvent event){
 		cbs = new StringBuilder();
