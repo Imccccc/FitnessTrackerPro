@@ -85,9 +85,9 @@ public class ShareTabController {
      */
     @FXML
     private void initialize() {
-        shareList= DBconnector.getPlans();
-        System.out.println("ShareList Size: "+shareList.size());       
-    	updateLayout();
+        //shareList= DBconnector.getPlans();
+        //System.out.println("ShareList Size: "+shareList.size());       
+    	//updateLayout();
     	
     	cb1.setOnAction(this::handleCheckboxAction);
     	cb2.setOnAction(this::handleCheckboxAction);
@@ -106,8 +106,9 @@ public class ShareTabController {
     	cblist.add(cb5); 
     }
 
-	private void updateLayout() {
-    	
+	public void updateLayout() {
+		shareList= DBconnector.getPlans();
+		
     	GridPane grid = new GridPane();
     	grid.setMinSize(750, 600);
     	grid.setHgap(10);
