@@ -3,22 +3,15 @@ package app.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
-import org.w3c.dom.css.Counter;
-
 import app.model.ActivityPlan;
-import app.model.DayPlan;
 import app.model.RealActivityPlan;
 import app.model.RealDayPlan;
 import app.model.Unit;
@@ -57,9 +50,6 @@ public class StatTabController {
     
     private XYChart.Series<String, Number> seriesPlannedData;
     
-    private String weekDayName[];
-    
-    private String monthDayName[];
     
     
     public StatTabController() {
@@ -68,8 +58,6 @@ public class StatTabController {
     
     @FXML
     private void initialize() {
-    	weekDayName = new DateFormatSymbols().getWeekdays(); //add day name to a string
-    	monthDayName = getMonthDayName();
     	//PlansCreator weekPlanCreator = new PlansCreator();
     	//chartPlans = weekPlanCreator.create(); //get the last 7-day activity plan as weekPlan
     	start(7);
@@ -94,16 +82,6 @@ public class StatTabController {
     }
     
     
-    private String[] getMonthDayName() {
-    	monthDayName = new String[30];
-    	LocalDate today = LocalDate.now();
-    	for(int i = 30; i>0; i--) {
-    		monthDayName[30 - i] = today.minusDays(i-1).toString().substring(4,10);
-    	}
-    	
-    	return monthDayName;
-    }
-    
     
     private void start(int length) {
     	
@@ -118,14 +96,10 @@ public class StatTabController {
     			System.out.println(dayPlan.getDate().toString().substring(4,10));
     		}
     		
-    	addPlanNames();
+    	addPlanNames();//add plan name to the planNameBox
     	xAxis = new CategoryAxis(dayNames);
-    	xAxis.setCategories(dayNames);
     	//xAxis.setLabel("Week");
-    	//yAxis = new NumberAxis();
         yAxis.setAutoRanging(false);
-    	seriesRealData = new XYChart.Series<String, Number>();
-    	seriesPlannedData = new XYChart.Series<String, Number>();  	
     	areaChart.setTitle("Statistics");
     }
     

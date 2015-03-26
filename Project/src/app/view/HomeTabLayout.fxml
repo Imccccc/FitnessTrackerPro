@@ -8,14 +8,15 @@
 
 <AnchorPane prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.HomeTabController">
    <children>
-      <LineChart fx:id="HomePageChart" prefHeight="413.0" prefWidth="616.0" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="345.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="84.0">
+      <AreaChart fx:id="areaChart" prefHeight="413.0" prefWidth="616.0" AnchorPane.bottomAnchor="103.0" AnchorPane.leftAnchor="345.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="84.0">
          <xAxis>
-            <CategoryAxis side="BOTTOM" />
+            <CategoryAxis side="BOTTOM" fx:id="xAxis"/>
          </xAxis>
          <yAxis>
-            <NumberAxis side="LEFT" />
+            <NumberAxis side="LEFT" fx:id="yAxis"/>
          </yAxis>
-      </LineChart>
+      </AreaChart>
+      
       <Label fx:id="HomepageLabel" layoutX="544.0" layoutY="34.0" prefHeight="39.0" prefWidth="170.0" text="Plan For today" />
       <AnchorPane layoutX="26.0" layoutY="34.0" prefHeight="450.0" prefWidth="286.0">
          <children>
