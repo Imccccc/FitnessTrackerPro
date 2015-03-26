@@ -59,7 +59,7 @@ public class MainApp extends Application {
         try {
             // Load root layout from fxml file.
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(MainApp.class.getResource("view/MainLayout.fxml"));
+            loader.setLocation(MainApp.class.getResource("/app/view/MainLayout.fxml"));
             rootLayout = (AnchorPane)loader.load();
             
             // Show the scene containing the root layout.

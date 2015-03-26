@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -25,9 +26,11 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-public class WishListTabController {
+public class WishListTabController{
 	
 	public static ObservableMap<String, WeekPlan> wishList;
+	
+	public MainController mainController;
 	
 	@FXML
 	private AnchorPane wishListPane;
@@ -58,12 +61,16 @@ public class WishListTabController {
     public WishListTabController() {
     }
     
+    public void init(MainController main){
+    	mainController = main;
+    }
+    
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
      */
-    @FXML
-    private void initialize() {
+    @FXML 
+    public void initialize() {
     	GridPane grid = new GridPane();
     	grid.setMinSize(1000, 600);
     	grid.setHgap(10);

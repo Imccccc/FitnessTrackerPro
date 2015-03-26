@@ -25,6 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -40,16 +41,26 @@ public class MainController {
 	TextField searchField;
 	@FXML
 	TextField username;
+	@FXML
+	Tab ShareTab;
+	@FXML
+	WishListTabController wishListTabController;
+	@FXML
+	ShareTabController shareTabController;
+	
 	PasswordField password;
 	PasswordField password_confirm;
 	
-
 	public MainController(){
 
 	}
 	
+	
     @FXML
     private void initialize() {
+    	shareTabController.init(this);
+    	wishListTabController.init(this);
+    	ShareTab.setDisable(true);
     	searchButton.setVisible(false);
     	searchField.setVisible(false);
     	searchField.setText("Find a friend");
@@ -135,6 +146,9 @@ public class MainController {
 				d.hide();
 				DBconnector.username = usernameString;
 				UpdateToolBar();
+				// Show sharetab
+				ShareTab.setDisable(false);
+				//TODO: Enable share button, etc.
 			}
 		}
 
@@ -187,6 +201,7 @@ public class MainController {
 			//loginButton.setDisable(false);
 			searchButton.setVisible(false);
 			searchField.setVisible(false);
+			ShareTab.setDisable(true);
 		}
 	}
 	
@@ -270,28 +285,8 @@ public class MainController {
 				DBconnector.username = usernameString;
 				UpdateToolBar();
 				
+				ShareTab.setDisable(false);
 				
-				FXMLLoader loader = new FXMLLoader(
-						  getClass().getResource(
-						    "/app/view/ShareTabLayout.fxml"
-						  )
-						);
-				
-				try {
-					Pane pane = (Pane) loader.load();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-						ShareTabController controller = 
-						    loader.<ShareTabController>getController();
-						
-						if(controller == null){
-							System.out.println("wocao |||||||||||||||||||||\n"
-									+ "fahfuhfuef");
-						}else{
-							controller.updateLayout();
-						}
 			}
 			else{
 				// Other error
@@ -299,6 +294,7 @@ public class MainController {
 			}
 		}
 	};
+	
 	
 	public void searchClick(){
 		System.out.println("clicked!!!");

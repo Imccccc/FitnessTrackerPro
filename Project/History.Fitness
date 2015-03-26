@@ -52,3 +52,9 @@ Skateboarding|MINUTE|15|20
 Football|MINUTE|15|10
 Jumping Rope|TIMES|15|20
 </DayHistory>
+<DayHistory>
+<Date>
+25/03/2015
+</Date>
+Football|MINUTE|15|3
+</DayHistory>

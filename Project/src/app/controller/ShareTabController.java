@@ -3,6 +3,10 @@ package app.controller;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
+
+
+
+
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.Rating;
 import org.controlsfx.control.ButtonBar.ButtonType;
@@ -10,7 +14,13 @@ import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 
+
+
+
+
 import DBconnector.DBconnector;
+import app.ClassSerializer;
+import app.MainApp;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.WeekPlan;
@@ -20,7 +30,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -48,6 +60,8 @@ public class ShareTabController {
 	@FXML
 	private CheckBox cb5;	
 	
+	public MainController mainController;
+	
 	private ArrayList<WeekPlan> shareList;
 	
 	private static WeekPlan popUpPlan;
@@ -72,12 +86,18 @@ public class ShareTabController {
 	
 	ArrayList<CheckBox> cblist;
 	StringBuilder cbs;
+	String filterString;
 	 /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     public ShareTabController() {
     	cblist = new ArrayList<CheckBox>();
+    	filterString = new String();
+    }
+    
+    public void init(MainController main){
+    	mainController = main;
     }
     
     /**
@@ -85,8 +105,8 @@ public class ShareTabController {
      * after the fxml file has been loaded.
      */
     @FXML
-    private void initialize() {       
-    	updateLayout();
+    private void initialize() { 
+    	updateLayout("");
     	
     	cb1.setOnAction(this::handleCheckboxAction);
     	cb2.setOnAction(this::handleCheckboxAction);
@@ -105,9 +125,14 @@ public class ShareTabController {
     	cblist.add(cb5); 
     }
 
-	public void updateLayout() {
-        shareList= DBconnector.getPlans();
-        //System.out.println("ShareList Size: "+shareList.size());
+	public void updateLayout(String filter) {
+		if(filter.equals("")){
+			shareList = DBconnector.getPlans();
+		}
+		else{
+			shareList = DBconnector.getPlans(filter);
+		}
+        System.out.println("ShareList Size: "+shareList.size());
 		
     	GridPane grid = new GridPane();
     	grid.setMinSize(750, 600);
@@ -191,8 +216,7 @@ public class ShareTabController {
         	grid.getRowConstraints().add(new RowConstraints(100));
         }    	
 
-    	shareTabScrollPane.setContent(grid);
-		
+    	shareTabScrollPane.setContent(grid);		
 	}
     
     private void popupPlan(Button button, int index) {
@@ -242,18 +266,25 @@ public class ShareTabController {
 		
 		Button applyButton = new Button("Apply");
 		applyButton.setOnAction((event) -> {
-    	    //MainApp.weekPlan = wishList.get(text);
-    	    //ActivityListController.updateWeekPlan();
+    	    MainApp.weekPlan = shareList.get(index);
+    	    ActivityListController.updateWeekPlan();
     	    dlg.hide();
     	}); 
 		gPane.add(applyButton, 1, 1);
 		
-		Button deleteButton = new Button("Delete");
+		Button deleteButton = new Button("Save to Wishlist");
 		deleteButton.setOnAction((event) -> {
-//    	    if(wishList.remove(text)==null)
-//    	    	System.out.println("No such Plan");
-//    	    ClassSerializer.WishListSerializer(wishList);
-//    	    initialize();
+			WishListTabController.wishList.put(shareList.get(index).getPlanName(), shareList.get(index));
+    	    ClassSerializer.WishListSerializer(WishListTabController.wishList);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/view/WishListTabLayout.fxml"));
+            try {
+				Parent root = (Parent) loader.load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+            //WishListTabController wishlistCtlr = (WishListTabController) loader.getController();          
+            //wishlistCtlr.initialize();
+            mainController.wishListTabController.initialize();
     	    dlg.hide();
     	}); 
 		gPane.add(deleteButton, 2, 1);
@@ -339,6 +370,7 @@ public class ShareTabController {
 				String comment = commentArea.getText();
 				double rate = rating.getRating();
 
+				System.out.println(plan.getPlanID());
 				System.out.println("Comment: "+comment);
 				System.out.println("Rating:  "+rate);
 				
@@ -346,7 +378,7 @@ public class ShareTabController {
 				DBconnector.addRating(plan.getPlanID(), rate, comment);
 				
 				// Call update to show the comment u just leaved
-				updateLayout();
+				updateLayout(filterString);
 				
 				d.hide();
 			}
@@ -380,20 +412,14 @@ public class ShareTabController {
 				cbs.append(c.getText()+"|");
 			}
 		}
-		String s = cbs.toString();
-		if(s.length() > 1){
-			s = s.substring(0, s.length()-1);
+		filterString = cbs.toString();
+		if(filterString.length() > 1){
+			filterString = filterString.substring(0, filterString.length()-1);
 		}
 		
-		System.out.println(s);
-		
-		if(s.equals("")){
-			shareList = DBconnector.getPlans();
-		}
-		else{
-			shareList = DBconnector.getPlans(s);
-		}
-		updateLayout();
+		System.out.println(filterString);
+				
+		updateLayout(filterString);
 	}
 	
 
