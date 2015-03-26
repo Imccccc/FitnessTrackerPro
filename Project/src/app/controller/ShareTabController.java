@@ -2,6 +2,7 @@ package app.controller;
 
 import java.util.ArrayList;
 import java.util.Map.Entry;
+
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.Rating;
 import org.controlsfx.control.ButtonBar.ButtonType;
@@ -20,6 +21,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
@@ -34,6 +36,16 @@ public class ShareTabController {
 
 	@FXML
 	private ScrollPane shareTabScrollPane;
+	@FXML
+	private CheckBox cb1;
+	@FXML
+	private CheckBox cb2;
+	@FXML
+	private CheckBox cb3;
+	@FXML
+	private CheckBox cb4;
+	@FXML
+	private CheckBox cb5;	
 	
 	private ArrayList<WeekPlan> shareList;
 	
@@ -57,11 +69,14 @@ public class ShareTabController {
 	public static final ObservableList<ActivityPlan> saturdayActivities = 
 	        FXCollections.observableArrayList();
 	
+	ArrayList<CheckBox> cblist;
+	StringBuilder cbs;
 	 /**
      * The constructor.
      * The constructor is called before the initialize() method.
      */
     public ShareTabController() {
+    	cblist = new ArrayList<CheckBox>();
     }
     
     /**
@@ -72,9 +87,23 @@ public class ShareTabController {
     private void initialize() {
         shareList= DBconnector.getPlans();
         System.out.println("ShareList Size: "+shareList.size());       
- 
     	updateLayout();
-
+    	
+    	cb1.setOnAction(this::handleCheckboxAction);
+    	cb2.setOnAction(this::handleCheckboxAction);
+    	cb3.setOnAction(this::handleCheckboxAction);
+    	cb4.setOnAction(this::handleCheckboxAction);
+    	cb5.setOnAction(this::handleCheckboxAction);
+    	cb1.setText("Arm");
+    	cb2.setText("Back");
+    	cb3.setText("Chest");
+    	cb4.setText("Core");
+    	cb5.setText("Leg");
+    	cblist.add(cb1);
+    	cblist.add(cb2);
+    	cblist.add(cb3);
+    	cblist.add(cb4);
+    	cblist.add(cb5); 
     }
 
 	private void updateLayout() {
@@ -324,5 +353,29 @@ public class ShareTabController {
 
 		}
 	};
+	
+	private void handleCheckboxAction(ActionEvent event){
+		cbs = new StringBuilder();
+		for(CheckBox c : cblist){
+			if(c.isSelected()){
+				cbs.append(c.getText()+"|");
+			}
+		}
+		String s = cbs.toString();
+		if(s.length() > 1){
+			s = s.substring(0, s.length()-1);
+		}
+		
+		System.out.println(s);
+		
+		if(s.equals("")){
+			shareList = DBconnector.getPlans();
+		}
+		else{
+			shareList = DBconnector.getPlans(s);
+		}
+		updateLayout();
+	}
+	
 
 }

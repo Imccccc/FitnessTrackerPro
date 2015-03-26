@@ -3,6 +3,7 @@ package DBconnector;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Comparator;
+
 import javafx.beans.property.*;
 import javafx.collections.*;
 import app.model.*;
@@ -25,17 +26,22 @@ public abstract class DBconnector {
 	}
 	
 	public static void main(String args[]){
+		
+		
+		
 		login("lhc3","123'");
 		
-		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
+		addRating(30,5,"hello");
 		
-		System.out.println("getplans1:"+getPlans().size());
+//		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 		
-		System.out.println("getplans2:"+getPlans("1|3").size());
+//		System.out.println("getplans1:"+getPlans().size());
 		
-		System.out.println("getplans2:"+getPlans("1|3",true).size());
+//		System.out.println("getplans2:"+getPlans("1|3").size());
 		
-		System.out.println("getplans2:"+getPlans(true).toString());
+	//	System.out.println("getplans2:"+getPlans("1|3",true).size());
+		
+//		System.out.println("getplans2:"+getPlans(true).toString());
 		
 	}
 	
@@ -136,6 +142,15 @@ public abstract class DBconnector {
 			System.out.println("Successfully adding rating");
 			return 0;
 		}catch(SQLException e){
+			try {
+				Statement stmt = con.createStatement();
+				String str = "update rating set rating = "+rating+" , comments = '"+comments+"' where username = '"+username+"' and planid = "+planid;
+				stmt.executeUpdate(str);
+				System.out.println("Successfully adding rating");
+				return 0;
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			e.printStackTrace();
 			return -1;
 		}
