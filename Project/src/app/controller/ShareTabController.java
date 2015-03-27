@@ -297,6 +297,7 @@ public class ShareTabController {
 	
 	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
 		DayPlan dayplan = popUpPlan.getDayPlan(index);
+		if(dayplan == null) return;
 		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
             ActivityPlan a = entry.getValue();
             dayList.add(a);

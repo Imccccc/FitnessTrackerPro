@@ -514,9 +514,14 @@ public abstract class DBconnector {
 				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
-				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
-				for(int i =0;i<7;i++)
-					dayplanlist.add(null);
+				SimpleListProperty<DayPlan> dayplanlist = new SimpleListProperty<DayPlan>(observabledayplanlist);
+				
+				for(int i =0;i<7;i++){
+					ObservableMap<String, ActivityPlan> emptyMap = FXCollections.observableHashMap();
+					MapProperty<String, ActivityPlan> emptyMapProperty = new SimpleMapProperty<>(emptyMap);
+					DayPlan emptyDayPlan = new DayPlan(emptyMapProperty);
+					dayplanlist.add(emptyDayPlan);
+				}
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
