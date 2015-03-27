@@ -517,10 +517,7 @@ public abstract class DBconnector {
 				SimpleListProperty<DayPlan> dayplanlist = new SimpleListProperty<DayPlan>(observabledayplanlist);
 				
 				for(int i =0;i<7;i++){
-					ObservableMap<String, ActivityPlan> emptyMap = FXCollections.observableHashMap();
-					MapProperty<String, ActivityPlan> emptyMapProperty = new SimpleMapProperty<>(emptyMap);
-					DayPlan emptyDayPlan = new DayPlan(emptyMapProperty);
-					dayplanlist.add(emptyDayPlan);
+					dayplanlist.add(null);
 				}
 				while(result2.next()){
 					
