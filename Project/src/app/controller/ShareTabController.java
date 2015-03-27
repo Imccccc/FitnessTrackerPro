@@ -171,6 +171,7 @@ public class ShareTabController {
         for(int i=0; i < shareList_size; i++){
         	grid.add(button[i], 0, i);
         	
+        	ScrollPane cLScrollPane = new ScrollPane();
         	GridPane CLGrid = new GridPane();
         	CLGrid.setHgap(0);
         	CLGrid.setPadding(new Insets(5, 0, 5, 5));
@@ -186,7 +187,8 @@ public class ShareTabController {
         	if(comment_num==0){
         		CLGrid.add(new Label("No comment right now"), 0, 0);
         	}
-        	grid.add(CLGrid, 1, i);    	
+        	cLScrollPane.setContent(CLGrid);
+        	grid.add(cLScrollPane, 1, i);    	
         	
         	GridPane RCGrid = new GridPane();
         	RCGrid.setMinSize(175, 100);
