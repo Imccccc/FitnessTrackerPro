@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="640" maxWidth="1000" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controller.MainController">
+   <children>
+      <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <rowConstraints>
+          <RowConstraints minHeight="40.0" prefHeight="40.0" />
+          <RowConstraints minHeight="600.0" prefHeight="600.0" />
+        </rowConstraints>
+        <columnConstraints>
+        	<ColumnConstraints minWidth="1000.0" prefWidth="1000.0" />
+        </columnConstraints>
+         <children>
+            <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="30.0" prefWidth="200.0">
+              <items>
+                <Button fx:id="registerButton" mnemonicParsing="false" onAction="#registerButtonClicked" text="Register" />
+                <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonClicked" text="Login" />
+                  <Button fx:id="searchButton" mnemonicParsing="false" onMouseClicked="#searchClick" text="Search" />
+                  <TextField fx:id="searchField" text="Compete" />
+              </items>
+            </ToolBar>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" GridPane.rowIndex="1">
+               <children>
+                  <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <tabs>
+                        <Tab text="Home">
+                           <content>
+      						<fx:include fx:id="hometab" source="HomeTabLayout.fxml" />
+                           </content>
+                        </Tab>
+                        <Tab text="Plan">
+                           <content>
+      						<fx:include fx:id="plantab" source="PlanTabLayout.fxml" />
+                           </content>
+                        </Tab>
+                        <Tab text="Stat">
+                           <content>
+                              <fx:include fx:id="tatTab" source="StatTabLayout.fxml" /> 
+                           </content>
+                        </Tab>
+                        <Tab fx:id="ShareTab" text="Share">
+                           <content>
+                              <fx:include fx:id="shareTab" source="ShareTabLayout.fxml" /> 
+                           </content>
+                        </Tab>
+                        <Tab text="WishList">
+                        	 <content>
+                        	 	<fx:include fx:id="wishListTab" source="WishListTabLayout.fxml" />
+                        	 </content>
+                        </Tab>
+                     </tabs>
+                  </TabPane>
+               </children>
+            </AnchorPane>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+      </GridPane>
+   </children>
+</AnchorPane>

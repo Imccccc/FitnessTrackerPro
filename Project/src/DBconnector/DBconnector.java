@@ -30,8 +30,9 @@ public abstract class DBconnector {
 		
 		
 		login("tester","111111");
-		
-		addRating(30,4,"hello");
+		setCompeteable(true);
+		System.out.println(isCompeteable("tester"));
+		//addRating(30,4,"hello");
 		
 //		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 		
@@ -625,6 +626,31 @@ public abstract class DBconnector {
 	public static String SQLSpecialChar(String input){
 		if (input==null) return null;
 		return input.replaceAll("(['\\\\])", "\\\\$1");
+	}
+	
+	public static boolean isCompeteable(String username){
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT Competeable FROM account WHERE username='"+username+"'");
+			while(result.next()){
+				return result.getBoolean("Competeable");
+			}
+			return true;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return true;
+		}
+	}
+	
+	public static int setCompeteable(boolean competeable){
+		try{
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate("update account set Competeable="+competeable+" where username='"+username+"'");
+			return 0;
+		}catch(SQLException e){
+			e.printStackTrace();
+			return -1;
+		}
 	}
 }
 
