@@ -368,8 +368,9 @@ public abstract class DBconnector {
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
 	//				System.out.println(weekday+" "+dayPlan.toString());
+
 					dayplanlist.set(weekday,dayPlan);
-					
+
 				}
 		//		System.out.println("next dayplanlist:");
 				Double rate = getAvgRating(planid);
@@ -517,9 +518,11 @@ public abstract class DBconnector {
 				ResultSet result2 = stmt2.executeQuery("SELECT DISTINCT WEEKDAY FROM plan where planid="+planid);
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
-				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
-				for(int i =0;i<7;i++)
+				SimpleListProperty<DayPlan> dayplanlist = new SimpleListProperty<DayPlan>(observabledayplanlist);
+				
+				for(int i =0;i<7;i++){
 					dayplanlist.add(null);
+				}
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");

@@ -14,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -228,7 +227,8 @@ public class WishListTabController{
 		name_Col.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
 		count_Col.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
 
-		tableView.getColumns().addAll(name_Col, count_Col);
+		tableView.getColumns().add(name_Col);
+		tableView.getColumns().add(count_Col);
 	}
 	  
 }

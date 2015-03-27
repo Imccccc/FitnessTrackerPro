@@ -3,20 +3,12 @@ package app.controller;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 
-
-
-
-
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.Rating;
 import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-
-
-
-
 
 import DBconnector.DBconnector;
 import app.ClassSerializer;
@@ -30,9 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -171,7 +161,6 @@ public class ShareTabController {
         for(int i=0; i < shareList_size; i++){
         	grid.add(button[i], 0, i);
         	
-        	ScrollPane cLScrollPane = new ScrollPane();
         	GridPane CLGrid = new GridPane();
         	CLGrid.setHgap(0);
         	CLGrid.setPadding(new Insets(5, 0, 5, 5));
@@ -187,6 +176,7 @@ public class ShareTabController {
         	if(comment_num==0){
         		CLGrid.add(new Label("No comment right now"), 0, 0);
         	}
+        	ScrollPane cLScrollPane = new ScrollPane();
         	cLScrollPane.setContent(CLGrid);
         	grid.add(cLScrollPane, 1, i);    	
         	
@@ -278,14 +268,6 @@ public class ShareTabController {
 		deleteButton.setOnAction((event) -> {
 			WishListTabController.wishList.put(shareList.get(index).getPlanName(), shareList.get(index));
     	    ClassSerializer.WishListSerializer(WishListTabController.wishList);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/view/WishListTabLayout.fxml"));
-            try {
-				Parent root = (Parent) loader.load();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-            //WishListTabController wishlistCtlr = (WishListTabController) loader.getController();          
-            //wishlistCtlr.initialize();
             mainController.wishListTabController.initialize();
     	    dlg.hide();
     	}); 
@@ -315,6 +297,7 @@ public class ShareTabController {
 	
 	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
 		DayPlan dayplan = popUpPlan.getDayPlan(index);
+		if(dayplan == null) return;
 		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
             ActivityPlan a = entry.getValue();
             dayList.add(a);
@@ -334,7 +317,8 @@ public class ShareTabController {
 		name_Col.setCellValueFactory(cellData -> cellData.getValue().getActivity().ActvityNameProperty());
 		count_Col.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
 
-		tableView.getColumns().addAll(name_Col, count_Col);
+		tableView.getColumns().add(name_Col);
+		tableView.getColumns().add(count_Col);
 	}
 	
 	private void popupCommentDlg(Button b, int index) {

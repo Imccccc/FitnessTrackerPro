@@ -1,8 +1,6 @@
 package app.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.controlsfx.control.ButtonBar;
@@ -10,12 +8,9 @@ import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
-
 import DBconnector.DBconnector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
@@ -28,7 +23,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 
 public class MainController {
 	@FXML
@@ -41,6 +35,7 @@ public class MainController {
 	TextField searchField;
 	@FXML
 	TextField username;
+	
 	@FXML
 	Tab ShareTab;
 	@FXML
@@ -66,6 +61,8 @@ public class MainController {
     	// Initialize the controller
     	shareTabController.init(this);
     	wishListTabController.init(this);
+    	planTabController.init(this);
+    	
     	// Set some access control
     	ShareTab.setDisable(true);
     	planTabController.sharePlanButton.setDisable(true);
