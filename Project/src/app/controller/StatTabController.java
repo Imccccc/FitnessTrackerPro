@@ -50,7 +50,7 @@ public class StatTabController {
     
     private XYChart.Series<String, Number> seriesPlannedData;
     
-    
+    private XYChart.Series<String, Number> seriesCalorieData;
     
     public StatTabController() {
     	
@@ -97,11 +97,7 @@ public class StatTabController {
     			System.out.println(dayPlan.getDate().toString().substring(4,10));
     		}
     		
-    		addPlanNames();//add plan name to the planNameBox
-    		xAxis = new CategoryAxis(dayNames);
-    		//xAxis.setLabel("Week");
-    		yAxis.setAutoRanging(false);
-    		areaChart.setTitle("Statistics");
+    		
 
    			addPlanNames();
     		xAxis = new CategoryAxis(dayNames);
@@ -111,6 +107,7 @@ public class StatTabController {
 	       	yAxis.setAutoRanging(false);
 	   		seriesRealData = new XYChart.Series<String, Number>();
 	   		seriesPlannedData = new XYChart.Series<String, Number>();  	
+	   		seriesCalorieData = new XYChart.Series<String, Number>();  	
 	    	areaChart.setTitle("Statistics");
     	}
 		else{
@@ -150,8 +147,10 @@ public class StatTabController {
     private void setActivityData() {
     	seriesRealData = new XYChart.Series<String, Number>();
     	seriesPlannedData = new XYChart.Series<String, Number>();
+    	seriesCalorieData = new XYChart.Series<String, Number>();  
     	seriesRealData.setName("RealData");
     	seriesPlannedData.setName("PlannedData");
+    	seriesCalorieData.setName("CalorieData");
     	
     	int maxRange = 0;
     	
@@ -161,8 +160,10 @@ public class StatTabController {
     		if(dayPlan.getDayPlan().get(planNameBox.getValue()) != null) { 
     			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 
     					dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount()));	//add data of selected activity to series
+    			seriesCalorieData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 
+    					dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount()*10));
     					if(dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount() > maxRange) {
-    						maxRange = dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount(); //update max-Range of the yAxis
+    						maxRange = dayPlan.getDayPlan().get(planNameBox.getValue()).getRealCount()*10; //update max-Range of the yAxis
     					}
     			seriesPlannedData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10),
     					dayPlan.getDayPlan().get(planNameBox.getValue()).getActivityPlan().getPlannedCount()));// add data of planned activity to series
@@ -175,12 +176,13 @@ public class StatTabController {
     		else {
     			seriesRealData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 0));
     			seriesPlannedData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 0));
+    			seriesCalorieData.getData().add(new XYChart.Data<String, Number>(dayPlan.getDate().toString().substring(4,10), 0));
     		}
     	}
-    	yAxis.setUpperBound(maxRange+5-maxRange%5);
+    	yAxis.setUpperBound(maxRange+80-maxRange%20);
     	areaChart.getData().clear();
     	//areaChart.setVerticalGridLinesVisible(true);
-    	areaChart.getData().addAll(seriesPlannedData,seriesRealData);
+    	areaChart.getData().addAll(seriesPlannedData,seriesRealData,seriesCalorieData);
     }
     
     
