@@ -32,17 +32,17 @@
                      <tabs>
                         <Tab text="Home">
                            <content>
-      						<fx:include fx:id="hometab" source="HomeTabLayout.fxml" />
+      						<fx:include fx:id="homeTab" source="HomeTabLayout.fxml" />
                            </content>
                         </Tab>
                         <Tab text="Plan">
                            <content>
-      						<fx:include fx:id="plantab" source="PlanTabLayout.fxml" />
+      						<fx:include fx:id="planTab" source="PlanTabLayout.fxml" />
                            </content>
                         </Tab>
                         <Tab text="Stat">
                            <content>
-                              <fx:include fx:id="tatTab" source="StatTabLayout.fxml" /> 
+                              <fx:include fx:id="statTab" source="StatTabLayout.fxml" /> 
                            </content>
                         </Tab>
                         <Tab fx:id="ShareTab" text="Share">

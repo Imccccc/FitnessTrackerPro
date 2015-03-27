@@ -21,7 +21,7 @@ public abstract class DBconnector {
 	
 	static{
 		connect();
-		createUser("lhc3","123'");
+		//createUser("lhc3","123'");
 		//login("lhc","123");
 	}
 	

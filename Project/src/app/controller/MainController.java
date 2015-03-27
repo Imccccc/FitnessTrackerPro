@@ -44,6 +44,8 @@ public class MainController {
 	@FXML
 	Tab ShareTab;
 	@FXML
+	ActivityListController planTabController;
+	@FXML
 	WishListTabController wishListTabController;
 	@FXML
 	ShareTabController shareTabController;
@@ -61,9 +63,12 @@ public class MainController {
 	
     @FXML
     private void initialize() {
+    	// Initialize the controller
     	shareTabController.init(this);
     	wishListTabController.init(this);
+    	// Set some access control
     	ShareTab.setDisable(true);
+    	planTabController.sharePlanButton.setDisable(true);
     	searchButton.setVisible(false);
     	searchField.setVisible(false);
     	searchField.setText("Find a friend");
@@ -151,7 +156,8 @@ public class MainController {
 				UpdateToolBar();
 				// Show sharetab
 				ShareTab.setDisable(false);
-				//TODO: Enable share button, etc.
+				//Enable share button, etc.
+				planTabController.sharePlanButton.setDisable(false);
 			}
 		}
 
@@ -205,6 +211,7 @@ public class MainController {
 			searchButton.setVisible(false);
 			searchField.setVisible(false);
 			ShareTab.setDisable(true);
+			planTabController.sharePlanButton.setDisable(true);
 		}
 	}
 	
@@ -289,7 +296,7 @@ public class MainController {
 				UpdateToolBar();
 				
 				ShareTab.setDisable(false);
-				
+				planTabController.sharePlanButton.setDisable(false);
 			}
 			else{
 				// Other error

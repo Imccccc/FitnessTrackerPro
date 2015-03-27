@@ -22,7 +22,7 @@
                      			 <HBox layoutX="672.0" layoutY="558.0" AnchorPane.bottomAnchor="14.0">
       		                          <children>
         	                             <Button fx:id="editPlanButton" layoutX="192.0" layoutY="340.0" mnemonicParsing="false" onAction="#editPlanButtonClicked" text="Edit" />
-            	                         <Button layoutX="247.0" layoutY="340.0" mnemonicParsing="false" text="Share" />
+            	                         <Button fx:id="sharePlanButton" layoutX="247.0" layoutY="340.0" mnemonicParsing="false" onAction="#sharePlanButtonClicked" text="Share" />
                 	                     <Button fx:id="clearPlanButton" layoutX="302.0" layoutY="340.0" mnemonicParsing="false" onAction="#clearPlanButtonClicked" prefHeight="23.0" prefWidth="53.0" text="Clear" />
                     		           </children>
                                  </HBox>

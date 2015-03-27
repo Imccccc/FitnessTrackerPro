@@ -2,7 +2,6 @@ package app.model;
 
 import java.io.Serializable;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -51,6 +50,10 @@ public class WeekPlan implements Serializable{
 	
 	public void addRating(Rating rating){
 		ratingList.add(rating);
+	}
+	
+	public void setPlanType(String type){
+		this.planType = new SimpleStringProperty(type);
 	}
 	
 	public String getPlanType(){
