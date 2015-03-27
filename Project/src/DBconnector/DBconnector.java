@@ -21,7 +21,7 @@ public abstract class DBconnector {
 	
 	static{
 		connect();
-		//createUser("lhc3","123'");
+		createUser("lhc3","123'");
 		//login("lhc","123");
 	}
 	
@@ -35,14 +35,14 @@ public abstract class DBconnector {
 		//addRating(30,4,"hello");
 		
 //		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
+		ArrayList<WeekPlan> wpp = getPlans();
+		System.out.println("getplans1:"+wpp.size());
 		
-//		System.out.println("getplans1:"+getPlans().size());
+		System.out.println("getplans2:"+getPlans("1|3").size());
 		
-//		System.out.println("getplans2:"+getPlans("1|3").size());
+		System.out.println("getplans2:"+getPlans("1|3",true).size());
 		
-	//	System.out.println("getplans2:"+getPlans("1|3",true).size());
-		
-//		System.out.println("getplans2:"+getPlans(true).toString());
+		System.out.println("getplans2:"+getPlans(true).toString());
 		
 	}
 	
@@ -263,6 +263,8 @@ public abstract class DBconnector {
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
 				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				for(int i =0;i<7;i++)
+					dayplanlist.add(null);
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
@@ -340,6 +342,8 @@ public abstract class DBconnector {
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
 				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				for(int i =0;i<7;i++)
+					dayplanlist.add(null);
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
@@ -360,7 +364,8 @@ public abstract class DBconnector {
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
 	//				System.out.println(weekday+" "+dayPlan.toString());
-					dayplanlist.add(weekday,dayPlan);
+
+					dayplanlist.set(weekday,dayPlan);
 
 				}
 		//		System.out.println("next dayplanlist:");
@@ -426,6 +431,8 @@ public abstract class DBconnector {
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
 				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				for(int i =0;i<7;i++)
+					dayplanlist.add(null);
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
@@ -508,6 +515,8 @@ public abstract class DBconnector {
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
 				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
+				for(int i =0;i<7;i++)
+					dayplanlist.add(null);
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
