@@ -210,6 +210,11 @@ public abstract class DBconnector {
 			return null;
 		}
 		
+		if (!isCompeteable(username)) {
+			System.out.println("Non exist username or not public user");
+			return null;
+		}
+		
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
@@ -218,7 +223,6 @@ public abstract class DBconnector {
 				app.model.dayAmount temp=new app.model.dayAmount(result.getDate("date"),result.getDouble("calories"));
 				ret.add(temp);
 			}
-			if (ret.isEmpty()) return null;
 			System.out.println("Successfully select");
 			return ret;
 		}catch(SQLException e){
@@ -641,10 +645,10 @@ public abstract class DBconnector {
 			while(result.next()){
 				return result.getBoolean("Competeable");
 			}
-			return true;
+			return false;
 		}catch(SQLException e){
 			e.printStackTrace();
-			return true;
+			return false;
 		}
 	}
 	
