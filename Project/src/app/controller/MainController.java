@@ -47,6 +47,9 @@ public class MainController {
 	WishListTabController wishListTabController;
 	@FXML
 	ShareTabController shareTabController;
+	@FXML 
+	HomeTabController hometabController;
+	
 	
 	PasswordField password;
 	PasswordField password_confirm;

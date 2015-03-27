@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.Map.Entry;
@@ -75,6 +76,8 @@ public class HomeTabController {
     private ObservableList<String> dayNames;
     
     private ObservableList<dayAmount> pastCalories;
+    
+    private ObservableList<RealDayPlan> amountList;
     
     private XYChart.Series<String, Number> dailyCaloriesData;
     
@@ -233,15 +236,15 @@ public class HomeTabController {
 	
 	public void plotData(int length) {
 		dayNames = FXCollections.observableArrayList();
-		ArrayList<app.model.dayAmount> amountList = DBconnector.getExerciseAmount(DBconnector.username);
+		amountList = StatTabController.getChartData(StatTabController.loadChartData(), length);
 		//ArrayList<app.model.dayAmount> amountList = makeFakeAmounts();
 		if(amountList == null)
 			return;
 		else{
-			pastCalories = getPastCalories(amountList, length);
+			pastCalories = getPastCalories(amountList);
 			
 			for(dayAmount day : pastCalories) {
-				dayNames.add(day.date.toString().substring(5,10));
+				dayNames.add(day.getDate().toString().substring(4,10));
 			}
 		
 			setCaloriesData();
@@ -251,31 +254,28 @@ public class HomeTabController {
 	}
 	
 	
-	public ObservableList<dayAmount> getPastCalories(ArrayList<app.model.dayAmount> amountList, int length) {
+	public ObservableList<dayAmount> getPastCalories(ObservableList<RealDayPlan> amountList) {
 		ObservableList<dayAmount> graph = FXCollections.observableArrayList();
-		if(amountList.size()<=length){
-			graph.addAll(amountList);
-			return graph;
-    	}
-    	else {
-    		int index = amountList.size() - length;
-    		while(index < amountList.size()) {
-    			graph.add(amountList.get(index));
-    			index++;
-    		}
-    		return graph;
-    	}
+		double dailyCalories = 0;
+		for(RealDayPlan dayPlan : amountList) {
+			dailyCalories = 0;
+			for(Map.Entry<String, RealActivityPlan> Entry : dayPlan.getDayPlan().entrySet()) {
+				dailyCalories += Entry.getValue().getRealCount()*10;
+			}
+			graph.add(new dayAmount(dayPlan.getDate(), dailyCalories));
+		}
+		return graph;
 	}
 	
 	public void setCaloriesData() {
 		dailyCaloriesData = new XYChart.Series<String, Number>();
-		dailyCaloriesData.setName("dailySum");
+		dailyCaloriesData.setName("Daily Calories");
 		
 		double maxRange = 0;
 		for(dayAmount day : pastCalories) {
-			dailyCaloriesData.getData().add(new XYChart.Data<String, Number>(day.date.toString().substring(5,10), day.amount));
-			if(maxRange<day.amount) {
-				maxRange = day.amount;
+			dailyCaloriesData.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
+			if(maxRange<day.getAmount()) {
+				maxRange = day.getAmount();
 			}
 		}
 		yAxis = new NumberAxis(0, maxRange+200, 200);
@@ -284,45 +284,5 @@ public class HomeTabController {
     	areaChart.getData().add(dailyCaloriesData);
 	}
 	
-	public ArrayList<app.model.dayAmount> makeFakeAmounts() {
-		ArrayList<app.model.dayAmount> exerciseAmounts = new ArrayList<>();
-		dayAmount ad1 = new dayAmount();
-		dayAmount ad2 = new dayAmount();
-		dayAmount ad3 = new dayAmount();
-		dayAmount ad4 = new dayAmount();
-		dayAmount ad5 = new dayAmount();
-		dayAmount ad6 = new dayAmount();
-		dayAmount ad7 = new dayAmount();
-		dayAmount ad8 = new dayAmount();
-		dayAmount ad9 = new dayAmount();
-		ad1.date = java.sql.Date.valueOf("2015-03-17");
-		ad1.amount = 1000.00;
-		ad2.date = java.sql.Date.valueOf("2015-03-18");
-		ad2.amount = 1100;
-		ad3.date = java.sql.Date.valueOf("2015-03-19");
-		ad3.amount = 1200;
-		ad4.date = java.sql.Date.valueOf("2015-03-20");
-		ad4.amount = 1000.00;
-		ad5.date = java.sql.Date.valueOf("2015-03-21");
-		ad5.amount = 1100;
-		ad6.date = java.sql.Date.valueOf("2015-03-22");
-		ad6.amount = 1200;
-		ad7.date = java.sql.Date.valueOf("2015-03-23");
-		ad7.amount = 1000.00;
-		ad8.date = java.sql.Date.valueOf("2015-03-24");
-		ad8.amount = 1100.00;
-		ad9.date = java.sql.Date.valueOf("2015-03-25");
-		ad9.amount = 1200;
-		exerciseAmounts.add(ad1);
-		exerciseAmounts.add(ad2);
-		exerciseAmounts.add(ad3);
-		exerciseAmounts.add(ad4);
-		exerciseAmounts.add(ad5);
-		exerciseAmounts.add(ad6);
-		exerciseAmounts.add(ad7);
-		exerciseAmounts.add(ad8);
-		exerciseAmounts.add(ad9);
-		return exerciseAmounts;
-	}
 	
 }

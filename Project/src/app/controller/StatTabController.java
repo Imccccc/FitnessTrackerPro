@@ -185,7 +185,7 @@ public class StatTabController {
     
     
     
-    private ObservableList<RealDayPlan> getChartData(ObservableList<RealDayPlan> plans, int length) {
+    public static ObservableList<RealDayPlan> getChartData(ObservableList<RealDayPlan> plans, int length) {
     	if(plans == null){
     		return null;
     	}
@@ -206,7 +206,7 @@ public class StatTabController {
     
     
     
-    private ObservableList<RealDayPlan> loadChartData() {
+    public static ObservableList<RealDayPlan> loadChartData() {
     	
     	ObservableList<RealDayPlan> plans = FXCollections.observableArrayList();
     	Date date = new Date();
