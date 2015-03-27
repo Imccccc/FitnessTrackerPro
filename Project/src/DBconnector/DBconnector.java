@@ -29,9 +29,9 @@ public abstract class DBconnector {
 		
 		
 		
-		login("lhc3","123'");
+		login("tester","111111");
 		
-		addRating(30,5,"hello");
+		addRating(30,4,"hello");
 		
 //		System.out.println(SQLSpecialChar("asd' OR 1=1--\\"));
 		
@@ -299,7 +299,7 @@ public abstract class DBconnector {
 					wp.addRating(r);
 	//				System.out.println("rating:"+r.toString()+" by "+r.getUsername());
 				}
-			
+				wp.setPlanID(planid);
 				wps.add(wp);
 							
 			}
@@ -375,7 +375,7 @@ public abstract class DBconnector {
 					wp.addRating(r);
 		//			System.out.println("rating:"+r.toString()+" by "+r.getUsername());
 				}
-			
+				wp.setPlanID(planid);
 				wps.add(wp);
 							
 			}
@@ -461,7 +461,7 @@ public abstract class DBconnector {
 					wp.addRating(r);
 					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
 				}
-			
+				wp.setPlanID(planid);
 				wps.add(wp);
 				wps.sort(new Comparator<WeekPlan>(){
 					@Override
@@ -543,7 +543,7 @@ public abstract class DBconnector {
 					wp.addRating(r);
 					System.out.println("rating:"+r.toString()+" by "+r.getUsername());
 				}
-			
+				wp.setPlanID(planid);
 				wps.add(wp);
 				wps.sort(new Comparator<WeekPlan>(){
 					@Override
