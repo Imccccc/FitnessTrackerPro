@@ -215,9 +215,7 @@ public abstract class DBconnector {
 			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"'");
 			ArrayList<app.model.dayAmount> ret=new ArrayList<app.model.dayAmount>();
 			while(result.next()){
-				app.model.dayAmount temp=new app.model.dayAmount();
-				temp.date=result.getDate("date");
-				temp.amount=result.getDouble("calories");
+				app.model.dayAmount temp=new app.model.dayAmount(result.getDate("date"),result.getDouble("calories"));
 				ret.add(temp);
 			}
 			if (ret.isEmpty()) return null;
