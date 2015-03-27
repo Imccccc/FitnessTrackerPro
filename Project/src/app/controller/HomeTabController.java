@@ -2,30 +2,19 @@ package app.controller;
 
 import impl.org.controlsfx.i18n.Localization;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Scanner;
 import java.util.Map.Entry;
 
 import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -40,16 +29,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
-import DBconnector.DBconnector;
 import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.RealActivityPlan;
 import app.model.RealDayPlan;
-import app.model.Unit;
 import app.model.dayAmount;
 import app.ClassSerializer;
 

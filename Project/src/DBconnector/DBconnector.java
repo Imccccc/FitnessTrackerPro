@@ -360,8 +360,16 @@ public abstract class DBconnector {
 					DayPlan dayPlan = new DayPlan(mapProperty);
 					
 	//				System.out.println(weekday+" "+dayPlan.toString());
-					dayplanlist.add(weekday,dayPlan);
-					
+					try{
+						dayplanlist.add(weekday,dayPlan);
+					}
+					catch(IndexOutOfBoundsException e){
+//						ObservableMap<String, ActivityPlan> emptyMap = FXCollections.observableHashMap();
+//						MapProperty<String, ActivityPlan> emptyMapProperty = new SimpleMapProperty<>(emptyMap);
+//						DayPlan emptyDayPlan = new DayPlan(emptyMapProperty);
+//						dayplanlist.add(emptyDayPlan);
+//						dayplanlist.add(weekday,dayPlan);
+					}
 				}
 		//		System.out.println("next dayplanlist:");
 				Double rate = getAvgRating(planid);

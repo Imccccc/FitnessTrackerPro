@@ -45,6 +45,8 @@ import app.model.WeekPlan;
 
 
 public class ActivityListController {
+	MainController mainController;
+	
 	private boolean dragable =false;
 	private String dragFrom = "";
 	private boolean removeAct = false;
@@ -56,6 +58,7 @@ public class ActivityListController {
 	private Button editPlanButton;
 	@FXML
 	private Button addActivityButton;
+	
 	@FXML
 	private TableView<Activity> activityList;
 	@FXML
@@ -145,6 +148,11 @@ public class ActivityListController {
 	public ActivityListController() {
 	}
 
+	// Called by MainController to setup (for controller communication)
+	public void init(MainController mainController) {
+		this.mainController = mainController;
+	}
+	
 	/**
 	 * Initializes the controller class. This method is automatically called
 	 * after the fxml file has been loaded.
@@ -241,7 +249,11 @@ public class ActivityListController {
 				MainApp.weekPlan.setPlanName(name);
 				MainApp.weekPlan.setPlanType(type);
 				
+				// Write to DB
 				DBconnector.writePlan(MainApp.weekPlan);
+				
+				// Update layout for share tab
+				mainController.shareTabController.updateLayout("");
 				
 				d.hide();
 			}
@@ -1259,4 +1271,5 @@ public class ActivityListController {
 		saveWeekPlan();
 
 	}
+
 }
