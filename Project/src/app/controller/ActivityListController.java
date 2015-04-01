@@ -21,12 +21,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
@@ -490,6 +492,8 @@ public class ActivityListController {
 
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
+						if(!checkCountValidity(count))	return;
+
 						for(ActivityPlan a : sundayActivities){
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
@@ -613,6 +617,8 @@ public class ActivityListController {
 
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
+						if(!checkCountValidity(count))	return;
+						
 						for(ActivityPlan a : mondayActivities){
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
@@ -735,6 +741,8 @@ public class ActivityListController {
 
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
+						if(!checkCountValidity(count))	return;
+						
 						for(ActivityPlan a : tuesdayActivities){
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
@@ -858,6 +866,8 @@ public class ActivityListController {
 
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
+						if(!checkCountValidity(count))	return;
+						
 						for(ActivityPlan a : wednesdayActivities){
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
@@ -981,6 +991,8 @@ public class ActivityListController {
 
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
+						if(!checkCountValidity(count))	return;
+						
 						for(ActivityPlan a : thursdayActivities){
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
@@ -1105,6 +1117,8 @@ public class ActivityListController {
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
 						for(ActivityPlan a : fridayActivities){
+							if(!checkCountValidity(count))	return;
+							
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
 								a.setPlannedCount(temp + Integer.parseInt(count));
@@ -1227,6 +1241,8 @@ public class ActivityListController {
 
 					// Add activity to the correspond observableList
 					response.ifPresent((count)->{
+						if(!checkCountValidity(count))	return;
+						
 						for(ActivityPlan a : saturdayActivities){
 							if(a.getActivity().getActvityName().equals(info[0])){
 								int temp = a.getPlannedCount();
@@ -1250,6 +1266,27 @@ public class ActivityListController {
 				dragEvent.setDropCompleted(true);
 			}
 				});
+	}
+
+	protected boolean checkCountValidity(String count) {
+		try {
+			if(Integer.parseInt(count) <= 0){
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Error");
+				alert.setHeaderText(null);
+				alert.setContentText("Please enter an positive integer as the count for activty!");
+				alert.showAndWait();
+				return false;
+			}
+			return true;
+		} catch (NumberFormatException e) {
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Error");
+			alert.setHeaderText(null);
+			alert.setContentText("Please enter an positive integer as the count for activty!");
+			alert.showAndWait();
+			return false;
+		}
 	}
 
 	public static void updateWeekPlan() {
