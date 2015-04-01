@@ -23,7 +23,7 @@
                 <Button fx:id="registerButton" mnemonicParsing="false" onAction="#registerButtonClicked" text="Register" />
                 <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginButtonClicked" text="Login" />
                   <Button fx:id="searchButton" mnemonicParsing="false" onMouseClicked="#searchClick" text="Search" />
-                  <TextField fx:id="searchField" text="Compete" />
+                  <TextField fx:id="searchField" />
               </items>
             </ToolBar>
             <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" GridPane.rowIndex="1">
@@ -61,6 +61,7 @@
             </AnchorPane>
          </children>
          <columnConstraints>
+            <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />
             <ColumnConstraints />

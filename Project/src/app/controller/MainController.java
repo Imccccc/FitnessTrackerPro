@@ -1,6 +1,5 @@
 package app.controller;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.controlsfx.control.ButtonBar;
@@ -8,11 +7,14 @@ import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
+
+import app.model.dayAmount;
 import DBconnector.DBconnector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.chart.AreaChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
@@ -68,7 +70,7 @@ public class MainController {
     	planTabController.sharePlanButton.setDisable(true);
     	searchButton.setVisible(false);
     	searchField.setVisible(false);
-    	searchField.setText("Find a friend");
+    	searchField.setPromptText("Compete a friend");
     }
 	
 	
@@ -304,46 +306,41 @@ public class MainController {
 	
 	
 	public void searchClick(){
-		System.out.println("clicked!!!");
-		String username = searchField.getText();
-		ArrayList<app.model.dayAmount> amountlist = DBconnector.getExerciseAmount(username);
-		if( /*!amountlist.isEmpty() &&*/ amountlist != null){
+		boolean userExist = true;
+		
+		//String username = searchField.getText();
+		//ArrayList<app.model.dayAmount> amountlist = DBconnector.getExerciseAmount(username);
+		
+		if(userExist){
     		Dialog dialog = new Dialog(null, "Compete result");
     		GridPane grid = new GridPane();
-            NumberAxis xAxis = new NumberAxis(1, 30, 1);
+    		
+    		// Setup the graph
+    		CategoryAxis xAxis = new CategoryAxis(HomeTabController.dayNames);
             NumberAxis yAxis = new NumberAxis();
-    		AreaChart<Number, Number> areaChart = new AreaChart<Number, Number>(xAxis, yAxis);
-    		//fake data
-    		XYChart.Series seriesApril= new XYChart.Series();
-            seriesApril.setName("April");
-            seriesApril.getData().add(new XYChart.Data(1, 4));
-            seriesApril.getData().add(new XYChart.Data(3, 10));
-            seriesApril.getData().add(new XYChart.Data(6, 15));
-            seriesApril.getData().add(new XYChart.Data(9, 8));
-            seriesApril.getData().add(new XYChart.Data(12, 5));
-            seriesApril.getData().add(new XYChart.Data(15, 18));
-            seriesApril.getData().add(new XYChart.Data(18, 15));
-            seriesApril.getData().add(new XYChart.Data(21, 13));
-            seriesApril.getData().add(new XYChart.Data(24, 19));
-            seriesApril.getData().add(new XYChart.Data(27, 21));
-            seriesApril.getData().add(new XYChart.Data(30, 21));
-            
-            XYChart.Series seriesMay = new XYChart.Series();
-            seriesMay.setName("May");
-            seriesMay.getData().add(new XYChart.Data(1, 20));
-            seriesMay.getData().add(new XYChart.Data(3, 15));
-            seriesMay.getData().add(new XYChart.Data(6, 13));
-            seriesMay.getData().add(new XYChart.Data(9, 12));
-            seriesMay.getData().add(new XYChart.Data(12, 14));
-            seriesMay.getData().add(new XYChart.Data(15, 18));
-            seriesMay.getData().add(new XYChart.Data(18, 25));
-            seriesMay.getData().add(new XYChart.Data(21, 25));
-            seriesMay.getData().add(new XYChart.Data(24, 23));
-            seriesMay.getData().add(new XYChart.Data(27, 26));
-            seriesMay.getData().add(new XYChart.Data(30, 26));
-            areaChart.getData().addAll(seriesApril, seriesMay);
+    		AreaChart<String, Number> areaChart = new AreaChart<>(xAxis, yAxis);
+    		
+    		XYChart.Series<String, Number> myDataSeries = new XYChart.Series<String, Number>();
+    		myDataSeries.setName("My Daily Calories");
+    		
+    		double maxRange = 0;
+    		for(dayAmount day :HomeTabController.pastCalories) {
+    			myDataSeries.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
+    			if(maxRange < day.getAmount()) {
+    				maxRange = day.getAmount();
+    			}
+    		}
+    		yAxis = new NumberAxis(0, maxRange+200, 200);
+    		yAxis.setAutoRanging(false);
+        	areaChart.getData().clear();
+        	areaChart.getData().add(myDataSeries);
+    		
+    		areaChart.setTitle("Compete Graph");
+    		
+    		
+    		
 
-    		//fake data down
+    		// Set layout
     		grid.setHgap(10);
     		grid.setVgap(10);
     		grid.setPadding(new Insets(20, 150, 10, 10));

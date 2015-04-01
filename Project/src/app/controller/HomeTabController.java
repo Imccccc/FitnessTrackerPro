@@ -40,6 +40,7 @@ import app.model.dayAmount;
 import app.ClassSerializer;
 
 public class HomeTabController {
+	// FXML Variables
 	@FXML
 	private TableView<RealActivityPlan> HomePageTable;
 	@FXML
@@ -59,14 +60,13 @@ public class HomeTabController {
     @FXML
     private Label HomepageLabel;
     
-    private ObservableList<String> dayNames;
+    // Global Variables
+    public static ObservableList<String> dayNames;
+    public static ObservableList<dayAmount> pastCalories;
     
-    private ObservableList<dayAmount> pastCalories;
-    
+    // Private Variables
     private ObservableList<RealDayPlan> amountList;
-    
     private XYChart.Series<String, Number> dailyCaloriesData;
-    
     private ObservableList<RealActivityPlan> activityData = FXCollections.observableArrayList();
     
     

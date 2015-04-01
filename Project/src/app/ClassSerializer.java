@@ -5,12 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.Map.Entry;
-
-import com.mysql.fabric.xmlrpc.base.Data;
 
 import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleMapProperty;
@@ -278,7 +274,7 @@ public class ClassSerializer {
 					}
 				}else{
 					System.out.println("Should Add to history");
-					String day = new String(input);
+					//String day = new String(input);
 					//System.out.println("day = " + day);
 					String content = new Scanner(file).useDelimiter("\\Z").next();
 					//System.out.println(content);
@@ -300,7 +296,7 @@ public class ClassSerializer {
 	
 	public static void HistorySerializer(String dayplan){
 		try{
-			File file = new File("./History.Fitness");
+			//File file = new File("./History.Fitness");
 			PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("./History.Fitness", true)));
 			out.println("<DayHistory>");
 			out.print(dayplan);
