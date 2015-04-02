@@ -240,13 +240,17 @@ public class HomeTabController {
 	}
 	
 	
-	public ObservableList<dayAmount> getPastCalories(ObservableList<RealDayPlan> amountList) {
+	public static ObservableList<dayAmount> getPastCalories(ObservableList<RealDayPlan> amountList) {
 		ObservableList<dayAmount> graph = FXCollections.observableArrayList();
 		double dailyCalories = 0;
 		for(RealDayPlan dayPlan : amountList) {
 			dailyCalories = 0;
 			for(Map.Entry<String, RealActivityPlan> Entry : dayPlan.getDayPlan().entrySet()) {
-				dailyCalories += Entry.getValue().getRealCount()*10;
+				if(Entry.getValue().getActivityPlan().getActivity().getUnit().equals("MINUTE"))
+					dailyCalories += Entry.getValue().getRealCount()*10;
+				else {
+					dailyCalories += Entry.getValue().getRealCount()*0.1;
+				}
 			}
 			graph.add(new dayAmount(dayPlan.getDate(), dailyCalories));
 		}

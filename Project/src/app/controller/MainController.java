@@ -1,5 +1,6 @@
 package app.controller;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.controlsfx.control.ButtonBar;
@@ -309,7 +310,7 @@ public class MainController {
 		boolean userExist = true;
 		
 		//String username = searchField.getText();
-		//ArrayList<app.model.dayAmount> amountlist = DBconnector.getExerciseAmount(username);
+		ArrayList<app.model.dayAmount> amountlist = DBconnector.getExerciseAmount("lhc");
 		
 		if(userExist){
     		Dialog dialog = new Dialog(null, "Compete result");
