@@ -130,13 +130,23 @@ public class ActivityListController {
 	final Action actionLogin = new AbstractAction("Confirm") {
 		// This method is called when the login button is clicked ...
 		public void handle(ActionEvent ae) {
+			// Get user input
 			Dialog d = (Dialog) ae.getSource();
 			String newActName = actitvityName.getText();
 			Unit newActUnit = choiceBox.getSelectionModel().getSelectedItem().equals("Times")?Unit.TIMES:Unit.MINUTE;
-			//	        System.out.println(newActName);
-			//	        System.out.println(newActUnit.toString());
-			//	        System.out.println(newActName);
+
+			// Check duplicate activity
+			for(Activity act : MainApp.activities){
+				if(act.getActvityName().equals(newActName)){
+					// If exist, pop up an alert and do NOT insert again
+					popupErrorAlert("This activity already exist in your list!");
+					d.hide();
+					return;
+				}
+			}
+			// Insert the added activity into the list
 			MainApp.activities.add(new Activity(newActName, newActUnit));
+			// Save the activity list into local file
 			ClassSerializer.ActivitySerializer(MainApp.activities);
 			d.hide();
 		}
@@ -189,6 +199,7 @@ public class ActivityListController {
 		saturdayList_cntCol.setCellValueFactory(cellData -> cellData.getValue().plannedCountProperty());
 		saturdayList.setItems(saturdayActivities);
 
+		// Initialize all the listener for the big plan table
 		initializeListeners();
 	}
 
@@ -1268,14 +1279,18 @@ public class ActivityListController {
 				});
 	}
 
+	private void popupErrorAlert(String contentText){
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(contentText);
+		alert.showAndWait();
+	}
+	
 	protected boolean checkCountValidity(String count) {
 		try {
 			if(Integer.parseInt(count) <= 0){
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Error");
-				alert.setHeaderText(null);
-				alert.setContentText("Please enter an positive integer as the count for activty!");
-				alert.showAndWait();
+				popupErrorAlert("Please enter an positive integer as the count for activty!");
 				return false;
 			}
 			return true;
