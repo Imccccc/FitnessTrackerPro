@@ -1,7 +1,10 @@
 package app.controller;
 
 
+import impl.org.controlsfx.i18n.Localization;
+
 import java.util.Map.Entry;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.controlsfx.control.ButtonBar;
@@ -158,6 +161,8 @@ public class ActivityListController {
 	 * The constructor is called before the initialize() method.
 	 */
 	public ActivityListController() {
+    	Localization.setLocale(new Locale("en", "EN"));
+
 	}
 
 	// Called by MainController to setup (for controller communication)
