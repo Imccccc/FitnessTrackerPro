@@ -53,30 +53,36 @@ public class MainApp extends Application {
     	alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo, buttonTypeCancel);
 
     	Optional<ButtonType> result = alert.showAndWait();
+    	
+		File plan1 = new File("./Fat");
+		File plan2 = new File("./Muscle");
+		File empty = new File("./Empty");
+		File weekplan = new File("./weekPlan");
+    	
     	if (result.get() == buttonTypeOne){
-    		File plan1 = new File("./Fat");
-    		File plan2 = new File("./Muscle");
-    		File weekplan = new File("./weekPlan");
     		if (plan1.exists()) {
 				plan1.renameTo(weekplan);
 				plan2.delete();
+				empty.delete();
 			}
     	} else if (result.get() == buttonTypeTwo) {
-    		File plan1 = new File("./Muscle");
-    		File plan2 = new File("./Fat");
-    		File weekplan = new File("./weekPlan");
     		if (plan1.exists()) {
 				plan1.renameTo(weekplan);
 				plan2.delete();
+				empty.delete();
 			}
     	} else {
-    	    // ... user chose CANCEL or closed the dialog, do nothing
+    		if (empty.exists()) {
+    			empty.renameTo(weekplan);
+				plan1.delete();
+				plan2.delete();
+			}
     	}
     }
     
     @Override
     public void start(Stage primaryStage) {
-    	File file = new File("History.Fitness");
+    	File file = new File("weekPlan");
     	if (!file.exists()) {
     		chooseDefaultPlan();
 		}
