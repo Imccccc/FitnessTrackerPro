@@ -346,8 +346,12 @@ public abstract class DBconnector {
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
 				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
-				for(int i =0;i<7;i++)
-					dayplanlist.add(null);
+				for(int i =0;i<7;i++){
+					ObservableMap<String, ActivityPlan> emptyMap = FXCollections.observableHashMap();
+					MapProperty<String, ActivityPlan> emptyMapProperty = new SimpleMapProperty<>(emptyMap);
+					DayPlan emptyDP = new DayPlan(emptyMapProperty);
+					dayplanlist.add(emptyDP);
+				}
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
@@ -435,8 +439,12 @@ public abstract class DBconnector {
 				
 				ObservableList<DayPlan> observabledayplanlist = FXCollections.observableArrayList();
 				SimpleListProperty<DayPlan> dayplanlist=new SimpleListProperty<DayPlan>(observabledayplanlist);
-				for(int i =0;i<7;i++)
-					dayplanlist.add(null);
+				for(int i =0;i<7;i++){
+					ObservableMap<String, ActivityPlan> emptyMap = FXCollections.observableHashMap();
+					MapProperty<String, ActivityPlan> emptyMapProperty = new SimpleMapProperty<>(emptyMap);
+					DayPlan emptyDP = new DayPlan(emptyMapProperty);
+					dayplanlist.add(emptyDP);
+				}
 				while(result2.next()){
 					
 					weekday = result2.getInt("weekday");
@@ -521,7 +529,10 @@ public abstract class DBconnector {
 				SimpleListProperty<DayPlan> dayplanlist = new SimpleListProperty<DayPlan>(observabledayplanlist);
 				
 				for(int i =0;i<7;i++){
-					dayplanlist.add(null);
+					ObservableMap<String, ActivityPlan> emptyMap = FXCollections.observableHashMap();
+					MapProperty<String, ActivityPlan> emptyMapProperty = new SimpleMapProperty<>(emptyMap);
+					DayPlan emptyDP = new DayPlan(emptyMapProperty);
+					dayplanlist.add(emptyDP);
 				}
 				while(result2.next()){
 					

@@ -95,6 +95,7 @@ public class WishListTabController{
         wishList = ClassSerializer.WishListUnserializer();
         //System.out.println(wishList.size());       
         if(wishList == null){
+        	wishList = FXCollections.observableArrayList();
         	grid.add(new Label("No plan in the wishlist"), 0, 0);
         	wishListScrollPane.setContent(grid);
         	return;
@@ -120,11 +121,6 @@ public class WishListTabController{
 					return this;
 				}
 			}.init(i));
-//				(event) -> {
-//        	    // Button was clicked, call to pop up plan
-//        		Button b = (Button) event.getSource();
-//        	    popupPlan(b, i);
-//        	}); 
         }
         
         int numRow = (int) Math.ceil(wishList.size() / 4.0);

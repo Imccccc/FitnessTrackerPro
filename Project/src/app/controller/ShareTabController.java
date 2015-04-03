@@ -233,9 +233,9 @@ public class ShareTabController {
 		gPane.setMinSize(1000, 600);
 		gPane.getRowConstraints().add(new RowConstraints(550));
 		gPane.getRowConstraints().add(new RowConstraints(50));
-		gPane.getColumnConstraints().add(new ColumnConstraints(880));
+		gPane.getColumnConstraints().add(new ColumnConstraints(790));
 		gPane.getColumnConstraints().add(new ColumnConstraints(60));
-		gPane.getColumnConstraints().add(new ColumnConstraints(60));
+		gPane.getColumnConstraints().add(new ColumnConstraints(150));
 		
     	Localization.setLocale(new Locale("en", "EN"));
 		SplitPane sp = new SplitPane();
@@ -309,7 +309,6 @@ public class ShareTabController {
 	
 	private void loadDayPlan(int index, ObservableList<ActivityPlan> dayList) {
 		DayPlan dayplan = popUpPlan.getDayPlan(index);
-		if(dayplan == null) return;
 		for(Entry<String, ActivityPlan> entry : dayplan.getDayPlan().entrySet()){
             ActivityPlan a = entry.getValue();
             dayList.add(a);
