@@ -117,8 +117,8 @@ public class ShareTabController {
     	cb3.setText("Chest");
     	cb4.setText("Core");
     	cb5.setText("Leg");
-    	cb6.setText("Fat Burn");
-    	cb7.setText("Muscle Build");
+    	cb6.setText("Fat_Burn");
+    	cb7.setText("Muscle_Build");
     	cblist.add(cb1);
     	cblist.add(cb2);
     	cblist.add(cb3);

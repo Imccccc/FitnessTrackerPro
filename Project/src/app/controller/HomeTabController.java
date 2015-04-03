@@ -63,10 +63,9 @@ public class HomeTabController {
     private Label HomepageLabel;
 
     // Global Variables
+    private MainController mainController;
     public static ObservableList<String> dayNames;
     public static ObservableList<dayAmount> pastCalories;
-    
-    private MainController mainController;
     
     private ObservableList<RealDayPlan> amountList;
     
@@ -81,9 +80,7 @@ public class HomeTabController {
 	DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	String today;
     
-	public void init(MainController mainController) {
-		this.mainController = mainController;
-	}
+	
 	
     /**
      * The constructor.
@@ -99,16 +96,13 @@ public class HomeTabController {
     	dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
     	
     	
-    	if(MainApp.weekPlan == null){
+    	if(MainApp.weekPlan==null)	{
     		System.out.println("Home Tab: Empty week plan");
-    		return;
-    	}
-    	
-    	if (ClassSerializer.TodayPlanUnserializer(today) != null) {
+    		return;}
+    	if (ClassSerializer.TodayPlanUnserializer(today)!=null) {
     		activityData.addAll(ClassSerializer.TodayPlanUnserializer(today));
 			System.out.println("Home Tab: Load day plan from TodayPlan.Fitness");
-		}
-    	else{
+		}else{
 	    	loadDayPlan(dayOfWeek-1, activityData);
 			System.out.println("Home Tab: Load day plan from week plan");
 			ClassSerializer.TodayPlanSerializer(activityData, today);
@@ -135,34 +129,33 @@ public class HomeTabController {
     	UserCount.setCellValueFactory(cellData -> cellData.getValue().realCountProperty());
     	
         HomePageTable.setItems(activityData);
-
+       // System.out.println("initialize");
         plotData(7);
     }
     
     public void updateTodayPlan(){
-    	// Keep all the finished activity plan
-    	ObservableList<RealActivityPlan> savedActivityPlan = FXCollections.observableArrayList();
-    	for(RealActivityPlan realActivityPlan : activityData){
-    		if(realActivityPlan.getRealCount() != 0){
-    			savedActivityPlan.add(realActivityPlan);
-    		}
-    	}
-    	
-    	activityData = savedActivityPlan;
-    	
-    	// Add updated plan
-    	DayPlan dayPlan = MainApp.weekPlan.getDayPlan(dayOfWeek-1);
-    	for(ActivityPlan activityPlan : dayPlan.getDayPlan().values()){
-    		activityData.add(new RealActivityPlan(activityPlan, 0));
-    	}
-    	
-    	// Re-bind the data
-    	HomePageTable.setItems(activityData);
-    	
-    	// Save the updated to local file
-		ClassSerializer.TodayPlanSerializer(activityData, today);
+        // Keep all the finished activity plan
+        ObservableList<RealActivityPlan> savedActivityPlan = FXCollections.observableArrayList();
+        for(RealActivityPlan realActivityPlan : activityData){
+            if(realActivityPlan.getRealCount() != 0){
+                savedActivityPlan.add(realActivityPlan);
+            }
+        }
+        
+        activityData = savedActivityPlan;
+        
+        // Add updated plan
+        DayPlan dayPlan = MainApp.weekPlan.getDayPlan(dayOfWeek-1);
+        for(ActivityPlan activityPlan : dayPlan.getDayPlan().values()){
+            activityData.add(new RealActivityPlan(activityPlan, 0));
+        }
+        
+        // Re-bind the data
+        HomePageTable.setItems(activityData);
+        
+        // Save the updated to local file
+        ClassSerializer.TodayPlanSerializer(activityData, today);
     }
-    
     
     /**
      * Is called by the main application to give a reference back to itself.
@@ -187,6 +180,7 @@ public class HomeTabController {
    						throw new NumberFormatException();
    					}
    					temp.setRealCount(Integer.parseInt(count));
+
    				}catch(NumberFormatException e){
    					Alert alert = new Alert(AlertType.INFORMATION);
    					alert.setTitle("Input Alert");
@@ -323,6 +317,10 @@ public class HomeTabController {
 		yAxis.setAutoRanging(false);
     	areaChart.getData().clear();
     	areaChart.getData().add(dailyCaloriesData);
+	}
+
+	public void init(MainController mainController) {
+		this.mainController = mainController;
 	}
 	
 	
