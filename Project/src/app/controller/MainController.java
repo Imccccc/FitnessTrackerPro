@@ -51,6 +51,8 @@ public class MainController {
 	ShareTabController shareTabController;
 	@FXML 
 	HomeTabController homeTabController;
+	@FXML
+	StatTabController statTabController;
 	
 	
 	PasswordField password;
@@ -68,6 +70,7 @@ public class MainController {
     	wishListTabController.init(this);
     	planTabController.init(this);
     	homeTabController.init(this);
+    	statTabController.init(this);
     	
     	// Set some access control
     	ShareTab.setDisable(true);
@@ -75,6 +78,7 @@ public class MainController {
     	searchButton.setVisible(false);
     	searchField.setVisible(false);
     	searchField.setPromptText("Compete a friend");
+    	statTabController.public_box.setVisible(false);
     }
 	
 	
@@ -205,6 +209,8 @@ public class MainController {
 			//loginButton.setDisable(true);
 			searchButton.setVisible(true);
 			searchField.setVisible(true);
+			statTabController.public_box.setVisible(true);
+			statTabController.public_box.setSelected(DBconnector.isCompeteable(DBconnector.username));
 		}
 		else{
 			registerButton.setText("Register");
@@ -215,6 +221,7 @@ public class MainController {
 			searchField.setVisible(false);
 			ShareTab.setDisable(true);
 			planTabController.sharePlanButton.setDisable(true);
+			statTabController.public_box.setVisible(false);
 		}
 	}
 	

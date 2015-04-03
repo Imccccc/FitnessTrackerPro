@@ -54,11 +54,23 @@ public class MainApp extends Application {
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == buttonTypeOne){
-    	    // ... user chose "One"
+    		File plan1 = new File("./Fat Burn");
+    		File plan2 = new File("./Muscle Building");
+    		File weekplan = new File("./weekPlan");
+    		if (plan1.exists()) {
+				plan1.renameTo(weekplan);
+				plan2.delete();
+			}
     	} else if (result.get() == buttonTypeTwo) {
-    	    // ... user chose "Two"
+    		File plan1 = new File("./Muscle Building");
+    		File plan2 = new File("./Fat Burn");
+    		File weekplan = new File("./weekPlan");
+    		if (plan1.exists()) {
+				plan1.renameTo(weekplan);
+				plan2.delete();
+			}
     	} else {
-    	    // ... user chose CANCEL or closed the dialog
+    	    // ... user chose CANCEL or closed the dialog, do nothing
     	}
     }
     

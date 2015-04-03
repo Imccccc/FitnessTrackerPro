@@ -1,5 +1,10 @@
 package app.controller;
 
+import javafx.scene.*;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
@@ -13,6 +18,9 @@ import java.util.Scanner;
 
 import com.sun.istack.internal.FinalArrayList;
 
+import DBconnector.DBconnector;
+import aleksPack10.jdk.ActionEvent;
+import aleksPack10.jdk.ActionListener;
 import app.model.ActivityPlan;
 import app.model.RealActivityPlan;
 import app.model.RealDayPlan;
@@ -25,11 +33,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tooltip;
 
@@ -44,6 +54,10 @@ public class StatTabController {
     private ComboBox<String> planNameBox;
     @FXML
     private ComboBox<String> timeScaleBox;
+    @FXML
+    public CheckBox public_box;
+    
+    private MainController mainController;
     
     private ObservableList<RealDayPlan> chartPlans;
     
@@ -90,6 +104,16 @@ public class StatTabController {
                     }
                 }
             });
+            public_box.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    DBconnector.setCompeteable(newValue);
+                }
+            });
+    }
+    
+    private void checkboxhandle(ActionEvent e){
+
     }
     
     
@@ -351,5 +375,9 @@ public class StatTabController {
         }
         return plans;
     }
+
+	public void init(MainController mainController) {
+		this.mainController = mainController;
+	}
     
 }
