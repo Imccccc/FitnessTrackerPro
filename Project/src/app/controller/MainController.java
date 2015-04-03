@@ -315,24 +315,24 @@ public class MainController {
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Error");
 		alert.setHeaderText(null);
-		alert.setContentText("errorMessage");
+		alert.setContentText(errorMessage);
 		alert.showAndWait();
 	}
 
 
 	public void searchClick(){
-		if(!DBconnector.usernameExists(username.getText()){
+		if(!DBconnector.usernameExists(searchField.getText())){
 			popupErrorMessage("This user does not exist!");
 			return;
 		}
 
-		if(!DBconnector.isCompeteable(username.getText())){
+		if(!DBconnector.isCompeteable(searchField.getText())){
 			popupErrorMessage("This user is not competeable!");
 			return;
 		}
 
 
-		ObservableList<app.model.dayAmount> amountlist = getCorrectAmountList(HomeTabController.pastCalories, DBconnector.getExerciseAmount(username.getText()));
+		ObservableList<app.model.dayAmount> amountlist = getCorrectAmountList(HomeTabController.pastCalories, DBconnector.getExerciseAmount(searchField.getText()));
 
 
 		Dialog dialog = new Dialog(null, "Compete result");
@@ -346,7 +346,7 @@ public class MainController {
 		XYChart.Series<String, Number> myDataSeries = new XYChart.Series<String, Number>();
 		XYChart.Series<String, Number> competorDataSeiresSeries = new XYChart.Series<String, Number>();
 		myDataSeries.setName("My Daily Calories");
-		competorDataSeiresSeries.setName("Competor's Daily Calories");
+		competorDataSeiresSeries.setName(searchField.getText()+"'s Daily Calories");
 
 		double maxRange = 0;
 		for(dayAmount day :HomeTabController.pastCalories) {
