@@ -32,6 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import DBconnector.DBconnector;
 import app.MainApp;
 import app.model.Activity;
 import app.model.ActivityPlan;
@@ -194,6 +195,19 @@ public class HomeTabController {
    				}
    				});
 			ClassSerializer.TodayPlanSerializer(activityData, today);
+			
+			if(DBconnector.username != null){
+				double dailyCalories = 0;
+				for(RealActivityPlan Entry : activityData) {
+					if(Entry.getActivityPlan().getActivity().getUnit().equals(Unit.MINUTE))
+						dailyCalories += Entry.getRealCount()*12.5;
+					else {
+						dailyCalories += Entry.getRealCount()*0.1;
+					}
+				}
+				DBconnector.reportToday(dailyCalories);
+				System.out.println("Report: "+dailyCalories);
+			}
     	}
     }
     

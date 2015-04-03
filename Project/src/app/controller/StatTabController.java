@@ -1,10 +1,5 @@
 package app.controller;
 
-import javafx.scene.*;
-
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
@@ -16,11 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
-import com.sun.istack.internal.FinalArrayList;
-
 import DBconnector.DBconnector;
-import aleksPack10.jdk.ActionEvent;
-import aleksPack10.jdk.ActionListener;
 import app.model.ActivityPlan;
 import app.model.RealActivityPlan;
 import app.model.RealDayPlan;
@@ -33,7 +24,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
@@ -85,7 +75,6 @@ public class StatTabController {
     	
         start(7);
         //xAxis = new CategoryAxis();
-        planNameBox.getItems().add("Total Calorie");
         
         timeScaleBox.getItems().addAll(
                 "Week",
@@ -110,10 +99,6 @@ public class StatTabController {
                     DBconnector.setCompeteable(newValue);
                 }
             });
-    }
-    
-    private void checkboxhandle(ActionEvent e){
-
     }
     
     
@@ -164,10 +149,11 @@ public class StatTabController {
         }
         
         Collections.sort(dayPlanNames);
+        dayPlanNames.add(0, "Total Calorie");
         planNameBox.setItems(dayPlanNames);
         planNameBox.setValue(dayPlanNames.get(0));
         System.out.println("Item in the planNameBox :"+planNameBox.getValue());
-        setActivityData();
+        setCaloriesData();
         planNameBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             public void changed (ObservableValue ov, Number value, Number newValue) {
             	if(planNameBox.getValue() == "Total Calorie") {

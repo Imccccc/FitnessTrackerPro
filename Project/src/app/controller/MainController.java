@@ -5,13 +5,11 @@ import impl.org.controlsfx.i18n.Localization;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
-
 import app.model.dayAmount;
 import DBconnector.DBconnector;
 import javafx.collections.FXCollections;
@@ -330,6 +328,11 @@ public class MainController {
 
 
 	public void searchClick(){
+		if(searchField.getText().equals(DBconnector.username)){
+			popupErrorMessage("Can not compete with yourself!");
+			return;
+		}
+		
 		if(!DBconnector.usernameExists(searchField.getText())){
 			popupErrorMessage("This user does not exist!");
 			return;
