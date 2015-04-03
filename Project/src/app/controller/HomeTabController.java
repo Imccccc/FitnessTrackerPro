@@ -182,7 +182,11 @@ public class HomeTabController {
 			        .showTextInput(Integer.toString(temp.getRealCount()));
    			response.ifPresent(count -> {
    				try{
-   				temp.setRealCount(Integer.parseInt(count));
+   					int input = Integer.parseInt(count);
+   					if(input < 0){
+   						throw new NumberFormatException();
+   					}
+   					temp.setRealCount(Integer.parseInt(count));
    				}catch(NumberFormatException e){
    					Alert alert = new Alert(AlertType.INFORMATION);
    					alert.setTitle("Input Alert");

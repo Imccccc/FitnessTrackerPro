@@ -123,7 +123,9 @@ public class ShareTabController {
     	cblist.add(cb2);
     	cblist.add(cb3);
     	cblist.add(cb4);
-    	cblist.add(cb5); 
+    	cblist.add(cb5);
+    	cblist.add(cb6);
+    	cblist.add(cb7); 
     }
 
 	public void updateLayout(String filter) {
