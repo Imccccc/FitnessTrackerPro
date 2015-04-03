@@ -1,5 +1,8 @@
 package app.controller;
 
+import impl.org.controlsfx.i18n.Localization;
+
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.controlsfx.control.ButtonBar;
@@ -89,7 +92,7 @@ public class MainController {
 		AtomicBoolean passwordConf_flag = new AtomicBoolean(true);
 
 		Dialog dlg = new Dialog( registerButton, "Registration");
-
+    	Localization.setLocale(new Locale("en", "EN"));
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -261,7 +264,7 @@ public class MainController {
 		// This method is called when the login button is clicked ...
 		public void handle(ActionEvent ae) {			
 			Dialog d = (Dialog) ae.getSource();
-			
+	    	Localization.setLocale(new Locale("en", "EN"));
 			// Validate the username (whether alphanumeric)
 			String usernameString = username.getText();
 			if(!usernameString.matches("[A-Za-z0-9]+")){

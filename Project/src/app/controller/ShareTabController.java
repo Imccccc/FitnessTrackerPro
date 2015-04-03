@@ -1,6 +1,9 @@
 package app.controller;
 
+import impl.org.controlsfx.i18n.Localization;
+
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import org.controlsfx.control.ButtonBar;
@@ -226,6 +229,7 @@ public class ShareTabController {
 		gPane.getColumnConstraints().add(new ColumnConstraints(60));
 		gPane.getColumnConstraints().add(new ColumnConstraints(60));
 		
+    	Localization.setLocale(new Locale("en", "EN"));
 		SplitPane sp = new SplitPane();
 		sp.setMaxSize(1000, 550);
 		sp.setMinSize(1000, 550);

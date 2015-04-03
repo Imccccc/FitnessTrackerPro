@@ -23,6 +23,8 @@ import javafx.scene.control.Dialog;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
@@ -59,14 +61,15 @@ public class HomeTabController {
     private TableColumn<RealActivityPlan, Number> UserCount;
     @FXML
     private Label HomepageLabel;
-    
+
     // Global Variables
     public static ObservableList<String> dayNames;
     public static ObservableList<dayAmount> pastCalories;
     
-    // Private Variables
     private ObservableList<RealDayPlan> amountList;
+    
     private XYChart.Series<String, Number> dailyCaloriesData;
+    
     private ObservableList<RealActivityPlan> activityData = FXCollections.observableArrayList();
     
     
@@ -93,14 +96,14 @@ public class HomeTabController {
     	
     	
     	if(MainApp.weekPlan==null)	{
-    		System.out.println("Empty week plan");
+    		System.out.println("Home Tab: Empty week plan");
     		return;}
     	if (ClassSerializer.TodayPlanUnserializer(today)!=null) {
     		activityData.addAll(ClassSerializer.TodayPlanUnserializer(today));
-			System.out.println("Load day plan from TodayPlan.Fitness");
+			System.out.println("Home Tab: Load day plan from TodayPlan.Fitness");
 		}else{
 	    	loadDayPlan(dayOfWeek-1, activityData);
-			System.out.println("Load day plan from week plan");
+			System.out.println("Home Tab: Load day plan from week plan");
 			ClassSerializer.TodayPlanSerializer(activityData, today);
 		}
     }
@@ -143,9 +146,21 @@ public class HomeTabController {
    			Optional<String> response = Dialogs.create()
    					.style(DialogStyle.NATIVE)
 			        .title("Text Input Count")
-			        .message("Please enter your planned count:")
+			        .message("Please enter your count:")
 			        .showTextInput(Integer.toString(temp.getRealCount()));
-   			response.ifPresent(count -> temp.setRealCount(Integer.parseInt(count)));
+   			response.ifPresent(count -> {
+   				try{
+   				temp.setRealCount(Integer.parseInt(count));
+   				}catch(NumberFormatException e){
+   					Alert alert = new Alert(AlertType.INFORMATION);
+   					alert.setTitle("Input Alert");
+   					alert.setHeaderText(null);
+   					alert.setContentText("Only positive Integer!");
+   					alert.showAndWait();
+   				}catch(Exception e){
+
+   				}
+   				});
 			ClassSerializer.TodayPlanSerializer(activityData, today);
     	}
     }
@@ -240,13 +255,17 @@ public class HomeTabController {
 	}
 	
 	
-	public ObservableList<dayAmount> getPastCalories(ObservableList<RealDayPlan> amountList) {
+	public static ObservableList<dayAmount> getPastCalories(ObservableList<RealDayPlan> amountList) {
 		ObservableList<dayAmount> graph = FXCollections.observableArrayList();
 		double dailyCalories = 0;
 		for(RealDayPlan dayPlan : amountList) {
 			dailyCalories = 0;
 			for(Map.Entry<String, RealActivityPlan> Entry : dayPlan.getDayPlan().entrySet()) {
-				dailyCalories += Entry.getValue().getRealCount()*10;
+				if(Entry.getValue().getActivityPlan().getActivity().getUnit().equals("MINUTE"))
+					dailyCalories += Entry.getValue().getRealCount()*10;
+				else {
+					dailyCalories += Entry.getValue().getRealCount()*0.1;
+				}
 			}
 			graph.add(new dayAmount(dayPlan.getDate(), dailyCalories));
 		}
