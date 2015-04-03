@@ -38,6 +38,7 @@ import app.model.ActivityPlan;
 import app.model.DayPlan;
 import app.model.RealActivityPlan;
 import app.model.RealDayPlan;
+import app.model.Unit;
 import app.model.dayAmount;
 import app.ClassSerializer;
 
@@ -156,6 +157,7 @@ public class HomeTabController {
         // Save the updated to local file
         ClassSerializer.TodayPlanSerializer(activityData, today);
     }
+
     
     /**
      * Is called by the main application to give a reference back to itself.
@@ -291,8 +293,8 @@ public class HomeTabController {
 		for(RealDayPlan dayPlan : amountList) {
 			dailyCalories = 0;
 			for(Map.Entry<String, RealActivityPlan> Entry : dayPlan.getDayPlan().entrySet()) {
-				if(Entry.getValue().getActivityPlan().getActivity().getUnit().equals("MINUTE"))
-					dailyCalories += Entry.getValue().getRealCount()*10;
+				if(Entry.getValue().getActivityPlan().getActivity().getUnit().equals(Unit.MINUTE))
+					dailyCalories += Entry.getValue().getRealCount()*12.5;
 				else {
 					dailyCalories += Entry.getValue().getRealCount()*0.1;
 				}

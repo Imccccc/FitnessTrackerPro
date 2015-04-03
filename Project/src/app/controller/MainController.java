@@ -2,6 +2,7 @@ package app.controller;
 
 import impl.org.controlsfx.i18n.Localization;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -13,6 +14,8 @@ import org.controlsfx.dialog.Dialog;
 
 import app.model.dayAmount;
 import DBconnector.DBconnector;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -40,7 +43,7 @@ public class MainController {
 	TextField searchField;
 	@FXML
 	TextField username;
-	
+
 	@FXML
 	Tab ShareTab;
 	@FXML
@@ -55,9 +58,11 @@ public class MainController {
 	StatTabController statTabController;
 	
 	
+
+
 	PasswordField password;
 	PasswordField password_confirm;
-	
+
 	public MainController(){
 
 	}
@@ -97,7 +102,7 @@ public class MainController {
 		AtomicBoolean passwordConf_flag = new AtomicBoolean(true);
 
 		Dialog dlg = new Dialog( registerButton, "Registration");
-    	Localization.setLocale(new Locale("en", "EN"));
+		Localization.setLocale(new Locale("en", "EN"));
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -136,13 +141,13 @@ public class MainController {
 
 	final Action actionRegister = new AbstractAction("Confirm") {
 		// This method is called when the login button is clicked ...
-		public void handle(ActionEvent ae) {			
+		public void handle(ActionEvent ae) {            
 			Dialog d = (Dialog) ae.getSource();
-			
+
 			String usernameString = username.getText();
 			if(!checkUsername(usernameString))
 				return;
-			
+
 			String passString = password.getText();
 			String passConfString = password_confirm.getText();
 			if(!checkPassword(passString, passConfString))
@@ -184,13 +189,13 @@ public class MainController {
 
 	private boolean checkUsername(String usernameString) { // Only check alphanumeric
 		if(!usernameString.matches("[A-Za-z0-9]+")){
-			showMessageDialog("Registration Dialog", "Error! Your username is not alphanumeric! Please only include number and character in your username.");			
+			showMessageDialog("Registration Dialog", "Error! Your username is not alphanumeric! Please only include number and character in your username.");           
 			return false;
 		}
 
 		return true;
 	}
-	
+
 
 	private void showMessageDialog(String title, String message){
 		Alert alert = new Alert(AlertType.INFORMATION);
@@ -198,9 +203,9 @@ public class MainController {
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 
-		alert.showAndWait();	
+		alert.showAndWait();    
 	}
-	
+
 	private void UpdateToolBar() {
 		if(DBconnector.username != null){
 			registerButton.setText("Logout");
@@ -224,7 +229,7 @@ public class MainController {
 			statTabController.public_box.setVisible(false);
 		}
 	}
-	
+
 	@FXML
 	public void loginButtonClicked(){
 		if(DBconnector.username != null){
@@ -270,16 +275,16 @@ public class MainController {
 
 	final Action actionLogin = new AbstractAction("Confirm") {
 		// This method is called when the login button is clicked ...
-		public void handle(ActionEvent ae) {			
+		public void handle(ActionEvent ae) {            
 			Dialog d = (Dialog) ae.getSource();
-	    	Localization.setLocale(new Locale("en", "EN"));
+			Localization.setLocale(new Locale("en", "EN"));
 			// Validate the username (whether alphanumeric)
 			String usernameString = username.getText();
 			if(!usernameString.matches("[A-Za-z0-9]+")){
-				showMessageDialog("Login Dialog", "Error! Your username is not alphanumeric! Your username sholud only contain numbers and characters..");			
+				showMessageDialog("Login Dialog", "Error! Your username is not alphanumeric! Your username sholud only contain numbers and characters..");          
 				return;
 			}
-			
+
 			// Validate the password (whether length in 6~32)
 			String passString = password.getText();
 			if(passString.length() < 6 || passString.length() > 32){
@@ -288,7 +293,7 @@ public class MainController {
 			}
 
 			// Check with DB
-			int ret = DBconnector.login(usernameString, passString);  //0 success -1fail -2dne -3wrong pass			
+			int ret = DBconnector.login(usernameString, passString);  //0 success -1fail -2dne -3wrong pass         
 			if(ret==-2){
 				// Do not exist current username
 				showMessageDialog("Login Dialog", "The username you entered does not exist!");
@@ -300,11 +305,11 @@ public class MainController {
 			else if(ret==0){
 				// Success
 				showMessageDialog("Login Dialog", "Welcome back to the Fitness Track Pro! Your login request succeed!");
-			
+
 				d.hide();
 				DBconnector.username = usernameString;
 				UpdateToolBar();
-				
+
 				ShareTab.setDisable(false);
 				planTabController.sharePlanButton.setDisable(false);
 			}
@@ -314,57 +319,102 @@ public class MainController {
 			}
 		}
 	};
-	
-	
-	public void searchClick(){
-		boolean userExist = true;
-		
-		//String username = searchField.getText();
-		//ArrayList<app.model.dayAmount> amountlist = DBconnector.getExerciseAmount("lhc");
-		
-		if(userExist){
-    		Dialog dialog = new Dialog(null, "Compete result");
-    		GridPane grid = new GridPane();
-    		
-    		// Setup the graph
-    		CategoryAxis xAxis = new CategoryAxis(HomeTabController.dayNames);
-            NumberAxis yAxis = new NumberAxis();
-    		AreaChart<String, Number> areaChart = new AreaChart<>(xAxis, yAxis);
-    		
-    		XYChart.Series<String, Number> myDataSeries = new XYChart.Series<String, Number>();
-    		myDataSeries.setName("My Daily Calories");
-    		
-    		double maxRange = 0;
-    		for(dayAmount day :HomeTabController.pastCalories) {
-    			myDataSeries.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
-    			if(maxRange < day.getAmount()) {
-    				maxRange = day.getAmount();
-    			}
-    		}
-    		yAxis = new NumberAxis(0, maxRange+200, 200);
-    		yAxis.setAutoRanging(false);
-        	areaChart.getData().clear();
-        	areaChart.getData().add(myDataSeries);
-    		
-    		areaChart.setTitle("Compete Graph");
-    		
-    		
-    		
 
-    		// Set layout
-    		grid.setHgap(10);
-    		grid.setVgap(10);
-    		grid.setPadding(new Insets(20, 150, 10, 10));
-    		grid.add(new Label("Compete result"), 0, 0);
-    		grid.add(areaChart, 1, 0);
-    		dialog.setContent(grid);
-    		dialog.show();
-		}else{
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Sorry");
-			alert.setHeaderText(null);
-			alert.setContentText("No such user!\nInvite your firend!");
-			alert.showAndWait();
+	public void popupErrorMessage(String errorMessage){
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Error");
+		alert.setHeaderText(null);
+		alert.setContentText(errorMessage);
+		alert.showAndWait();
+	}
+
+
+	public void searchClick(){
+		if(!DBconnector.usernameExists(searchField.getText())){
+			popupErrorMessage("This user does not exist!");
+			return;
 		}
+
+		if(!DBconnector.isCompeteable(searchField.getText())){
+			popupErrorMessage("This user is not competeable!");
+			return;
+		}
+
+
+		ObservableList<app.model.dayAmount> amountlist = getCorrectAmountList(HomeTabController.pastCalories, DBconnector.getExerciseAmount(searchField.getText()));
+
+
+		Dialog dialog = new Dialog(null, "Compete result");
+		GridPane grid = new GridPane();
+
+		// Setup the graph
+		CategoryAxis xAxis = new CategoryAxis(HomeTabController.dayNames);
+		NumberAxis yAxis = new NumberAxis();
+		AreaChart<String, Number> areaChart = new AreaChart<>(xAxis, yAxis);
+
+		XYChart.Series<String, Number> myDataSeries = new XYChart.Series<String, Number>();
+		XYChart.Series<String, Number> competorDataSeiresSeries = new XYChart.Series<String, Number>();
+		myDataSeries.setName("My Daily Calories");
+		competorDataSeiresSeries.setName(searchField.getText()+"'s Daily Calories");
+
+		double maxRange = 0;
+		for(dayAmount day :HomeTabController.pastCalories) {
+			myDataSeries.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
+			//System.out.println("My dayAmount"+day.getAmount()+" "+day.getDate());
+			if(maxRange < day.getAmount()) {
+				maxRange = day.getAmount();
+			}
+		}
+		System.out.println("the size of the return list is "+amountlist.size());
+		for(dayAmount day : amountlist) {
+			//java.util.Date utilDate = new java.util.Date(day.getDate().getTime());
+			competorDataSeiresSeries.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
+			//System.out.println("Competetor's dayAmount"+day.getAmount()+" "+day.getDate());
+			if(maxRange < day.getAmount()) {
+				maxRange = day.getAmount();
+			}
+		}
+		yAxis = new NumberAxis(0, maxRange+200, 200);
+		yAxis.setAutoRanging(false);
+		areaChart.getData().clear();
+		areaChart.getData().add(myDataSeries);
+		areaChart.getData().add(competorDataSeiresSeries);
+
+		areaChart.setTitle("Compete Graph");
+
+
+		// Set layout
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+		grid.add(new Label("Compete result"), 0, 0);
+		grid.add(areaChart, 1, 0);
+		dialog.setContent(grid);
+		dialog.show();
+
+	}
+
+	private ObservableList<app.model.dayAmount> getCorrectAmountList(ObservableList<dayAmount> self, ArrayList<dayAmount> other ) {
+		ObservableList<app.model.dayAmount> amountList = FXCollections.observableArrayList();
+		boolean same;
+
+
+		for(dayAmount day : other) {
+			day.setDate(new java.util.Date(day.getDate().getTime()));
+		}
+		for(dayAmount me : self) {
+			same = false;
+			for(dayAmount he : other) {
+				if(he.getDate().equals(me.getDate())) {
+					amountList.add(he);
+					same = true;
+					break;
+				}
+			}
+			if(!same) {
+				amountList.add(new dayAmount(me.getDate(), 0));
+			}
+		}
+		return amountList;
 	}
 }

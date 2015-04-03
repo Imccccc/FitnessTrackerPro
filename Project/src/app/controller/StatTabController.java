@@ -260,7 +260,7 @@ public class StatTabController {
             ObservableList<RealDayPlan> graphPlans = FXCollections.observableArrayList();
             int index = plans.size() - length;
             while(index < plans.size()) {
-                graphPlans.add(plans.get(index));
+                graphPlans.add(plans.get(index-1));
                 index++;
             }
             return graphPlans;
