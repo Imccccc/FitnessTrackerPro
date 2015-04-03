@@ -104,6 +104,25 @@ public abstract class DBconnector {
 		}
 	}
 	
+	public static boolean usernameExists(String username){
+		if (con==null) {
+			System.out.println("Connot connect to database");
+			return false;
+		}
+
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet result = stmt.executeQuery("SELECT * FROM account WHERE username='"+username+"'");
+			if(!result.next()){  
+				return false;
+			}else{
+				return true;
+			}
+		}catch(SQLException e){
+			return false;
+		}
+	}
+	
 
 	public static int createUser(String username, String password){//0 success -1other error -2existing
 		if (con==null) {
