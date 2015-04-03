@@ -17,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -93,6 +94,11 @@ public class WishListTabController{
     	
         wishList = ClassSerializer.WishListUnserializer();
         //System.out.println(wishList.size());       
+        if(wishList == null){
+        	grid.add(new Label("No plan in the wishlist"), 0, 0);
+        	wishListScrollPane.setContent(grid);
+        	return;
+        }
         
        	Button[] button = new Button[wishList.size()];
        	

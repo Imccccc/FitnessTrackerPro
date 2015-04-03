@@ -165,6 +165,7 @@ public class ClassSerializer {
 		try{
 			File file = new File("./wishList");
 			Scanner scan = new Scanner(file);
+			if(!scan.hasNext())	return null; // Empty plan, return null
 			String planName;
 			ObservableList<WeekPlan> wishList = FXCollections.observableArrayList();
 
