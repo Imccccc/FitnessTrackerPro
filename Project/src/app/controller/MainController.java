@@ -50,7 +50,7 @@ public class MainController {
 	@FXML
 	ShareTabController shareTabController;
 	@FXML 
-	HomeTabController hometabController;
+	HomeTabController homeTabController;
 	
 	
 	PasswordField password;
@@ -67,6 +67,7 @@ public class MainController {
     	shareTabController.init(this);
     	wishListTabController.init(this);
     	planTabController.init(this);
+    	homeTabController.init(this);
     	
     	// Set some access control
     	ShareTab.setDisable(true);

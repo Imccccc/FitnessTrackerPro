@@ -12,7 +12,6 @@ import app.model.DayPlan;
 import app.model.WeekPlan;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -183,7 +182,7 @@ public class WishListTabController{
 		Button applyButton = new Button("Apply");
 		applyButton.setOnAction((event) -> {
     	    MainApp.weekPlan = wishList.get(index);
-    	    ActivityListController.updateWeekPlan();
+    	    mainController.planTabController.updateWeekPlan();
     	    dlg.hide();
     	}); 
 		gPane.add(applyButton, 1, 1);

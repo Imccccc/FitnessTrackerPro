@@ -120,12 +120,12 @@ public class ShareTabController {
 
 	public void updateLayout(String filter) {
 		if(filter.equals("")){
-			shareList = DBconnector.getPlans();
+			shareList = DBconnector.getPlans(true);
 		}
 		else{
-			shareList = DBconnector.getPlans(filter);
+			shareList = DBconnector.getPlans(filter, true);
 		}
-        System.out.println("ShareList Size: "+shareList.size());
+        //System.out.println("ShareList Size: "+shareList.size());
 		
     	GridPane grid = new GridPane();
     	grid.setMinSize(750, 600);
@@ -263,7 +263,7 @@ public class ShareTabController {
 		Button applyButton = new Button("Apply");
 		applyButton.setOnAction((event) -> {
     	    MainApp.weekPlan = shareList.get(index);
-    	    ActivityListController.updateWeekPlan();
+    	    mainController.planTabController.updateWeekPlan();
     	    dlg.hide();
     	}); 
 		gPane.add(applyButton, 1, 1);

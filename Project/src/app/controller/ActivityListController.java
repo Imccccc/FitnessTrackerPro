@@ -235,14 +235,16 @@ public class ActivityListController {
 	public void sharePlanButtonClicked(){
 		TextField planName = new TextField();
 		ObservableList<String> choices =  FXCollections.observableArrayList();
+		choices.add("Fat Burn");
+		choices.add("Muscle Building");
 		choices.add("Arm");
 		choices.add("Back");
 		choices.add("Chest");
 		choices.add("Core");
 		choices.add("Leg");
-		choices.add("Fat Burn");
+
 		ChoiceBox<String> typeBox = new ChoiceBox<>(choices); 
-		typeBox.setValue("Arm");
+		typeBox.setValue("Fat Burn");
 		
 		Dialog dlg = new Dialog( sharePlanButton, "Share current plan");
 
@@ -340,7 +342,7 @@ public class ActivityListController {
 		dragable = !dragable;
 	}
 
-	private static void saveWeekPlan() {
+	private void saveWeekPlan() {
 
 		ObservableList<DayPlan> dayPlanList = FXCollections.observableArrayList();
 		dayPlanList.add(generateDayPlan(sundayActivities));
@@ -355,6 +357,9 @@ public class ActivityListController {
 		WeekPlan newWeekPlan = new WeekPlan(dayPlanListProperty, "Current Plan");
 		MainApp.weekPlan = newWeekPlan;
 		ClassSerializer.WeekPlanSerializer(MainApp.weekPlan);
+		
+		// Update the home tab's today list
+		mainController.homeTabController.updateTodayPlan();
 	}
 
 	private static DayPlan generateDayPlan(ObservableList<ActivityPlan> activitiesList) {
@@ -1309,7 +1314,7 @@ public class ActivityListController {
 		}
 	}
 
-	public static void updateWeekPlan() {
+	public void updateWeekPlan() {
 		sundayActivities.clear();
 		mondayActivities.clear();
 		tuesdayActivities.clear();
