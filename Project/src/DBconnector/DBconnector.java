@@ -217,7 +217,7 @@ public abstract class DBconnector {
 		
 		try{
 			Statement stmt = con.createStatement();
-			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"' ORDER BY DATE DESC LIMIT 7");
+			ResultSet result = stmt.executeQuery("SELECT * FROM personalexerciseamount WHERE username='"+username+"' AND `date` >= DATE_SUB(CURDATE(),INTERVAL 7 DAY)");
 			ArrayList<app.model.dayAmount> ret=new ArrayList<app.model.dayAmount>();
 			while(result.next()){
 				app.model.dayAmount temp=new app.model.dayAmount(result.getDate("date"),result.getDouble("calories"));

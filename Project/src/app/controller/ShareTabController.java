@@ -52,6 +52,10 @@ public class ShareTabController {
 	private CheckBox cb4;
 	@FXML
 	private CheckBox cb5;	
+	@FXML
+	private CheckBox cb6;	
+	@FXML
+	private CheckBox cb7;	
 	
 	public MainController mainController;
 	
@@ -106,11 +110,15 @@ public class ShareTabController {
     	cb3.setOnAction(this::handleCheckboxAction);
     	cb4.setOnAction(this::handleCheckboxAction);
     	cb5.setOnAction(this::handleCheckboxAction);
+    	cb6.setOnAction(this::handleCheckboxAction);
+    	cb7.setOnAction(this::handleCheckboxAction);
     	cb1.setText("Arm");
     	cb2.setText("Back");
     	cb3.setText("Chest");
     	cb4.setText("Core");
     	cb5.setText("Leg");
+    	cb6.setText("Fat Burn");
+    	cb7.setText("Muscle Build");
     	cblist.add(cb1);
     	cblist.add(cb2);
     	cblist.add(cb3);
