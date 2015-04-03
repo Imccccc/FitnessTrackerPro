@@ -57,23 +57,28 @@ Football|MINUTE|15
 </WishPlan>
 <WishPlan>
 <Name>
-Second Plan
+Testing Share
 </Name>
 <Day0>
-Water Aerobics|MINUTE|15
+Basketball|MINUTE|60
 </Day0>
 <Day1>
+Basketball|MINUTE|60
 </Day1>
 <Day2>
-Jumping Rope|TIMES|15
+Water Aerobics|MINUTE|50
 </Day2>
 <Day3>
+Basketball|MINUTE|80
 </Day3>
 <Day4>
+Skateboarding|MINUTE|15
 </Day4>
 <Day5>
+Basketball|MINUTE|135
 </Day5>
 <Day6>
+Basketball|MINUTE|33
 </Day6>
 </WishPlan>
 <WishPlan>
@@ -193,6 +198,32 @@ Water Aerobics|MINUTE|15
 <Day5>
 </Day5>
 <Day6>
+</Day6>
+</WishPlan>
+<WishPlan>
+<Name>
+First Plan
+</Name>
+<Day0>
+Water Aerobics|MINUTE|15
+</Day0>
+<Day1>
+Water Aerobics|MINUTE|15
+</Day1>
+<Day2>
+Water Aerobics|MINUTE|15
+</Day2>
+<Day3>
+Water Aerobics|MINUTE|15
+</Day3>
+<Day4>
+Water Aerobics|MINUTE|15
+</Day4>
+<Day5>
+Water Aerobics|MINUTE|15
+</Day5>
+<Day6>
+Water Aerobics|MINUTE|15
 </Day6>
 </WishPlan>
 </WishList>

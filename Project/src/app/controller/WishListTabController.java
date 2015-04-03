@@ -13,6 +13,8 @@ import app.model.WeekPlan;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -27,7 +29,7 @@ import javafx.scene.layout.RowConstraints;
 
 public class WishListTabController{
 	
-	public static ObservableMap<String, WeekPlan> wishList;
+	public static ObservableList<WeekPlan> wishList;
 	
 	public MainController mainController;
 	
@@ -94,17 +96,30 @@ public class WishListTabController{
         //System.out.println(wishList.size());       
         
        	Button[] button = new Button[wishList.size()];
-       	String[] planNameSet = new String[wishList.size()];
-       	wishList.keySet().toArray(planNameSet);
        	
         for(int i=0; i<wishList.size(); i++){
-        	button[i] = new Button(planNameSet[i]);
+        	button[i] = new Button(wishList.get(i).getPlanName());
         	button[i].setMaxSize(210, 180);
-        	button[i].setOnAction((event) -> {
-        	    // Button was clicked, do something...
-        		Button b = (Button) event.getSource();
-        	    popupPlan(b, b.getText());
-        	}); 
+        	button[i].setOnAction(new EventHandler<ActionEvent>() {
+				int i;
+				
+				@Override
+				public void handle(ActionEvent event) {
+	        	    // Button was clicked, call to pop up plan
+	        		Button b = (Button) event.getSource();
+	        	    popupPlan(b, i);
+				}
+				
+				public EventHandler<ActionEvent> init(int i){
+					this.i = i;
+					return this;
+				}
+			}.init(i));
+//				(event) -> {
+//        	    // Button was clicked, call to pop up plan
+//        		Button b = (Button) event.getSource();
+//        	    popupPlan(b, i);
+//        	}); 
         }
         
         int numRow = (int) Math.ceil(wishList.size() / 4.0);
@@ -121,9 +136,9 @@ public class WishListTabController{
     	wishListScrollPane.setContent(grid);
     }
 
-	private void popupPlan(Button button, String text) {
+	private void popupPlan(Button button, int index) {
 		
-		loadWeekPlan(text);
+		loadWeekPlan(index);
 		
 		Dialog dlg = new Dialog(button, "Plan Detail");
 		GridPane gPane = new GridPane();
@@ -167,7 +182,7 @@ public class WishListTabController{
 		
 		Button applyButton = new Button("Apply");
 		applyButton.setOnAction((event) -> {
-    	    MainApp.weekPlan = wishList.get(text);
+    	    MainApp.weekPlan = wishList.get(index);
     	    ActivityListController.updateWeekPlan();
     	    dlg.hide();
     	}); 
@@ -175,7 +190,7 @@ public class WishListTabController{
 		
 		Button deleteButton = new Button("Delete");
 		deleteButton.setOnAction((event) -> {
-    	    if(wishList.remove(text)==null)
+    	    if(wishList.remove(index)==null)
     	    	System.out.println("No such Plan");
     	    ClassSerializer.WishListSerializer(wishList);
     	    initialize();
@@ -187,8 +202,8 @@ public class WishListTabController{
 		dlg.show();
 	}
 	
-    private void loadWeekPlan(String planName) {    	
-    	popUpPlan = wishList.get(planName);
+    private void loadWeekPlan(int index) {    	
+    	popUpPlan = wishList.get(index);
     	
     	sundayActivities.clear();
     	mondayActivities.clear();

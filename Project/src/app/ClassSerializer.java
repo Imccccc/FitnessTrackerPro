@@ -133,12 +133,12 @@ public class ClassSerializer {
 		}
 	}
 
-	public static void WishListSerializer(ObservableMap<String, WeekPlan> wishList){
+	public static void WishListSerializer(ObservableList<WeekPlan> wishList){
 		try {
 			File file = new File("./wishList");
 			PrintWriter pw = new PrintWriter(file);
 			pw.println("<WishList>");
-			for(WeekPlan weekPlan : wishList.values()){
+			for(WeekPlan weekPlan : wishList){
 				pw.println("<WishPlan>");
 				pw.println("<Name>");
 				pw.println(weekPlan.getPlanName());
@@ -161,12 +161,12 @@ public class ClassSerializer {
 		}
 	}
 
-	public static ObservableMap<String, WeekPlan> WishListUnserializer(){
+	public static ObservableList<WeekPlan> WishListUnserializer(){
 		try{
 			File file = new File("./wishList");
 			Scanner scan = new Scanner(file);
 			String planName;
-			ObservableMap<String, WeekPlan> wishList = FXCollections.observableHashMap();
+			ObservableList<WeekPlan> wishList = FXCollections.observableArrayList();
 
 			String input;
 			input = scan.nextLine();
@@ -222,7 +222,7 @@ public class ClassSerializer {
 				WeekPlan weekPlan = new WeekPlan(new SimpleListProperty<>(dayPlanList), planName);
 
 				//Insert into the wishList
-				wishList.put(planName, weekPlan);
+				wishList.add(weekPlan);
 
 				input = scan.nextLine();
 			}

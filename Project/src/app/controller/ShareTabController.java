@@ -266,7 +266,7 @@ public class ShareTabController {
 		
 		Button deleteButton = new Button("Save to Wishlist");
 		deleteButton.setOnAction((event) -> {
-			WishListTabController.wishList.put(shareList.get(index).getPlanName(), shareList.get(index));
+			WishListTabController.wishList.add(shareList.get(index));
     	    ClassSerializer.WishListSerializer(WishListTabController.wishList);
             mainController.wishListTabController.initialize();
     	    dlg.hide();
