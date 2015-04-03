@@ -54,7 +54,7 @@ public class MainController {
     @FXML
     ShareTabController shareTabController;
     @FXML 
-    HomeTabController hometabController;
+    HomeTabController homeTabController;
     
     
     PasswordField password;

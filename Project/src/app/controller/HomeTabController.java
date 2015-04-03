@@ -64,6 +64,7 @@ public class HomeTabController {
     private Label HomepageLabel;
 
     // Global Variables
+    private MainController mainController;
     public static ObservableList<String> dayNames;
     public static ObservableList<dayAmount> pastCalories;
     
@@ -133,6 +134,31 @@ public class HomeTabController {
         plotData(7);
     }
     
+    public void updateTodayPlan(){
+        // Keep all the finished activity plan
+        ObservableList<RealActivityPlan> savedActivityPlan = FXCollections.observableArrayList();
+        for(RealActivityPlan realActivityPlan : activityData){
+            if(realActivityPlan.getRealCount() != 0){
+                savedActivityPlan.add(realActivityPlan);
+            }
+        }
+        
+        activityData = savedActivityPlan;
+        
+        // Add updated plan
+        DayPlan dayPlan = MainApp.weekPlan.getDayPlan(dayOfWeek-1);
+        for(ActivityPlan activityPlan : dayPlan.getDayPlan().values()){
+            activityData.add(new RealActivityPlan(activityPlan, 0));
+        }
+        
+        // Re-bind the data
+        HomePageTable.setItems(activityData);
+        
+        // Save the updated to local file
+        ClassSerializer.TodayPlanSerializer(activityData, today);
+    }
+
+    
     /**
      * Is called by the main application to give a reference back to itself.
      * 
@@ -151,7 +177,12 @@ public class HomeTabController {
 			        .showTextInput(Integer.toString(temp.getRealCount()));
    			response.ifPresent(count -> {
    				try{
-   				temp.setRealCount(Integer.parseInt(count));
+   					int input = Integer.parseInt(count);
+   					if(input < 0){
+   						throw new NumberFormatException();
+   					}
+   					temp.setRealCount(Integer.parseInt(count));
+
    				}catch(NumberFormatException e){
    					Alert alert = new Alert(AlertType.INFORMATION);
    					alert.setTitle("Input Alert");
@@ -288,6 +319,10 @@ public class HomeTabController {
 		yAxis.setAutoRanging(false);
     	areaChart.getData().clear();
     	areaChart.getData().add(dailyCaloriesData);
+	}
+
+	public void init(MainController mainController) {
+		this.mainController = mainController;
 	}
 	
 	
