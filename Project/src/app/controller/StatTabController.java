@@ -317,7 +317,7 @@ public class StatTabController {
             //return plans;
         }
         catch(FileNotFoundException e){
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         
         try{

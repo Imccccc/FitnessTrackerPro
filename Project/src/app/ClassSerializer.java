@@ -298,7 +298,6 @@ public class ClassSerializer {
 			}
 			return today;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}

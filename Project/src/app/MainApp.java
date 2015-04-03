@@ -54,16 +54,16 @@ public class MainApp extends Application {
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == buttonTypeOne){
-    		File plan1 = new File("./Fat Burn");
-    		File plan2 = new File("./Muscle Building");
+    		File plan1 = new File("./Fat");
+    		File plan2 = new File("./Muscle");
     		File weekplan = new File("./weekPlan");
     		if (plan1.exists()) {
 				plan1.renameTo(weekplan);
 				plan2.delete();
 			}
     	} else if (result.get() == buttonTypeTwo) {
-    		File plan1 = new File("./Muscle Building");
-    		File plan2 = new File("./Fat Burn");
+    		File plan1 = new File("./Muscle");
+    		File plan2 = new File("./Fat");
     		File weekplan = new File("./weekPlan");
     		if (plan1.exists()) {
 				plan1.renameTo(weekplan);

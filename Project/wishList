@@ -1,48 +1,71 @@
 <WishList>
 <WishPlan>
 <Name>
-Easy Plan
+Fat Burn
 </Name>
 <Day0>
+Arm Curl|TIMES|65
+Running|MINUTE|60
+Push up|TIMES|75
 </Day0>
 <Day1>
-Yoga|MINUTE|15
-Football|MINUTE|15
+Walking|MINUTE|15
+Sit up|TIMES|60
+Push up|TIMES|70
 </Day1>
 <Day2>
+Pectoral Fly|TIMES|15
+Incline raise|TIMES|15
+Triceps extension|TIMES|30
 </Day2>
 <Day3>
-Basketball|MINUTE|80
+Dumbell fiyes|TIMES|55
 </Day3>
 <Day4>
+Pectoral Fly|TIMES|60
+Running|MINUTE|60
 </Day4>
 <Day5>
-Basketball|MINUTE|135
+Tricep Pulldown|TIMES|20
+Incline raise|TIMES|40
+Swimming|MINUTE|30
 </Day5>
 <Day6>
+Running|MINUTE|40
 </Day6>
 </WishPlan>
 <WishPlan>
 <Name>
-Lazy Plan
+Muscle Building
 </Name>
 <Day0>
+Sit up|TIMES|40
+Arm Curl|TIMES|40
+Squat|TIMES|40
+Standing Biceps Curl|TIMES|40
 </Day0>
 <Day1>
-Yoga|MINUTE|15
+Arse curl|TIMES|40
+Arm Curl|TIMES|40
+Squat|TIMES|60
 </Day1>
 <Day2>
-Football|MINUTE|15
+Arse curl|TIMES|30
+Arm Curl|TIMES|30
 </Day2>
 <Day3>
-Basketball|MINUTE|80
+Sit up|TIMES|50
 </Day3>
 <Day4>
+Triceps extension|TIMES|30
+Standing Biceps Curl|TIMES|30
 </Day4>
 <Day5>
-Basketball|MINUTE|135
+Arse curl|TIMES|30
+Standing Biceps Curl|TIMES|45
 </Day5>
 <Day6>
+Dumbell fiyes|TIMES|15
 </Day6>
 </WishPlan>
 </WishList>
