@@ -3,13 +3,17 @@ package app.controller;
 import impl.org.controlsfx.i18n.Localization;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
+
 import app.model.dayAmount;
 import DBconnector.DBconnector;
 import javafx.collections.FXCollections;
@@ -29,6 +33,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import jdk.nashorn.internal.runtime.linker.JavaAdapterFactory;
 
 public class MainController {
 	@FXML
@@ -343,8 +348,9 @@ public class MainController {
 			return;
 		}
 
-
-		ObservableList<app.model.dayAmount> amountlist = getCorrectAmountList(HomeTabController.pastCalories, DBconnector.getExerciseAmount(searchField.getText()));
+		ObservableList<app.model.dayAmount> selfAmountlist = getCorrectAmountList(HomeTabController.pastCalories);
+		
+		ObservableList<app.model.dayAmount> competetorsAmountlist = getCorrectAmountList(DBconnector.getExerciseAmount(searchField.getText()));
 
 
 		Dialog dialog = new Dialog(null, "Compete result");
@@ -361,15 +367,15 @@ public class MainController {
 		competorDataSeiresSeries.setName(searchField.getText()+"'s Daily Calories");
 
 		double maxRange = 0;
-		for(dayAmount day :HomeTabController.pastCalories) {
+		for(dayAmount day :selfAmountlist) {
 			myDataSeries.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
 			//System.out.println("My dayAmount"+day.getAmount()+" "+day.getDate());
 			if(maxRange < day.getAmount()) {
 				maxRange = day.getAmount();
 			}
 		}
-		System.out.println("the size of the return list is "+amountlist.size());
-		for(dayAmount day : amountlist) {
+		System.out.println("the size of the return list is "+competetorsAmountlist.size());
+		for(dayAmount day : competetorsAmountlist) {
 			//java.util.Date utilDate = new java.util.Date(day.getDate().getTime());
 			competorDataSeiresSeries.getData().add(new XYChart.Data<String, Number>(day.getDate().toString().substring(4,10), day.getAmount()));
 			//System.out.println("Competetor's dayAmount"+day.getAmount()+" "+day.getDate());
@@ -397,25 +403,25 @@ public class MainController {
 
 	}
 
-	private ObservableList<app.model.dayAmount> getCorrectAmountList(ObservableList<dayAmount> self, ArrayList<dayAmount> other ) {
+	private ObservableList<app.model.dayAmount> getCorrectAmountList(Collection<dayAmount> other ) {
 		ObservableList<app.model.dayAmount> amountList = FXCollections.observableArrayList();
 		boolean same;
-
+		Date d = new Date();
 
 		for(dayAmount day : other) {
 			day.setDate(new java.util.Date(day.getDate().getTime()));
 		}
-		for(dayAmount me : self) {
+		for(int i =1;i<8;i++) {
 			same = false;
 			for(dayAmount he : other) {
-				if(he.getDate().equals(me.getDate())) {
+				if(he.getDate().equals(new Date(d.getTime() - i*24*3600*1000))) {
 					amountList.add(he);
 					same = true;
 					break;
 				}
 			}
 			if(!same) {
-				amountList.add(new dayAmount(me.getDate(), 0));
+				amountList.add(new dayAmount(new Date(d.getTime() - i*24*3600*1000), 0));
 			}
 		}
 		return amountList;
